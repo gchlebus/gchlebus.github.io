@@ -25,15 +25,34 @@ Now, let's take a look at other special methods which can help you in making you
 - `__del__(self)`: Finalizer method, which gets called when the reference count of an object reaches 0. It is not guaranteed, that the function will be called for existing objects at the time Python interpreter exits. 
 
 ### String/byte representation
-- `__repr__(self)`: Invoked by `repr(object)`. Used to create the *official* string representation of an object. The official representation should be of this form `<representation>`. This string is used for debugging, so make sure it contains all required informations.
+- `__repr__(self)`: Invoked by `repr(object)`. Used to create the *official* string representation of an object. There is a convention, that this function should try to return a string, which when passed to `eval()` yields an object. Otherwise, a string encompassed with angle brackets with the class name and additional information should be returned, e.g., `<ClassName address>`.
 - `__str__(self)`: Invoked by `str(object)`. Used to produce the *informal* string representation which is pretty and can be nicely printed. In case the method is not present, Python will call the `__repr__` method.
-- `__bytes__(self)`
-- `__format__(self, format_spec)`: Use this function to change the class behavior when calling `format()` or `str.format()`. For example:
+- `__bytes__(self)`: Used by `bytes(object)`. Return object's byte representation.
+- `__format__(self, format_spec)`: Use to return a string representatino of an object depending on the format specifier string..
 
+#### Example
 ```python
+from array import array
+
 class Distance(object):
+  typecode = 'd' # Array item type. Used in bytes and frombytes methods.
+
   def __init__(self, distance_km):
     self.__distance_km = float(distance_km)
+
+  @classmethod
+  def frombytes(cls, octets):
+    mview = memoryview(octets).cast(cls.typecode)
+    return cls(mview[0])
+
+  def __str__(self):
+    return '{} km'.format(self.__distance_km)
+
+  def __repr__(self):
+    return '{}({})'.format(self.__class__.__name__, self.__distance_km)
+
+  def __bytes__(self):
+    return bytes(array(self.typecode, [self.__distance_km]))
 
   def __format__(self, fmt_spec=''):
     unit = fmt_spec if fmt_spec else 'km'
@@ -45,16 +64,25 @@ class Distance(object):
       value = self.__distance_km
     return '{} {}'.format(value, unit)
 ```
-results in:
-
 ```
+>>> repr(Distance(3.4))
+'Distance(3.4)'
+>>> print(Distance(5.6))
+5.6 km
 >>> print(format(Distance(1)))
 1.0 km
 >>> print(format(Distance(1), 'mi'))
 0.621371 mi
 >>> print(format(Distance(1), 'y'))
 1093.61 y
+>>> bytes(Distance(1.0))
+b'\x00\x00\x00\x00\x00\x00\xf0?'
+>>> Distance.frombytes(bytes(Distance(1.2)))
+Distance(1.2)
 ```
+
+### Conversion to number
+- `__hash__(self)`: Called by `hash(object)`. Note, that if two objects compare equal, they have same hashes.
 
 ___
 ### References
