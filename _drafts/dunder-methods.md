@@ -7,16 +7,15 @@ categories: python
 The term *dunder methods* refers to Python special methods, which can make our custom defined objects take advantage of the Python language features. *Dunder* stems from the special method name spelling, which involves leading and trailing *double underscores*, e.g., `__len__()` or `__call__()`. The dunder methods are meant to be called by the Python interpreter (think of Python as a framework calling the special methods).
 
 Let's consider an example of checking list length. We can write:
-```python
-l = 'a b c d e f'.split()
-print len(l)
 ```
-or
-```python
-print l.__len__()
+>>> l = 'a b c d e f'.split()
+>>> len(l)
+6
+>>> l.__len__()
+6
 ```
 
-The first way is smarter since it allows the Python to make some optimizations for us. For example calling `len()` on built-in types will return the `ob_size` field in the `PyVarObject`, which is faster than calling a method.
+The first way is smarter, since it allows Python to make some optimizations for us. For example calling `len()` on built-in types will return the `ob_size` field in the `PyVarObject`, which is faster than calling a method.
 
 Now, let's take a look at other special methods which can help you in making your classes truly pythonic.
 
@@ -49,12 +48,11 @@ class Distance(object):
 results in:
 
 ```
->>> d = Distance(1)
->>> print(format(d))
+>>> print(format(Distance(1)))
 1.0 km
->>> print(format(d, 'mi'))
+>>> print(format(Distance(1), 'mi'))
 0.621371 mi
->>> print(format(d, 'y'))
+>>> print(format(Distance(1), 'y'))
 1093.61 y
 ```
 

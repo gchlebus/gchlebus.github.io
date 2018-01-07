@@ -1,15 +1,16 @@
+__author__ = 'gchlebus'
+
 class Distance(object):
   def __init__(self, distance_km):
     self.__distance_km = float(distance_km)
 
   def __format__(self, fmt_spec=''):
     '''
-      >>> d = Distance(1)
-      >>> print(format(d))
+      >>> print(format(Distance(1)))
       1.0 km
-      >>> print(format(d, 'mi'))
+      >>> print(format(Distance(1), 'mi'))
       0.621371 mi
-      >>> print(format(d, 'y'))
+      >>> print(format(Distance(1), 'y'))
       1093.61 y
     '''
     unit = fmt_spec if fmt_spec else 'km'
