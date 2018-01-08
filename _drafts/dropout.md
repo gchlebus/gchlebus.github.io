@@ -12,10 +12,13 @@ The inspiration of the dropout is rooted in the sexual reproduction, which is ho
 ### Method
 Before describing how we can incorporate dropout into a neural net, we need to define what it means to *drop* a neural unit. Dropping a unit with a drop probability $p_d$ corresponds to removing the neuron from the network with all its input and output connections with a probability $p_d$. The authors claim, that a quite optimal dropout probability is $0.5$ for hidden layers and $0.2$ for input layers.
 
-We can write the following equation for output $y_i$ of a neuron unit $i$ in layer $l$ having weights $\boldsymbol{w}_i$ and bias $b_i$. $\boldsymbol{y}^{l-1}$ denotes the input vector.
+We can write the following equation for output $y_i$ of a neuron unit $i$ in layer $l$ having weights $$\boldsymbol{w}_i$$ and bias $b_i$. $\boldsymbol{y}^{l-1}$ denotes the input vector.
 
-<div class="equation">
-(@nodrop) $y_i^{l} = f(\boldsymbol{w}_i \boldsymbol{y}^{l-1} + b_i)$
-</div>
+$$
+\begin{align*}
+y_i^{l} = f(\boldsymbol{w}_i \boldsymbol{y}^{l-1} + b_i)
+\end{align*}
+$$
+
 
 [^1]: Srivastava at al., [*Dropout: A Simple Way to Prevent Neural Networks from Overfitting*](http://jmlr.org/papers/volume15/srivastava14a/srivastava14a.pdf). Journal of Machine Learning Research, 2014.

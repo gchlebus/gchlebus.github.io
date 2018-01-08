@@ -24,7 +24,7 @@ github_username:  gchlebus
 linkedin_username: gchlebus
 
 # Build settings
-markdown: Pandoc
+markdown: kramdown
 theme: minima
 plugins:
   - jekyll-feed
