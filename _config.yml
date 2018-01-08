@@ -24,10 +24,11 @@ github_username:  gchlebus
 linkedin_username: gchlebus
 
 # Build settings
-markdown: kramdown
+markdown: Pandoc
 theme: minima
 plugins:
   - jekyll-feed
+  - jekyll-pandoc
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list

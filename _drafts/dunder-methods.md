@@ -28,7 +28,7 @@ Now, let's take a look at other special methods which can help you in making you
 - `__repr__(self)`: Invoked by `repr(object)`. Used to create the *official* string representation of an object. There is a convention, that this function should try to return a string, which when passed to `eval()` yields an object. Otherwise, a string encompassed with angle brackets with the class name and additional information should be returned, e.g., `<ClassName address>`.
 - `__str__(self)`: Invoked by `str(object)`. Used to produce the *informal* string representation which is pretty and can be nicely printed. In case the method is not present, Python will call the `__repr__` method.
 - `__bytes__(self)`: Used by `bytes(object)`. Return object's byte representation.
-- `__format__(self, format_spec)`: Use to return a string representatino of an object depending on the format specifier string..
+- `__format__(self, format_spec)`: Used to return a string representatino of an object depending on the format specifier string.
 
 #### Example
 ```python
@@ -84,7 +84,5 @@ Distance(1.2)
 ### Conversion to number
 - `__hash__(self)`: Called by `hash(object)`. Note, that if two objects compare equal, they have same hashes.
 
-___
-### References
-1. [Python Data Model](https://docs.python.org/3/reference/datamodel.html#special-method-names)
-2. Luciano Ramahlho, *Fluent Python*. O'Reilly 2015.
+[^1]: [Python Data Model](https://docs.python.org/3/reference/datamodel.html#special-method-names)
+[^2]: Luciano Ramahlho, *Fluent Python*. O'Reilly 2015.
