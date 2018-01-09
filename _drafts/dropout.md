@@ -4,7 +4,7 @@ title: Dropout
 categories: neural network
 ---
 
-Dropout[^1] is a very popular regularization technique which can be injected into most of the neural network architectures. Together with other methods such as L1-/L2-norm regularization, soft weight sharing it helps deep neural nets in fighting overfitting. 
+Dropout[^1] is a very popular regularization technique which can be injected into most of the neural network architectures. Together with other methods such as L1-/L2-norm regularization, soft weight sharing it helps deep neural nets in fighting overfitting.
 
 ### Motivation
 The inspiration of the dropout is rooted in the sexual reproduction, which is how the most intelligent animals evolved. An offspring conceived in such a way inherits genes from both of parents. It seems counter-intuitive, that this way of reproduction was chosen over asexual one, where one parent passes all of his genes with some mutation allowing for further boost of individual fitness. One explanation for this phenomenon is that what really matters is not the individual fitness, but the ability of genes to do something useful when mixed with a new random set of genes. It forces genes not to depend too much on the presence of specific genes. Dropout aims at achieving the same behavior for neurons.
