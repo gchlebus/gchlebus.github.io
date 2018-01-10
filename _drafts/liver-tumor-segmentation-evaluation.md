@@ -49,6 +49,38 @@ Dice and Jaccard indices can be in most situations used interchangeably, since J
 #### Free-Response Receiver Operating Characteristic (FROC)
 FROC[^4] is an extension to the conventional ROC[^5] which tries to overcome the limitiation of the ROC which is only one decision per case and only two decision alternatives. The FROC allows for analysis of experiments where number of lesions per case may be zero or more and the reader is allowed to take multiple decisions per image. A typical FROC plot would have *Sensitivity* on the y-axis and *FP per image* on the x-axis. It should be noted, that there are currently no established methods to test for significance of differences between two FROC curves as well as no single index summarizing the FROC plot (e.g, ROC has the area under the curve index).
 
+### How to define a hit?
+For the detection metrics we need to define what should be counted as a hit allowing us to distinguish between $$TP$$ and $$FP$$. In our case where we can have zero or more tumors per patient we will have the following cases (output tumor referrs to a tumor produced by some algorithm we would like to evaluate):
+
+1. $$1:1$$: one reference tumor corresponds one to output tumor. In this case 
+2. $$1:n$$: one reference tumor is found by $$n$$ output tumors
+3. $$m:1$$: $$m$$ reference tumors were found by one output tumor
+4. $$m:n$$: $$m$$ reference tumors were found by $$n$$ output tumors
+
+The correspondence can be determined using the following algorithm:
+
+``` python
+def get_corresponding_tumors(out_tumor, out_tumors, ref_tumors):
+    corresponding_out_tumors = [out_tumor]
+    corresponding_ref_tumors = list()
+    out_tumors.remove(corresponding_out_tumors)
+    while True:
+        if len(out_tumors) == 0 or len(ref_tumors) == 0:
+            break
+        for tout in corresponding_out_tumors:
+            corresponding_ref_tumors.extend([t for t in ref_tumors if intersection(t, tout) > 0])
+        if len(corresponding_ref_tumors) == 0:
+            break
+        ref_tumors.remove(corresponding_ref_tumors)
+        for tref in corresponding_ref_tumors:
+            corresponding_out_tumors.extend([t for t in out_tumors if interesction(t, tref) > 0])
+        out_tumors.remove(corresponding_out_tumors)
+    return corresponding_out_tumors, corresponding_ref_tumors, out_tumors, ref_tumors
+```
+
+The correspondence can be determined using condition $$\lvert A \cup B \rvert > 0$$. For the trivial case 1. we can use $$J( n) > 0.5$$ to determine the TP. In case 2. the $$n$$ output tumors should be counted as one $$TP$$. In general if 
+
+
 ---
 [^1]: [Wikipedia article on Jaccard index](https://en.wikipedia.org/wiki/Jaccard_index)
 [^2]: [Wikipedia article on Dice index](https://en.wikipedia.org/wiki/Sørensen–Dice_coefficient)
