@@ -4,3 +4,4 @@ _site
 .idea
 Gemfile.lock
 __pycache__
+.ipynb_checkpoints
