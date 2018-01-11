@@ -6,8 +6,9 @@ import numpy as np
 def evaluate(refmask, testmask, th=0.5):
   tp = 0
   correspondences = []
+  jaccard_indices = []
   if not np.any(testmask) or not np.any(refmask):
-    return tp, len(unique(testmask)), correspondences
+    return tp, len(unique(testmask)), correspondences, jaccard_indices, unique(testmask).tolist()
     
   for idx in unique(testmask):
     current_test_mask = np.where(testmask == idx, 1, 0)
@@ -24,13 +25,15 @@ def evaluate(refmask, testmask, th=0.5):
 
     #print('jaccard current_test_mask', current_test_mask)
     #print('jaccard current_ref_mask', current_ref_mask)
-    if jaccard(current_ref_mask, current_test_mask) > th:
+    j = jaccard(current_ref_mask, current_test_mask)
+    if  j > th:
       tp += len(unique(current_test_mask * refmask))
       correspondences.append([unique(refmask * current_ref_mask).tolist(), unique(testmask * current_test_mask).tolist()])
+      jaccard_indices.append(j)
       testmask[current_test_mask==1] = 0
       #print('testmask', testmask)
     
-  return tp, len(unique(testmask)), correspondences
+  return tp, len(unique(testmask)), correspondences, jaccard_indices, unique(testmask).tolist()
 
 def unique(array):
   ret = np.unique(array)
