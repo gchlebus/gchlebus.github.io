@@ -3,7 +3,11 @@ __author__ = 'gchlebus'
 
 import numpy as np
 
-def evaluate(refmask, testmask, th=0.5):
+def evaluate(refmask, testmask, th=0.1):
+  '''
+  refmask, testmask - ndarray, where each connected component has a unique label
+  th - jaccard threshold to determine true positive
+  '''
   tp = 0
   correspondences = []
   jaccard_indices = []
@@ -41,6 +45,7 @@ def evaluate(refmask, testmask, th=0.5):
   return tp, len(unique(testmask)), correspondences, jaccard_indices, unique(testmask).tolist()
 
 def unique(array):
+  ''' Return list of unique values in array except for 0.'''
   ret = np.unique(array)
   return ret[1:] if ret[0] == 0 else ret
      
