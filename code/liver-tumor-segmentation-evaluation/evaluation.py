@@ -12,26 +12,31 @@ def evaluate(refmask, testmask, th=0.5):
     
   for idx in unique(testmask):
     current_test_mask = np.where(testmask == idx, 1, 0)
-    #print('current_test_mask', current_test_mask)
+    current_ref_mask = np.zeros_like(refmask)
     if not np.any(current_test_mask):
       continue
-    current_ref_mask = np.zeros_like(refmask)
-    for i in unique(current_test_mask * refmask):
-      current_ref_mask[refmask == i] = 1
     
-    for i in unique(current_ref_mask * testmask):
-      current_test_mask[testmask == i] = 1
-    
+    ref_components_count = len(unique(current_ref_mask))
+    while True:  
+      for i in unique(current_test_mask * refmask):
+        current_ref_mask[refmask == i] = i
+      
+      count = len(unique(current_ref_mask))
+      if count == ref_components_count:
+        break
+      else:
+        ref_components_count = count
+      
+      for i in unique(np.where(current_ref_mask>0, 1, 0) * testmask):
+        current_test_mask[testmask == i] = 1
 
-    #print('jaccard current_test_mask', current_test_mask)
-    #print('jaccard current_ref_mask', current_ref_mask)
+    current_ref_mask = np.where(current_ref_mask>0, 1, 0)
     j = jaccard(current_ref_mask, current_test_mask)
     if  j > th:
       tp += len(unique(current_test_mask * refmask))
       correspondences.append([unique(refmask * current_ref_mask).tolist(), unique(testmask * current_test_mask).tolist()])
       jaccard_indices.append(j)
       testmask[current_test_mask==1] = 0
-      #print('testmask', testmask)
     
   return tp, len(unique(testmask)), correspondences, jaccard_indices, unique(testmask).tolist()
 
@@ -44,7 +49,6 @@ def jaccard(refmask, testmask):
   assert not np.any(testmask > 1)
   intersection = np.sum(refmask * testmask)
   union = np.sum(refmask + testmask) - intersection
-  #print('jaccard = ', intersection / union)
   return intersection / union
 
 if __name__ == '__main__':
