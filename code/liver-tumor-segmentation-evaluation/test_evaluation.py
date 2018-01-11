@@ -49,7 +49,7 @@ def test_one_ref_one_test_2():
   assert fp == 1
 
 
-def test_one_ref_one_test_1():
+def test_one_ref_one_test_3():
   '''
   ref   test
   1 0   1 1
@@ -58,7 +58,7 @@ def test_one_ref_one_test_1():
   refmask = np.zeros(shape=(2,2))
   testmask = np.ones(shape=(2,2))
   refmask[0,0] = 1
-  tp, fp, correspondences, jaccard_indices, fp_indicies = evaluate(refmask, testmask)
+  tp, fp, correspondences, jaccard_indices, fp_indicies = evaluate(refmask, testmask, 0.5)
   assert tp == 0
   assert fp == 1
 
