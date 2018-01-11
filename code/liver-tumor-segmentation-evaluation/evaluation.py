@@ -47,7 +47,11 @@ def unique(array):
 def jaccard(refmask, testmask):
   assert not np.any(refmask > 1)
   assert not np.any(testmask > 1)
+  if not np.any(refmask) or not np.any(testmask):
+    return 0
   intersection = np.sum(refmask * testmask)
+  if not np.any(intersection):
+    return 0
   union = np.sum(refmask + testmask) - intersection
   return intersection / union
 
