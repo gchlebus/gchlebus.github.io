@@ -53,7 +53,7 @@ def jaccard(refmask, testmask):
   if not np.any(intersection):
     return 0
   union = np.sum(refmask + testmask) - intersection
-  return intersection / union
+  return float(intersection) / float(union)
 
 if __name__ == '__main__':
   import doctest
