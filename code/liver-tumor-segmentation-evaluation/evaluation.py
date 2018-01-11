@@ -6,7 +6,7 @@ import numpy as np
 def evaluate(refmask, testmask, th=0.5):
   tp = 0
   correspondences = []
-  if not np.any(testmask) or (not np.any(refmask) and np.any(testmask)):
+  if not np.any(testmask) or not np.any(refmask):
     return tp, len(unique(testmask)), correspondences
     
   for idx in unique(testmask):
