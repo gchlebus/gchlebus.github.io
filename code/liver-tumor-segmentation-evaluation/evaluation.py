@@ -4,7 +4,7 @@ __author__ = 'gchlebus'
 import numpy as np
 
 
-def evaluate(refarr, testarr, tp_threshold=0.1):
+def evaluate(refarr, testarr, tp_threshold=0.1, similarity_measure='dice'):
     '''
     Evaluate tumor segmentation contained in 'testarr' against reference 'refarr'. The function
     attemtps to determine correspondences between test and reference tumor segmentation in order
@@ -16,7 +16,9 @@ def evaluate(refarr, testarr, tp_threshold=0.1):
     Arguments:
     refarr -- ndarray with the reference tumors (each tumor has a unique value)
     testarr -- ndarray with tumors to be evaluated (each tumor has a unique value)
-    th -- jaccard threshold to determine a true positive
+    tp_threshold -- threshold to determine a true positive
+    similarity_measure -- similarity measure used for true positive determination. Can be either
+                          'dice' or 'jaccard'.
 
     Returns:
     - true positive count
@@ -26,27 +28,29 @@ def evaluate(refarr, testarr, tp_threshold=0.1):
     ], meaning that reference tumors with indices 1 and 2 were used to determine whether the test
     tumor with index 1 is a true positive. If the test passes, then the tumor would be counted as
     two true positives, since it corresponds to two tumors in the reference.
-    - jaccard indices for each of the corresponding tumor sets
+    - similarity measure values for each of the corresponding tumor sets
     - array containing all tumors classified as false positives
     '''
     tp = 0
     correspondences = []
-    jaccard_indices = []
+    tp_similarities = []
     if not np.any(testarr) or not np.any(refarr):
-        return tp, len(unique(testarr)), correspondences, jaccard_indices, unique(testarr).tolist()
+        return tp, len(unique(testarr)), correspondences, tp_similarities, unique(testarr).tolist()
 
     for idx in unique(testarr):
         current_testarr, current_refarr = determine_correspondences(idx, testarr, refarr)
-        j = jaccard(current_refarr, current_testarr)
-        if j > tp_threshold:
+        if not np.any(current_testarr):
+            continue
+        s = similarity(current_testarr, current_refarr, similarity_measure)
+        if s > tp_threshold:
             tp += len(unique(current_testarr * refarr))
             correspondences.append([unique(refarr * current_refarr).tolist(),
                                     unique(testarr * current_testarr).tolist()])
-            jaccard_indices.append(j)
+            tp_similarities.append(s)
             testarr[current_testarr == 1] = 0
             refarr[current_refarr == 1] = 0
 
-    return tp, len(unique(testarr)), correspondences, jaccard_indices, unique(testarr).tolist()
+    return tp, len(unique(testarr)), correspondences, tp_similarities, unique(testarr).tolist()
 
 
 def determine_correspondences(testidx, testarr, refarr):
@@ -102,13 +106,27 @@ def unique(array):
     ret = np.unique(array)
     return ret[1:] if ret[0] == 0 else ret
 
-
-def jaccard(refarr, testarr):
+def similarity(testarr, refarr, function):
     assert not np.any(refarr > 1) or not np.any(testarr > 1), 'Only arrays with 0, 1 values are allowed.'
-    if not np.any(refarr) or not np.any(testarr):
-        return 0
-    intersection = np.sum(refarr * testarr)
-    if not np.any(intersection):
-        return 0
-    union = np.sum(refarr + testarr) - intersection
-    return float(intersection) / float(union)
+    if function == 'dice':
+        return dice(testarr, refarr)
+    elif function == 'jaccard':
+        return jaccard(testarr, refarr)
+    else:
+        raise RuntimeError('Not supported similarity function {}.'.format(function))
+
+def jaccard(testarr, refarr):
+    intersection = float(np.sum(refarr * testarr))
+    union = float(np.sum(refarr + testarr) - intersection)
+    try:
+        return intersection / union
+    except ZeroDivisionError:
+        return 1.0
+
+def dice(testarr, refarr):
+    intersection = float(np.sum(refarr * testarr))
+    sum = float(np.sum(refarr + testarr))
+    try:
+        return 2*intersection / sum
+    except ZeroDivisionError:
+        return 1.0
