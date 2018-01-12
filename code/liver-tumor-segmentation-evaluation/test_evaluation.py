@@ -72,7 +72,7 @@ def test_one_ref_two_test():
   '''
   refmask = np.zeros(shape=(3,3))
   testmask = np.zeros(shape=(3,3))
-  refmask[0,0] = 1 
+  refmask[0,0] = 1
   testmask[0,0] = 1
   testmask[2,2] = 2
   tp, fp, correspondences, jaccard_indices, fp_indicies = evaluate(refmask, testmask)
@@ -89,7 +89,7 @@ def test_two_ref_two_test_1():
   '''
   refmask = np.zeros(shape=(3,3))
   testmask = np.zeros(shape=(3,3))
-  refmask[0,0] = 1 
+  refmask[0,0] = 1
   refmask[2,2] = 2
   testmask[0,0] = 1
   testmask[2,2] = 2
@@ -108,7 +108,7 @@ def test_two_ref_one_test_2():
   refmask = np.zeros(shape=(3,3))
   testmask = np.ones(shape=(3,3))
   refmask[0,0] = 1
-  refmask[0,1] = 1 
+  refmask[0,1] = 1
   refmask[2,2] = 2
   testmask[1,0] = 0
   testmask[2,0] = 0
@@ -172,7 +172,7 @@ def test_three_ref_three_test():
   1 1 1   2 2 2
   0 0 0   2 2 2
   2 2 2   2 2 2
-  2 2 2   2 2 2 
+  2 2 2   2 2 2
   0 0 0   0 0 0
   0 0 0   3 3 3
   3 3 3   0 0 0
@@ -213,7 +213,7 @@ def test_four_ref_four_test():
   1 1 1   2 2 2
   0 0 0   2 2 2
   2 2 2   2 2 2
-  2 2 2   2 2 2 
+  2 2 2   2 2 2
   2 2 2   0 0 0
   2 2 2   3 3 3
   0 0 0   3 3 3
