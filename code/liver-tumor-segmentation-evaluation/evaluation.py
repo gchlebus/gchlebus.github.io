@@ -38,42 +38,62 @@ def evaluate(testarr, refarr, tp_threshold=0.2, similarity_measure='dice'):
         return tp, len(unique(testarr)), correspondences, tp_similarities, unique(testarr).tolist()
 
     for idx in unique(testarr):
-        current_testarr, current_refarr = determine_correspondences(idx, testarr, refarr)
-        if not np.any(current_testarr):
+        correspondence_candidates = determine_correspondences(idx, testarr, refarr)
+        if not correspondence_candidates:
             continue
-        s = similarity(current_testarr, current_refarr, similarity_measure)
-        if s > tp_threshold:
-            tp += len(unique(current_testarr * refarr))
-            correspondences.append([unique(refarr * current_refarr).tolist(),
-                                    unique(testarr * current_testarr).tolist()])
-            tp_similarities.append(s)
-            testarr[current_testarr == 1] = 0
-            refarr[current_refarr == 1] = 0
-
+        similarities = []
+        for ref_indices, test_indicies in correspondence_candidates:
+            current_refarr = filter_tumors(refarr, ref_indices)
+            current_testarr = filter_tumors(testarr, test_indicies)
+            similarities.append(similarity(current_testarr > 0, current_refarr > 0, similarity_measure))
+        max_s = max(similarities)
+        max_idx = [i for i, s in enumerate(similarities) if s == max_s]
+        if max_s > tp_threshold:
+            ref_indices, test_indicies = correspondence_candidates[max_idx[0]]
+            current_refarr = filter_tumors(refarr, ref_indices)
+            current_testarr = filter_tumors(testarr, test_indicies)
+            tp += len(ref_indices)
+            correspondences.append([ref_indices.tolist(), test_indicies.tolist()])
+            tp_similarities.append(max_s)
+            testarr[current_testarr > 0] = 0
+            refarr[current_refarr > 0] = 0
     return tp, len(unique(testarr)), correspondences, tp_similarities, unique(testarr).tolist()
 
+def filter_tumors(arr, tumor_indices):
+    '''
+    Returns array with tumors specified by tumor_indices.
+    '''
+    retarr = np.zeros_like(arr)
+    for i in tumor_indices:
+        retarr[arr==i] = i
+    return retarr
 
 def determine_correspondences(testidx, testarr, refarr):
     '''
     Determine tumor correspondences between tumors in the testarr and refarr. The correspondence
     algorithm starts with a tumor with index textidx from the testarr.
-    Returns:
-    - binary array with corresponding tumors from testarr
-    - binary array with corresponding tumors from refarr
+    Returns list with correspondence candidates.
     '''
     current_testarr = np.where(testarr == testidx, testidx, 0)
     ref_components_count = 0
+    correspondences = []
     while True:
         current_refarr = get_overlapping_mask(np.where(current_testarr > 0, 1, 0), refarr)
 
-        count = len(unique(current_refarr))
+        unique_ids = unique(current_refarr)
+        count = len(unique_ids)
         if count == ref_components_count:
             break
         else:
             ref_components_count = count
-
+        from itertools import combinations
+        for r in range(len(unique_ids)):
+            for c in combinations(unique_ids, r):
+                correspondences.append([np.asarray(c), unique(current_testarr)])
         current_testarr = get_overlapping_mask(np.where(current_refarr > 0, 1, 0), testarr)
-    return np.where(current_testarr > 0, 1, 0), np.where(current_refarr > 0, 1, 0)
+    if ref_components_count > 0:
+        correspondences.append([unique(current_refarr), unique(current_testarr)])
+    return correspondences
 
 
 def get_overlapping_mask(arr_a, arr_b, overlap=None):

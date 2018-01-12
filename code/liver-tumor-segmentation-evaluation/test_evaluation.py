@@ -118,6 +118,56 @@ def test_two_ref_one_test_2():
   assert tp == 2
   assert fp == 0
 
+def test_two_ref_one_test_3():
+  '''
+  ref     test
+  1 1 1   1 1 1
+  1 1 1   1 1 1
+  1 1 1   1 1 1
+  0 0 0   1 1 1
+  2 2 2   1 1 1
+  2 2 2   0 0 0
+  2 2 2   0 0 0
+  2 2 2   0 0 0
+  2 2 2   0 0 0
+  2 2 2   0 0 0
+  2 2 2   0 0 0
+  2 2 2   0 0 0
+  2 2 2   0 0 0
+  '''
+  refmask = np.array([
+    [1, 1, 1],
+    [1, 1, 1],
+    [1, 1, 1],
+    [0, 0, 0],
+    [2, 2, 2],
+    [2, 2, 2],
+    [2, 2, 2],
+    [2, 2, 2],
+    [2, 2, 2],
+    [2, 2, 2],
+    [2, 2, 2],
+    [2, 2, 2]
+  ])
+  testmask = np.array([
+    [1, 1, 1],
+    [1, 1, 1],
+    [1, 1, 1],
+    [1, 1, 1],
+    [1, 1, 1],
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0]
+  ])
+  tp, fp, correspondences, jaccard_indices, fp_indicies =  evaluate(testmask, refmask, tp_threshold=0.5)
+  assert tp == 1
+  assert fp == 0
+  assert correspondences == [[[1],[1]]]
+
 def test_one_ref_two_test_2():
   '''
   ref     test
