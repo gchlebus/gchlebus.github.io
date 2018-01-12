@@ -17,7 +17,7 @@ Given **reference** tumor segmentation produced by clinical experts and **test**
 ### Definitions
 
 #### Detection measures
-Detection measures are typically functions of real positives $$P$$ (the number of positives in the reference data), real negatives $$N$$, true positives $$TP$$ (the number of correctly found real positives), true negatives $$TN$$, false negatives $$FN$$ (the number of missclassified real negatives) and false positives $$FP$$. Some of the most common measures are Sensitivity, Specificity, Precision and Recall[^3]: 
+Detection measures are typically functions of real positives $$P$$ (the number of positives in the reference data), real negatives $$N$$, true positives $$TP$$ (the number of correctly found real positives), true negatives $$TN$$, false negatives $$FN$$ (the number of missclassified real negatives) and false positives $$FP$$. Some of the most common measures are Sensitivity, Specificity, Precision and Recall[^3]:
 
 $$Sensitivity = \frac{TP}{P}$$
 
@@ -38,13 +38,20 @@ $$0 \leq J(A, B) = \frac{|A \cap B|}{|A \cup B|} = \frac{TP}{TP + FP + FN}\leq 1
 For empty $$A$$ and $$B$$ the $$J(A,B)=1$$. The Jaccard index can be considered a metric, since it satisfies the triangle inequality. Assuming a constant error in terms of missclassified voxels and a variable size of the object to be segmented, the behavior of the Jaccard index as depicted in the following figure can be observed. It is interesting to note, that the **Jaccard index favours methods which tend to produce bigger segmentations**.
 ![Jaccard]({{ "/assets/liver-tumor-segmentation-evaluation/jaccard.png" | absolute_url }})
 
-#### Dice index
+#### Dice index or F-1 score
 The Dice index[^2] (aka Dice's coefficient) is a metric defined very similarly to the Jaccard index, but it does not satisfy the triangle inequality.
 
 $$0 \leq DSC(A,B) = \frac{2|A \cap B|}{|A|+|B|} = \frac{2J(A,B)}{1+J(A,B)} = \frac{2TP}{2TP + FP + FN} \leq 1$$
 
 Dice and Jaccard indices can be in most situations used interchangeably, since Jaccard can be derived from Dice and vice versa. They exhibit the following relationship:
 ![JaccardVsDice]({{ "/assets/liver-tumor-segmentation-evaluation/jaccard_vs_dice.png" | absolute_url }})
+
+#### Tversky index
+The Tversky index[^7] is a generalization of the Dice and Jaccard index, where one can weight how the $$FP$$ and $$FN$$ are weghted. Assuming that $$A$$ is a subject of comparison and $$B$$ is the referent we can write:
+
+$$S(A,B,\alpha, \beta)_{\alpha, \beta \geq 0} = \frac{|A \cap B|}{|A \cap B| + \alpha|A-B| + \beta|B-A|} = \frac{TP}{TP + \alpha FP + \beta FN}$$
+
+By tinkering with $$\alpha$$ and $$\beta$$ the focus of the comparison can be shifted. In case of $$\alpha > \beta$$, the subject features are weighted more heavily than the referent features.
 
 #### Free-Response Receiver Operating Characteristic (FROC)
 FROC[^4] is an extension to the conventional ROC[^5] which tries to overcome the limitiation of the ROC which is only one decision per case and only two decision alternatives. The FROC allows for analysis of experiments where number of lesions per case may be zero or more and the reader is allowed to take multiple decisions per image. A typical FROC plot would have *Sensitivity* on the y-axis and *FP per image* on the x-axis. It should be noted, that there are currently no established methods to test for significance of differences between two FROC curves as well as no single index summarizing the FROC plot (e.g, ROC has the area under the curve index).
@@ -60,7 +67,7 @@ The evalation criteria should be chosen having the appliaction of an algorithm i
 ### How to define a hit?
 For the detection metrics we need to define what should be counted as a hit allowing us to distinguish between $$TP$$ and $$FP$$. In our case where we can have zero or more tumors per patient, we will have the following cases (output tumor referrs to a tumor produced by some algorithm we would like to evaluate):
 
-1. $$1:1$$: one reference tumor corresponds one to output tumor. In this case 
+1. $$1:1$$: one reference tumor corresponds one to output tumor.
 2. $$1:n$$: one reference tumor is found by $$n$$ output tumors
 3. $$m:1$$: $$m$$ reference tumors were found by one output tumor
 4. $$m:n$$: $$m$$ reference tumors were found by $$n$$ output tumors
@@ -73,3 +80,4 @@ For the detection metrics we need to define what should be counted as a hit allo
 [^4]: [Extensions to Conventional ROC Methodology: LROC, FROC, and AFROC](https://doi.org/10.1093/jicru/ndn011). Journal of the International Commision on Radiation Units and Measurements, 2008.
 [^5]: [Wikipedia article on ROC](https://en.wikipedia.org/wiki/Receiver_operating_characteristic)
 [^6]: [Wikipedia article on SIRT](https://en.wikipedia.org/wiki/Selective_internal_radiation_therapy)
+[^7]: Tversky A., [Features of Similarity](http://psycnet.apa.org/record/1978-09287-001). Psychological Review, 1977.
