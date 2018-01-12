@@ -4,7 +4,7 @@ __author__ = 'gchlebus'
 import numpy as np
 
 
-def evaluate(refarr, testarr, tp_threshold=0.2, similarity_measure='dice'):
+def evaluate(testarr, refarr, tp_threshold=0.2, similarity_measure='dice'):
     '''
     Evaluate tumor segmentation contained in 'testarr' against reference 'refarr'. The function
     attemtps to determine correspondences between test and reference tumor segmentation in order
@@ -62,7 +62,6 @@ def determine_correspondences(testidx, testarr, refarr):
     - binary array with corresponding tumors from refarr
     '''
     current_testarr = np.where(testarr == testidx, testidx, 0)
-    current_refarr = np.zeros_like(refarr)
     ref_components_count = 0
     while True:
         current_refarr = get_overlapping_mask(np.where(current_testarr > 0, 1, 0), refarr)
