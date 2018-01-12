@@ -127,6 +127,8 @@ def unique(array):
 
 def similarity(testarr, refarr, function):
     assert not np.any(refarr > 1) or not np.any(testarr > 1), 'Only arrays with 0, 1 values are allowed.'
+    testarr = testarr.astype(np.int32)
+    refarr = refarr.astype(np.int32)
     if function == 'dice':
         return dice(testarr, refarr)
     elif function == 'jaccard':
