@@ -4,7 +4,7 @@ __author__ = 'gchlebus'
 import numpy as np
 
 
-def evaluate(refarr, testarr, tp_threshold=0.1, similarity_measure='dice'):
+def evaluate(refarr, testarr, tp_threshold=0.2, similarity_measure='dice'):
     '''
     Evaluate tumor segmentation contained in 'testarr' against reference 'refarr'. The function
     attemtps to determine correspondences between test and reference tumor segmentation in order
