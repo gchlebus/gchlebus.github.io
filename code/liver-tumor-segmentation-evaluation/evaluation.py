@@ -79,22 +79,25 @@ def determine_correspondences(testidx, testarr, refarr):
     correspondences = []
     while True:
         current_refarr = get_overlapping_mask(np.where(current_testarr > 0, 1, 0), refarr)
-
         unique_ids = unique(current_refarr)
         count = len(unique_ids)
         if count == ref_components_count:
             break
         else:
             ref_components_count = count
-        from itertools import combinations
-        for r in range(len(unique_ids)):
-            for c in combinations(unique_ids, r):
-                correspondences.append([np.asarray(c), unique(current_testarr)])
+
+        for c in all_combinations(unique_ids):
+            correspondences.append([np.asarray(c), unique(current_testarr)])
         current_testarr = get_overlapping_mask(np.where(current_refarr > 0, 1, 0), testarr)
-    if ref_components_count > 0:
-        correspondences.append([unique(current_refarr), unique(current_testarr)])
+        for c in all_combinations(unique_ids):
+            correspondences.append([np.asarray(c), unique(current_testarr)])
     return correspondences
 
+def all_combinations(ids):
+    from itertools import combinations
+    for k in range(1, len(ids)+1):
+        for c in combinations(ids, k):
+            yield c
 
 def get_overlapping_mask(arr_a, arr_b, overlap=None):
     '''
