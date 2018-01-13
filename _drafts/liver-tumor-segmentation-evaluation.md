@@ -37,6 +37,11 @@ $$Recall = \frac{TP}{P} = \frac{TP}{TP + FN}$$
 Precision answers *How many relevant items were selected?*
 Recall answers *How many selected items are relevant?*
 
+#### RVE
+Relative volume error (RVE) for a test volume $$A$$ and reference volume $$B$$ is defined as:
+
+$$RVE = \frac{||A|-|B|}{|B|} \cdot 100$$
+
 #### Jaccard index
 The Jaccard index[^1] (aka Intersection over Union *IoU*) is a common metric for evaluation of segmentation quality.
 
