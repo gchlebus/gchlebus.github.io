@@ -19,7 +19,7 @@ The evalation criteria should be chosen having the appliaction of an algorithm i
 
 1. **Tumor detection**: *Were all tumors found?* *How many false positives per image are produced?*
 2. **Tumor volumetry**: *How accurate is the volume of all found tumors?* Tumor volumetry is needed for example for planing of selective internal radiation therapy *SIRT*, where the to be applied activity depends on the total tumor volume.
-3. **Follow-up**: *Is there a new tumor in the follow-up scan?* How has the volume of a given tumor changed since the previous scan?
+3. **Follow-up**: *Is there a new tumor in the follow-up scan?* *How has the volume of a given tumor changed since the previous scan?*
 
 ### Definitions
 
@@ -66,19 +66,44 @@ FROC[^4] is an extension to the conventional ROC[^5] which tries to overcome the
 ### How to define corresponding tumors?
 In order to determine which of the output tumors are true positives, we need to define a test function $$f(\textbf{T}^{out}, \textbf{T}^{ref})$$ and a threshold $$\theta_{TP}$$ such that:
 
-$$f(\textbf{T}^{out}, \textbf{T}^{ref}) > \theta_{TP}, \textbf{T}^{out} \rightarrow TP$$
+$$f(\textbf{T}^{out}, \textbf{T}^{ref}) > \theta_{TP}, \textbf{T}^{out} \: is \: true \: positive$$
 
-where $$\textbf{T}^{out}$$ is a set of output tumors corresponding to a set of reference tumors $$\textbf{T}^{ref}$$. Let's take a look at example segmentations below:
+where $$\textbf{T}^{out}$$ is a set of output tumors corresponding to a set of reference tumors $$\textbf{T}^{ref}$$. By a tumor I mean each connected component in the segmentation mask. Let's take a look at example segmentations below:
 
 ![TumorCases]({{ "/assets/liver-tumor-segmentation-evaluation/cases.png" | absolute_url }})
 
-The case **(a)** represents a simple $$1:1$$ correspondence, where $$\textbf{T}^{out}=\{T_1^{out}\} $$ and $$\textbf{T}^{ref}=\{T_1^{ref}\}$$. The case **(b)** shows a situation, where 2 output tumors correspond to one reference tumor. Thus, if $$f(\{T_1^{out},T_2^{out}\},\{T_1^{ref}\}) > \theta_{TP}$$, then we should count two output tumors as a one $$TP$$. In situation **(c)** one output tumor corresponds to three reference tumors. Therefore, if $$f(\{T_1^{out}\},\{T_1^{ref},T_2^{ref},T_3^{ref}\}) > \theta_{TP}$$, we should count it as three $$TPs$$. **(d)** depicts a case where $$\textbf{T}^{out}=\{T_1^{out}, T_2^{out}\} $$ and $$\textbf{T}^{ref}=\{T_1^{ref}, T_2^{ref}\}$$. Although in case **(e)** the output tumor overlaps with two reference tumors, it should be tested for being test positive only with the smaller one, since the overlap with the bigger one is marginal.
+The case **(a)** represents a simple $$1:1$$ correspondence, where $$\textbf{T}^{out}=\{T_1^{out}\} $$ and $$\textbf{T}^{ref}=\{T_1^{ref}\}$$. The case **(b)** shows a situation, where two output tumors correspond to one reference tumor. Thus, if $$f(\{T_1^{out},T_2^{out}\},\{T_1^{ref}\}) > \theta_{TP}$$, we should count two output tumors as a one $$TP$$. In situation **(c)** one output tumor corresponds to three reference tumors. Therefore, if $$f(\{T_1^{out}\},\{T_1^{ref},T_2^{ref},T_3^{ref}\}) > \theta_{TP}$$, we should count it as three $$TPs$$. **(d)** depicts a case where $$\textbf{T}^{out}=\{T_1^{out}, T_2^{out}\} $$ and $$\textbf{T}^{ref}=\{T_1^{ref}, T_2^{ref}\}$$. Although in case **(e)** the output tumor overlaps with two reference tumors, it should be tested for being test positive only with the smaller one, since the overlap with the bigger one is marginal.
+
+An algorithm to find and evaluate a $$\textbf{T}^{out}$$ and $$\textbf{T}^{ref}$$ pair could be as follows:
 
 ---
+Input: threshold $$\theta_{TP}$$ and output tumor index $$i$$.
+
+1. $$\textbf{T}^{out} = \{T_i^{out}\}$$, where $$T_i^{out}$$ is a tumor with a given index $$i$$ from the output tumor mask.
+2. $$size_{ref} = 0$$, $$\textbf{C} = \{\}$$, $$\textbf{s} = \{\}$$
+3. While true:
+    1. Collect all reference tumors overlaping with tumors from $$\textbf{T}^{out}$$ in $$\textbf{T}^{ref}$$.
+    2. if $$size_{ref} == \|\textbf{T}^{ref}\|$$, then break, else $$size_{ref} = \|\textbf{T}^{ref}\|$$.
+    3. Append $$\{ {\textbf{T}^{ref}\choose{k}}_{k=1,2,...,\|\textbf{T}^{ref}\|}, \textbf{T}^{out}\}$$ to $$\textbf{C}$$.
+    5. Collect all output tumors overlaping with tumors from $$\textbf{T}^{ref}$$ in $$\textbf{T}^{out}$$.
+    6. Append $$\{ {\textbf{T}^{ref}\choose{k}}_{k=1,2,...,\|\textbf{T}^{ref}\|}, \textbf{T}^{out}\}$$ to $$\textbf{C}$$.
+4. For each $$\{\textbf{T}^{out'}, \textbf{T}^{ref'}\}$$ in $$\textbf{C}$$:
+    1. Append $$f(\textbf{T}^{out'}, \textbf{T}^{ref'})$$ to $$\textbf{s}$$
+5. if $$max(\textbf{s}) > \theta_{TP}$$:
+    1. $$\{\textbf{T}^{out}, \textbf{T}^{ref}\} = \textbf{C}[argmax(\textbf{s})]$$.
+    2. Remove tumors in $$\textbf{T}^{out}$$ from the output tumor mask.
+    3. Remove tumors in $$\textbf{T}^{ref}$$ from the reference tumor mask.
+    4. Count that $$\|\textbf{T}^{ref}\|$$ true positives were found.
+
+---
+The above algorithm should be called repeatadly for each tumor in the output tumor mask. All output tumors left in the output mask should be counted as false positives.
+
+---
+#### References
 [^1]: [Wikipedia article on Jaccard index](https://en.wikipedia.org/wiki/Jaccard_index)
 [^2]: [Wikipedia article on Dice index](https://en.wikipedia.org/wiki/Sørensen–Dice_coefficient)
 [^3]: [Wikipedia article on Precision and Recall](https://en.wikipedia.org/wiki/Precision_and_recall)
-[^4]: [Extensions to Conventional ROC Methodology: LROC, FROC, and AFROC](https://doi.org/10.1093/jicru/ndn011). Journal of the International Commision on Radiation Units and Measurements, 2008.
+[^4]: [Extensions to Conventional ROC Methodology: LROC, FROC, and AFROC](https://doi.org/10.1093/jicru/ndn011). Journal of the International Commission on Radiation Units and Measurements, 2008.
 [^5]: [Wikipedia article on ROC](https://en.wikipedia.org/wiki/Receiver_operating_characteristic)
 [^6]: [Wikipedia article on SIRT](https://en.wikipedia.org/wiki/Selective_internal_radiation_therapy)
 [^7]: Tversky A., [Features of Similarity](http://psycnet.apa.org/record/1978-09287-001). Psychological Review, 1977.
