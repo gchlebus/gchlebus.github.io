@@ -34,12 +34,16 @@ def evaluate(testarr, refarr, tp_threshold=0.2, similarity_measure='dice'):
     tp = 0
     correspondences = []
     tp_similarities = []
+    fp_indices = []
     if not np.any(testarr) or not np.any(refarr):
         return tp, len(unique(testarr)), correspondences, tp_similarities, unique(testarr).tolist()
 
-    for idx in unique(testarr):
+    for idx in reversed(unique(testarr)):
         correspondence_candidates = determine_correspondences(idx, testarr, refarr)
         if not correspondence_candidates:
+            if np.any(testarr[testarr == idx]):
+                testarr[testarr == idx] = 0
+                fp_indices.append(idx)
             continue
         similarities = []
         for ref_indices, test_indicies in correspondence_candidates:
@@ -57,7 +61,10 @@ def evaluate(testarr, refarr, tp_threshold=0.2, similarity_measure='dice'):
             tp_similarities.append(max_s)
             testarr[current_testarr > 0] = 0
             refarr[current_refarr > 0] = 0
-    return tp, len(unique(testarr)), correspondences, tp_similarities, unique(testarr).tolist()
+        else:
+            testarr[testarr == idx] = 0
+            fp_indices.append(idx)
+    return tp, len(fp_indices), correspondences, tp_similarities, fp_indices
 
 def filter_tumors(arr, tumor_indices):
     '''
@@ -75,21 +82,31 @@ def determine_correspondences(testidx, testarr, refarr):
     Returns list with correspondence candidates.
     '''
     current_testarr = np.where(testarr == testidx, testidx, 0)
-    ref_components_count = 0
+    ref_size = 0
+    test_size = 1
     correspondences = []
     while True:
         current_refarr = get_overlapping_mask(np.where(current_testarr > 0, 1, 0), refarr)
-        unique_ids = unique(current_refarr)
-        count = len(unique_ids)
-        if count == ref_components_count:
+
+        ref_unique_ids = unique(current_refarr)
+        new_ref_size = len(ref_unique_ids)
+        if new_ref_size == ref_size:
             break
         else:
-            ref_components_count = count
+            ref_size = new_ref_size
 
-        for c in all_combinations(unique_ids):
+        for c in all_combinations(ref_unique_ids):
             correspondences.append([np.asarray(c), unique(current_testarr)])
+
         current_testarr = get_overlapping_mask(np.where(current_refarr > 0, 1, 0), testarr)
-        for c in all_combinations(unique_ids):
+        test_unique_ids = unique(current_testarr)
+        new_test_size = len(test_unique_ids)
+        if new_test_size == test_size:
+            break
+        else:
+            test_size = new_ref_size
+
+        for c in all_combinations(ref_unique_ids):
             correspondences.append([np.asarray(c), unique(current_testarr)])
     return correspondences
 
