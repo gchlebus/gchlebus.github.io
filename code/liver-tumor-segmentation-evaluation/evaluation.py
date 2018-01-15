@@ -62,8 +62,10 @@ def evaluate(testarr, refarr, tp_threshold=0.2, similarity_measure='dice'):
             testarr[current_testarr > 0] = 0
             refarr[current_refarr > 0] = 0
         else:
-            testarr[testarr == idx] = 0
-            fp_indices.append(idx)
+            ref_indices, test_indicies = correspondence_candidates[-1]
+            current_testarr = filter_tumors(testarr, test_indicies)
+            testarr[current_testarr > 0] = 0
+            fp_indices.extend(unique(current_testarr))
     return tp, len(fp_indices), correspondences, tp_similarities, fp_indices
 
 def filter_tumors(arr, tumor_indices):
