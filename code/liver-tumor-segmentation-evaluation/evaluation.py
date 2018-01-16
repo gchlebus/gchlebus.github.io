@@ -35,8 +35,10 @@ def evaluate(testarr, refarr, tp_threshold=0.2, similarity_measure='dice'):
     correspondences = []
     tp_similarities = []
     fp_indices = []
+    merge_error_count = 0
+    split_error_count = 0
     if not np.any(testarr) or not np.any(refarr):
-        return tp, len(unique(testarr)), correspondences, tp_similarities, unique(testarr).tolist()
+        return tp, len(unique(testarr)), correspondences, tp_similarities, unique(testarr).tolist(), merge_error_count, split_error_count
 
     for idx in reversed(unique(testarr)):
         correspondence_candidates = determine_correspondences(idx, testarr, refarr)
@@ -61,12 +63,14 @@ def evaluate(testarr, refarr, tp_threshold=0.2, similarity_measure='dice'):
             tp_similarities.append(max_s)
             testarr[current_testarr > 0] = 0
             refarr[current_refarr > 0] = 0
+            merge_error_count += max(0, len(ref_indices)-1)
+            split_error_count += max(0, len(test_indicies) - len(ref_indices))
         else:
             ref_indices, test_indicies = correspondence_candidates[-1]
             current_testarr = filter_tumors(testarr, test_indicies)
             testarr[current_testarr > 0] = 0
             fp_indices.extend(unique(current_testarr))
-    return tp, len(fp_indices), correspondences, tp_similarities, fp_indices
+    return tp, len(fp_indices), correspondences, tp_similarities, fp_indices, merge_error_count, split_error_count
 
 def filter_tumors(arr, tumor_indices):
     '''
