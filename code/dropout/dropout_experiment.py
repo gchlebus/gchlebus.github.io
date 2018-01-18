@@ -23,7 +23,7 @@ class ConvNet(object):
     g = tf.get_default_graph()
     out = self._input
     if dropout:
-      out = tf.layers.dropout(out, rate=0.2, training=self._training)
+      out = tf.layers.dropout(out, rate=0.2 if dropout > 0.2 else dropout, training=self._training)
     out = self.conv2d(out, filters=6, max_norm=max_norm[0], name='layer0') # 24
     out = tf.layers.max_pooling2d(out, pool_size=2, strides=2) # 12
     if dropout:
