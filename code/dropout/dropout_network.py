@@ -104,6 +104,7 @@ def parse_args():
 
 def run_experiment(dropout, max_norm, iterations, verbose):
   batch_size = 100
+  tf.reset_default_graph()
   net = ConvNet(dropout, max_norm)
 
   validation_batch = mnist.test.images
