@@ -14,7 +14,7 @@ class ConvNet(object):
     self._labels = tf.placeholder(tf.float32, shape=[None, 10])
 
     if max_norm:
-      max_norm = (5,) * 5
+      max_norm = (max_norm,) * 5
     else:
       max_norm = (0,) * 5
 
@@ -96,14 +96,15 @@ def parse_args():
   import argparse
   parser = argparse.ArgumentParser(description='Dropout experiment.')
   parser.add_argument('-d', '--dropout', action='store_true', help='Use dropout?')
-  parser.add_argument('--max_norm', action='store_true', help='Use max-norm regularization on kernel weights?')
+  parser.add_argument('--max_norm', type=int, help='Max-norm constraint on kernel weights.', default=0)
   parser.add_argument('-i', '--iterations', type=str, default=10000, help='Max iteration count.')
+  parser.add_argument('-r', '--reps', type=int, default=10, help='Experiment runs.')
+  parser.add_argument('-v', '--verbose', action='store_true')
   return parser.parse_args()
 
-if __name__ == '__main__':
+def run_experiment(dropout, max_norm, iterations, verbose):
   batch_size = 100
-  args = parse_args()
-  net = ConvNet(args.dropout, args.max_norm)
+  net = ConvNet(dropout, max_norm)
 
   validation_batch = mnist.test.images
   val_count = validation_batch.shape[0]
@@ -113,17 +114,26 @@ if __name__ == '__main__':
   training_log = []
   with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
-    for i in range(args.iterations):
+    for i in range(iterations):
       batch = mnist.train.next_batch(batch_size)
       input_batch = np.reshape(batch[0], (batch_size, 28, 28, 1))
       loss = net.train(sess, input_batch, batch[1])
       if (i+1) % 100 == 0:
         accuracy = net.evaluate(sess, validation_batch, validation_labels)
         training_log.append((accuracy, i+1))
-        print('[{:d}/{:d}] loss: {:.3g}, accuracy: {:.3g}%'.format(i+1, args.iterations, loss, accuracy))
+        if args.verbose:
+          print('[{:d}/{:d}] loss: {:.3g}, accuracy: {:.3g}%'.format(i+1, iterations, loss, accuracy))
         #net.print_kernel_norms()
     print('Training finished.')
     accuracy = net.evaluate(sess, validation_batch, validation_labels)
-    training_log.append((accuracy, args.iterations))
+    training_log.append((accuracy, iterations))
     best = sorted(training_log, key=lambda x: x[0], reverse=True)[0]
     print('Best accuracy: {:.3g} at iteration {:d}.'.format(best[0], best[1]))
+    return best[0]
+
+if __name__ == '__main__':
+  args = parse_args()
+  accuracies = [run_experiment(args.dropout, args.max_norm, args.iterations, args.verbose)
+      for i in range(args.reps)]
+  print('EXPERIMENT FINISHED')
+  print('mean accuracy ({:d runs}):{:.3g} +/. {:.3g}'.format(args.reps, np.mean(accuracies), np.std(accuracies)))
