@@ -126,10 +126,11 @@ def run_experiment(dropout, max_norm, iterations, verbose):
         training_log.append((accuracy, i+1))
         if args.verbose:
           print('[{:d}/{:d}] loss: {:.3g}, accuracy: {:.3g}%'.format(i+1, iterations, loss, accuracy))
-        net.print_kernel_norms()
+          net.print_kernel_norms()
     accuracy = net.evaluate(sess, validation_batch, validation_labels)
     training_log.append((accuracy, iterations))
     best = sorted(training_log, key=lambda x: x[0], reverse=True)[0]
+    net.print_kernel_norms()
     print('Training finished. Best accuracy: {:.3g} at iteration {:d}.'.format(best[0], best[1]))
     return best[0]
 
