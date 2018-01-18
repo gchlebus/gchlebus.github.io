@@ -99,7 +99,7 @@ def parse_args():
   parser = argparse.ArgumentParser(description='Dropout experiment.')
   parser.add_argument('-d', '--dropout', type=float, default=0, help='Dropout drop rate.')
   parser.add_argument('--max_norm', type=int, help='Max-norm constraint on kernel weights.', default=0)
-  parser.add_argument('-i', '--iterations', type=str, default=10000, help='Max iteration count.')
+  parser.add_argument('-i', '--iterations', type=str, default=50000, help='Max iteration count.')
   parser.add_argument('-r', '--reps', type=int, default=10, help='Experiment runs.')
   parser.add_argument('-v', '--verbose', action='store_true')
   return parser.parse_args()
