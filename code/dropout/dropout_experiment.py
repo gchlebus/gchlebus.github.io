@@ -10,7 +10,7 @@ mnist = input_data.read_data_sets('MNIST_DATA', one_hot=True)
 CLIP_OPS = 'CLIP_OPS'
 
 class ConvNet(object):
-  def __init__(self, dropout=False, max_norm=0, lr=1e-3):
+  def __init__(self, dropout=0, max_norm=0, lr=1e-3):
     self._input = tf.placeholder(tf.float32, shape=[None, 28, 28, 1])
     self._training = tf.placeholder(tf.bool, shape=None)
     self._labels = tf.placeholder(tf.float32, shape=[None, 10])
@@ -27,19 +27,19 @@ class ConvNet(object):
     out = self.conv2d(out, filters=6, max_norm=max_norm[0], name='layer0') # 24
     out = tf.layers.max_pooling2d(out, pool_size=2, strides=2) # 12
     if dropout:
-      out = tf.layers.dropout(out, rate=0.5, training=self._training)
+      out = tf.layers.dropout(out, rate=dropout, training=self._training)
     out = self.conv2d(out, filters=16, max_norm=max_norm[1], name='layer1') # 8
 
     out = tf.layers.max_pooling2d(out, pool_size=2, strides=2) # 4
     if dropout:
-      out = tf.layers.dropout(out, rate=0.5, training=self._training)
+      out = tf.layers.dropout(out, rate=dropout, training=self._training)
     out = tf.contrib.layers.flatten(out)
     out = self.dense(out, filters=120, max_norm=max_norm[2], name='layer2')
     if dropout:
-      out = tf.layers.dropout(out, rate=0.5, training=self._training)
+      out = tf.layers.dropout(out, rate=dropout, training=self._training)
     out = self.dense(out, filters=84, max_norm=max_norm[3], name='layer3')
     if dropout:
-      out = tf.layers.dropout(out, rate=0.5, training=self._training)
+      out = tf.layers.dropout(out, rate=dropout, training=self._training)
     out = self.dense(out, filters=10, max_norm=max_norm[4], name='layer4')
     self._inference_op = out
 
@@ -97,7 +97,7 @@ class ConvNet(object):
 def parse_args():
   import argparse
   parser = argparse.ArgumentParser(description='Dropout experiment.')
-  parser.add_argument('-d', '--dropout', action='store_true', help='Use dropout?')
+  parser.add_argument('-d', '--dropout', type=float, default=0, help='Dropout drop rate.')
   parser.add_argument('--max_norm', type=int, help='Max-norm constraint on kernel weights.', default=0)
   parser.add_argument('-i', '--iterations', type=str, default=10000, help='Max iteration count.')
   parser.add_argument('-r', '--reps', type=int, default=10, help='Experiment runs.')
