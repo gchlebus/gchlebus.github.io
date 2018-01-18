@@ -7,6 +7,8 @@ import collections
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets('MNIST_DATA', one_hot=True)
 
+CLIP_OPS = 'CLIP_OPS'
+
 class ConvNet(object):
   def __init__(self, dropout=False, max_norm=0, lr=1e-3):
     self._input = tf.placeholder(tf.float32, shape=[None, 28, 28, 1])
@@ -65,7 +67,7 @@ class ConvNet(object):
       return
     g = tf.get_default_graph()
     kernel = g.get_tensor_by_name('{:s}/kernel:0'.format(name))
-    tf.add_to_collection('CLIP_OPS', tf.assign(kernel, tf.clip_by_norm(kernel, max_norm)))
+    tf.add_to_collection(CLIP_OPS, tf.assign(kernel, tf.clip_by_norm(kernel, max_norm)))
 
   def train(self, session, input_batch, output_batch):
     feed_dict = {
@@ -73,7 +75,7 @@ class ConvNet(object):
       self._labels: output_batch,
       self._training: True
     }
-    clip_ops = tf.get_collection('CLIP_OPS')
+    clip_ops = tf.get_collection(CLIP_OPS)
     loss, _ = session.run([self._loss_op, self._train_op], feed_dict=feed_dict)
     _ = session.run(clip_ops)
     return loss
@@ -136,4 +138,4 @@ if __name__ == '__main__':
   accuracies = [run_experiment(args.dropout, args.max_norm, args.iterations, args.verbose)
       for i in range(args.reps)]
   print('EXPERIMENT FINISHED')
-  print('mean accuracy ({:d} runs):{:.3g} +/- {:.3g}'.format(args.reps, np.mean(accuracies), np.std(accuracies)))
+  print('mean accuracy ({:d} runs): {:.3g} +/- {:.3g}'.format(args.reps, np.mean(accuracies), np.std(accuracies)))

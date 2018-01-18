@@ -34,11 +34,11 @@ I implemented a LeNet-like model and run the following experiments. Please check
 
 ```
 >>> python dropout_experiment.py
-mean accuracy (10 runs): 73.1 +/- 14.0
+mean accuracy (10 runs): 73.1 +/- 14
 >>> python dropout_experiment.py --dropout
-mean accuracy (10 runs):97.9 +/. 0.107
+mean accuracy (10 runs): 97.9 +/. 0.107
 >>> python dropout_experiment.py --dropout --max_norm 10
-mean accuracy (10 runs):97.7 +/. 0.0973
+mean accuracy (10 runs): 97.7 +/. 0.0973
 ```
 
 ---
