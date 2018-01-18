@@ -8,7 +8,7 @@ from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets('MNIST_DATA', one_hot=True)
 
 class ConvNet(object):
-  def __init__(self, dropout=False, max_norm=0, lr=1e-2):
+  def __init__(self, dropout=False, max_norm=0, lr=1e-3):
     self._input = tf.placeholder(tf.float32, shape=[None, 28, 28, 1])
     self._training = tf.placeholder(tf.bool, shape=None)
     self._labels = tf.placeholder(tf.float32, shape=[None, 10])
@@ -117,13 +117,13 @@ if __name__ == '__main__':
       batch = mnist.train.next_batch(batch_size)
       input_batch = np.reshape(batch[0], (batch_size, 28, 28, 1))
       loss = net.train(sess, input_batch, batch[1])
-      if (i+1) % 1000 == 0:
+      if (i+1) % 100 == 0:
         accuracy = net.evaluate(sess, validation_batch, validation_labels)
         training_log.append((accuracy, i+1))
-        print('[{:d}/{:d}] loss: {:.2g}, accuracy: {:.2g}%'.format(i+1, args.iterations, loss, accuracy))
-        net.print_kernel_norms()
+        print('[{:d}/{:d}] loss: {:.3g}, accuracy: {:.3g}%'.format(i+1, args.iterations, loss, accuracy))
+        #net.print_kernel_norms()
     print('Training finished.')
     accuracy = net.evaluate(sess, validation_batch, validation_labels)
-    training_log.append(accuracy)
-    best = sorted(training_log, lambda x: x[0])
-    print('Best accuracy: {.2g} at iteration {:d}.'.format(best[0], best[1]))
+    training_log.append((accuracy, args.iterations))
+    best = sorted(training_log, key=lambda x: x[0], reverse=True)[0]
+    print('Best accuracy: {:.3g} at iteration {:d}.'.format(best[0], best[1]))
