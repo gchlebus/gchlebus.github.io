@@ -137,4 +137,4 @@ if __name__ == '__main__':
   accuracies = [run_experiment(args.dropout, args.max_norm, args.iterations, args.verbose)
       for i in range(args.reps)]
   print('EXPERIMENT FINISHED')
-  print('mean accuracy ({:d runs}):{:.3g} +/. {:.3g}'.format(args.reps, np.mean(accuracies), np.std(accuracies)))
+  print('mean accuracy ({:d} runs):{:.3g} +/. {:.3g}'.format(args.reps, np.mean(accuracies), np.std(accuracies)))
