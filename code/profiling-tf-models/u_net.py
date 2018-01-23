@@ -2,22 +2,16 @@
 __author__ = 'gchlebus'
 
 import tensorflow as tf
+from enum import Enum
 from memory_saving_gradients import gradients_memory, gradients_speed, gradients_collection
 
-class GradientType():
+class GradientType(Enum):
   PLAIN_ADAM = 'PLAIN_ADAM'
   TF_GRADIENTS = 'TF_GRADIENTS'
-  GRADIENTS_SPEED = 'GRADIENTS_SPEED'
+  #GRADIENTS_SPEED = 'GRADIENTS_SPEED' # causes AttributeError: 'NoneType' object has no attribute 'op'
   GRADIENTS_MEMORY = 'GRADIENTS_MEMORY'
   GRADIENTS_COLLECTION = 'GRADIENTS_COLLECTION'
   ADAM_COMPUTE_GRADIENTS = 'ADAM_COMPUTE_GRADIENTS'
-
-  @classmethod
-  def all(cls):
-    return [
-        cls.PLAIN_ADAM, cls.TF_GRADIENTS, cls.GRADIENTS_SPEED, cls.GRADIENTS_MEMORY,
-        cls.GRADIENTS_COLLECTION, cls.ADAM_COMPUTE_GRADIENTS
-      ]
 
 
 class UNet(object):
@@ -29,7 +23,7 @@ class UNet(object):
     self._inference_op = self.build_model(self._input, filters, n_conv, dropout, batch_norm, self._training)
 
     with tf.variable_scope('train'):
-      print('GRADIENT TYPE:', gradient_type)
+      print(gradient_type)
       self._loss_op = tf.losses.softmax_cross_entropy(self._labels, logits=self._inference_op)
       update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
       with tf.control_dependencies(update_ops):
@@ -42,14 +36,13 @@ class UNet(object):
           self._train_op = optimizer.apply_gradients(grads)
           return
         elif gradient_type == GradientType.TF_GRADIENTS:
-          grads = tf.gradients(self._loss_op, tf.trainable_variables(),
-            gate_gradients=True)
-        elif gradient_type == GradientType.GRADIENTS_SPEED:
-          grads = gradients_speed(self._loss_op, tf.trainable_variables())
+          grads = tf.gradients(self._loss_op, tf.trainable_variables(), gate_gradients=True)
+        #elif gradient_type == GradientType.GRADIENTS_SPEED:
+        #  grads = gradients_speed(self._loss_op, tf.trainable_variables())
         elif gradient_type == GradientType.GRADIENTS_MEMORY:
           grads = gradients_memory(self._loss_op, tf.trainable_variables(),gate_gradients=True)
         elif gradient_type == GradientType.GRADIENTS_COLLECTION:
-          grads = gradients_collection(self._loss_op, tf.trainable_variables())
+          grads = gradients_collection(self._loss_op, tf.trainable_variables(), gate_gradients=True)
         if grads:
           self._train_op = optimizer.apply_gradients(grads_and_vars=list(zip(grads, tf.trainable_variables())))
 

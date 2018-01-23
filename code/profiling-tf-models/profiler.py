@@ -7,8 +7,9 @@ from tensorflow.core.protobuf import rewriter_config_pb2
 import numpy as np
 from u_net import UNet, GradientType
 import mem_util
+from enum import Enum
 
-class OutputType():
+class OutputType(Enum):
   FILE = 0
   TIMELINE = 1
   STDOUT = 2
@@ -26,12 +27,12 @@ def get_session(disable_optimizer):
     return tf.Session()
 
 
-def profile(img_size=128, batch_size=1, filters=64, n_conv=5, dropout=0.5, batch_norm=False,
+def profile(img_size=128, batch_size=1, filters=16, n_conv=2, dropout=0.5, batch_norm=False,
   output_type=OutputType.NONE, gradient_type=GradientType.PLAIN_ADAM, disable_optimizer=False):
   tf.reset_default_graph()
   unet = UNet(filters, n_conv, dropout, batch_norm, gradient_type=gradient_type)
   sess = get_session(disable_optimizer)
-  
+
   sess.run(tf.global_variables_initializer())
   input_batch = np.random.rand(batch_size, img_size, img_size, 1)
   output_batch = np.random.rand(batch_size, img_size, img_size, 2)
@@ -55,7 +56,7 @@ def profile(img_size=128, batch_size=1, filters=64, n_conv=5, dropout=0.5, batch
   options = builder.build()
   result = tf.profiler.profile(tf.get_default_graph(), run_meta=run_metadata, cmd="scope",
                       options=options)
-  print(mem_util.peak_memory(run_metadata))
+  return mem_util.peak_memory(run_metadata)
   #print(run_metadata)
   #tl = timeline.Timeline(run_metadata.step_stats)
   #print(tl.generate_chrome_trace_format(show_memory=True))
