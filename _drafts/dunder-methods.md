@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Dunder Methods
+title: "Dunder Methods"
+excerpt: "Master dunder methods to make your classes truly pythonic!"
 categories: python
 ---
 
@@ -129,6 +130,17 @@ True
 >>> p1 >= p3
 True
 ```
+
+### Sequence like behavior
+- `__contains__(self, item)`: It should return `true` if `item` is present in `self`, otherwise `false`. If this operator is not implemented, iteration with `__iter__` and then with the old-style protocol `__getiitem__`is attempted to find if any of the elements equals `item`.
+- `__missing__(self, key)`: Implements class behavior, when on `self[key]` call, `key` is not present.
+- `__iter__(self)`: The method request an iterator. For sequence types an iterator iterating over *elements*, whereas for mapping containers an iterator iterating over *keys* should be returned.
+- `__getitem__(self, key)`: Method to access container's elements. For sequence types, the `key` is supposed to be an integer or a slice object. Handling of negative indices is up to the author of the class. If an out of range index is passed, `IndexError` should be raised. This is crucial to make the class for-loop compatible. `KeyError` should be raised, if the `key` is not present. `TypeError` should be thrown, if the passed `key` is of a wrong type.
+- `__setitem__(self, key, value)`: Used to add/change/replace container's elements. Handling of out of range, invalid, not present keys is the same as for `__getitem__`.
+- `__delitem__(self, key)`: Implement this method, if you would like to give the user the possibility to remove elements from the container.
+
+TODO:
+- in the example show `isinstance(cls, collections.abs.Sequence)`
 
 ---
 #### References
