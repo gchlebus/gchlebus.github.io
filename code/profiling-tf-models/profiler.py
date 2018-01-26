@@ -6,7 +6,7 @@ from tensorflow.python.client import timeline
 from tensorflow.core.protobuf import rewriter_config_pb2
 import numpy as np
 from u_net import UNet, GradientType
-import mem_util
+from gradientcheckpointing.test import mem_util
 from enum import Enum
 
 class OutputType(Enum):

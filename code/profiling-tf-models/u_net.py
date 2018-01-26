@@ -3,7 +3,7 @@ __author__ = 'gchlebus'
 
 import tensorflow as tf
 from enum import Enum
-from memory_saving_gradients import gradients_memory, gradients_speed, gradients_collection
+from gradientcheckpointing.memory_saving_gradients import gradients_memory, gradients_speed, gradients_collection
 
 class GradientType(Enum):
   PLAIN_ADAM = 'PLAIN_ADAM'
