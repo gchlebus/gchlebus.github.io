@@ -8,6 +8,7 @@ from memory_saving_gradients import gradients_memory, gradients_speed, gradients
 class GradientType(Enum):
   PLAIN_ADAM = 'PLAIN_ADAM'
   TF_GRADIENTS = 'TF_GRADIENTS'
+  TF_GRADIENTS_EXPERIMENTAL_ACCUMULATE_N = 'TF_GRADIENTS_EXPERIMENTAL_ACCUMULATE_N'
   #GRADIENTS_SPEED = 'GRADIENTS_SPEED' # causes AttributeError: 'NoneType' object has no attribute 'op'
   GRADIENTS_MEMORY = 'GRADIENTS_MEMORY'
   GRADIENTS_COLLECTION = 'GRADIENTS_COLLECTION'
@@ -15,10 +16,15 @@ class GradientType(Enum):
 
 
 class UNet(object):
-  def __init__(self, filters=32, n_conv=2, dropout=0, batch_norm=False, gradient_type=GradientType.PLAIN_ADAM):
-    self._input = tf.placeholder(tf.float32, shape=[None, None, None, 1])
+  def __init__(self, filters=32, n_conv=2, dropout=0, batch_norm=False, gradient_type=GradientType.PLAIN_ADAM,
+    predefined_shape=False):
+    if predefined_shape:
+      self._input = tf.placeholder(tf.float32, shape=[1, 128, 128, 1])
+      self._labels = tf.placeholder(tf.float32, shape=[1, 128, 128, 2])
+    else:
+      self._input = tf.placeholder(tf.float32, shape=[None, None, None, 1])
+      self._labels = tf.placeholder(tf.float32, shape=[None, None, None, 2])
     self._training = tf.placeholder(tf.bool, shape=None)
-    self._labels = tf.placeholder(tf.float32, shape=[None, None, None, 2])
 
     self._inference_op = self.build_model(self._input, filters, n_conv, dropout, batch_norm, self._training)
 
@@ -37,6 +43,9 @@ class UNet(object):
           return
         elif gradient_type == GradientType.TF_GRADIENTS:
           grads = tf.gradients(self._loss_op, tf.trainable_variables(), gate_gradients=True)
+        elif gradient_type == GradientType.TF_GRADIENTS_EXPERIMENTAL_ACCUMULATE_N:
+          grads = tf.gradients(self._loss_op, tf.trainable_variables(), gate_gradients=True,
+          aggregation_method=tf.AggregationMethod.EXPERIMENTAL_ACCUMULATE_N)
         #elif gradient_type == GradientType.GRADIENTS_SPEED:
         #  grads = gradients_speed(self._loss_op, tf.trainable_variables())
         elif gradient_type == GradientType.GRADIENTS_MEMORY:

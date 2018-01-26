@@ -28,9 +28,11 @@ def get_session(disable_optimizer):
 
 
 def profile(img_size=128, batch_size=1, filters=16, n_conv=2, dropout=0.5, batch_norm=False,
-  output_type=OutputType.NONE, gradient_type=GradientType.PLAIN_ADAM, disable_optimizer=False):
+  output_type=OutputType.NONE, gradient_type=GradientType.PLAIN_ADAM, disable_optimizer=False,
+  predefined_shape=False):
   tf.reset_default_graph()
-  unet = UNet(filters, n_conv, dropout, batch_norm, gradient_type=gradient_type)
+  unet = UNet(filters, n_conv, dropout, batch_norm, gradient_type=gradient_type, 
+    predefined_shape=predefined_shape)
   sess = get_session(disable_optimizer)
 
   sess.run(tf.global_variables_initializer())
