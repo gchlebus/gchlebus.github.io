@@ -8,7 +8,8 @@ categories: neural networks
 In this post I will show you how to get more insight into your model.
 
 ### Base architecure
-U-net.
+![UNet]({{ "/assets/profiling-tf-models/unet.png" | absolute_url }})
+*Figure credit: Olaf Ronneberger et al.[^2]*
 
 ### Trainable parameter count
 Once you have constructed your model, you can query the trainable parameter count using the following function:
@@ -59,7 +60,7 @@ def peak_memory(batch_size=1, mode='train'):
 {'/cpu:0': 180936736}
 ```
 From the above we can see, that the U-Net model requires ca. 2 GB of memory in the train mode and only 180 MB in the inference mode. We can run the above code to obtain train peak memory for different batch sizes. From the below plot, we can clearly see, that the peak memory increases linearly with the batch size.
-![Memory_BatchSizr]({{ "/assets/profiling-tf-models/memory_batchsize.png" | absolute_url }})
+![Memory_BatchSize]({{ "/assets/profiling-tf-models/memory_batchsize.png" | absolute_url }})
 
 ### Compile tf profiles
 1. Install `bazel`in version `>= 0.5.4`.
@@ -81,3 +82,4 @@ TODO:
 ---
 #### References
 [^1]: [openai/gradient-checkpointing](https://github.com/openai/gradient-checkpointing)
+[^2]: Ronneberger et al., [*U-Net: Convolutional Networks for Biomedical Image Segmentation*](https://link.springer.com/chapter/10.1007%2F978-3-319-24574-4_28). MICCAI, 2015.
