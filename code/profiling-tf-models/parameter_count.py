@@ -3,10 +3,10 @@ __author__ = 'gchlebus'
 
 import tensorflow as tf
 import numpy as np
-from u_net import UNet
 
 def parameter_count(graph):
   '''
+  >>> from u_net import UNet
   >>> u_net = UNet()
   >>> parameter_count(tf.get_default_graph())
   31030658

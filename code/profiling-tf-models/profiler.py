@@ -10,13 +10,13 @@ from gradientcheckpointing.test import mem_util
 from enum import Enum
 
 class OutputType(Enum):
-  FILE = 0
-  TIMELINE = 1
-  STDOUT = 2
-  NONE = 3
+  FILE = 'FILE'
+  TIMELINE = 'TIMELINE'
+  STDOUT = 'STDOUT'
+  NONE = 'NONE'
 
 def get_session(disable_optimizer):
-  print('DISABLE OPTIMIZER:', str(disable_optimizer).upper())
+  #print('DISABLE OPTIMIZER:', str(disable_optimizer).upper())
   if disable_optimizer:
     optimizer_options = tf.OptimizerOptions(opt_level=tf.OptimizerOptions.L0)
     config = tf.ConfigProto(operation_timeout_in_ms=150000, graph_options=tf.GraphOptions(optimizer_options=optimizer_options))
@@ -27,17 +27,18 @@ def get_session(disable_optimizer):
     return tf.Session()
 
 
-def profile(img_size=128, batch_size=1, filters=16, n_conv=2, dropout=0.5, batch_norm=False,
-  output_type=OutputType.NONE, gradient_type=GradientType.PLAIN_ADAM, disable_optimizer=False,
-  predefined_shape=False):
-  tf.reset_default_graph()
-  unet = UNet(filters, n_conv, dropout, batch_norm, gradient_type=gradient_type, 
+def profile(batch_size=1, filters=64, n_conv=2, dropout=0, batch_norm=False,
+            output_type=OutputType.NONE, gradient_type=GradientType.PLAIN_ADAM,
+            disable_optimizer=False, predefined_shape=False):
+  unet = UNet(filters, n_conv, dropout, batch_norm, gradient_type=gradient_type,
     predefined_shape=predefined_shape)
   sess = get_session(disable_optimizer)
 
   sess.run(tf.global_variables_initializer())
-  input_batch = np.random.rand(batch_size, img_size, img_size, 1)
-  output_batch = np.random.rand(batch_size, img_size, img_size, 2)
+  input_shape = [batch_size] + UNet.INPUT_SHAPE
+  output_shape = [batch_size] + UNet.OUTPUT_SHAPE
+  input_batch = np.random.rand(*input_shape)
+  output_batch = np.random.rand(*output_shape)
 
   run_metadata = tf.RunMetadata()
   options = tf.RunOptions(trace_level=tf.RunOptions.FULL_TRACE)

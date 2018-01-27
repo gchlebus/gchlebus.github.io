@@ -16,11 +16,15 @@ class GradientType(Enum):
 
 
 class UNet(object):
+  INPUT_SHAPE = [572, 572, 1]
+  OUTPUT_SHAPE = [388, 388, 2]
+
   def __init__(self, filters=64, n_conv=2, dropout=0, batch_norm=False, gradient_type=GradientType.PLAIN_ADAM,
     predefined_shape=False):
+    tf.reset_default_graph()
     if predefined_shape:
-      self._input = tf.placeholder(tf.float32, shape=[1, 572, 572, 1])
-      self._labels = tf.placeholder(tf.float32, shape=[1, 388, 388, 2])
+      self._input = tf.placeholder(tf.float32, shape=[1]+UNet.INPUT_SHAPE)
+      self._labels = tf.placeholder(tf.float32, shape=[1]+UNet.OUTPUT_SHAPE)
     else:
       self._input = tf.placeholder(tf.float32, shape=[None, None, None, 1])
       self._labels = tf.placeholder(tf.float32, shape=[None, None, None, 2])
@@ -109,6 +113,14 @@ class UNet(object):
     crop = tf.cast((tf.shape(input) - tf.shape(target)) / 2, tf.int32)
     return input[:, crop[1]:-crop[1], crop[2]:-crop[2]]
 
+  def inference(self, session, input_batch, options=None, run_metadata=None):
+    feed_dict = {
+      self._input: input_batch,
+      self._training: True
+    }
+    session.run(self._inference_op, feed_dict=feed_dict, options=options,
+                run_metadata=run_metadata)
+
   def train(self, session, input_batch, output_batch, options=None, run_metadata=None):
     feed_dict = {
       self._input: input_batch,
@@ -116,4 +128,4 @@ class UNet(object):
       self._training: True
     }
     session.run([self._loss_op, self._train_op], feed_dict=feed_dict,
-                          options=options, run_metadata=run_metadata)
+                options=options, run_metadata=run_metadata)
