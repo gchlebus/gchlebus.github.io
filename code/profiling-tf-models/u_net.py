@@ -71,16 +71,20 @@ class UNet(object):
       down3 = cls.transition_down(left3)
       across = cls.unet_block(down3, 16*filters, n_conv, dropout, batch_norm, training, 'across')
       up3 = cls.transition_up(across, 8*filters)
-      concat3 = tf.concat([cls.center_crop(left3, up3), up3], axis=-1)
+      with tf.variable_scope('concat3'):
+        concat3 = tf.concat([cls.center_crop(left3, up3), up3], axis=-1)
       right3 = cls.unet_block(concat3, 8*filters, n_conv, dropout, batch_norm, training, 'right3')
       up2 = cls.transition_up(right3, 4*filters)
-      concat2 = tf.concat([cls.center_crop(left2, up2), up2], axis=-1)
+      with tf.variable_scope('concat2'):
+        concat2 = tf.concat([cls.center_crop(left2, up2), up2], axis=-1)
       right2 = cls.unet_block(concat2, 4*filters, n_conv, dropout, batch_norm, training, 'right2')
       up1 = cls.transition_up(right2, 2*filters)
-      concat1 = tf.concat([cls.center_crop(left1, up1), up1], axis=-1)
+      with tf.variable_scope('concat1'):
+        concat1 = tf.concat([cls.center_crop(left1, up1), up1], axis=-1)
       right1 = cls.unet_block(concat1, 2*filters, n_conv, dropout, batch_norm, training, 'right1')
       up0 = cls.transition_up(right1, filters)
-      concat0 = tf.concat([cls.center_crop(left0, up0), up0], axis=-1)
+      with tf.variable_scope('concat0'):
+        concat0 = tf.concat([cls.center_crop(left0, up0), up0], axis=-1)
       right0 = cls.unet_block(concat0, filters, n_conv, dropout, batch_norm, training, 'right0')
       return tf.layers.conv2d(right0, filters=2, kernel_size=1)
 
@@ -129,3 +133,6 @@ class UNet(object):
     }
     session.run([self._loss_op, self._train_op], feed_dict=feed_dict,
                 options=options, run_metadata=run_metadata)
+
+  def write_graph(self, filepath):
+    writer = tf.summary.FileWriter(filepath, tf.get_default_graph())
