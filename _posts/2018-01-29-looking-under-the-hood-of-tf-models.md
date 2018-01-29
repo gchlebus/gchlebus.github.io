@@ -10,8 +10,8 @@ In this post I will show you how to get more insights into tensorflow models. We
 
 ### Base architecture
 All examples in this post use the U-Net[^2] neural net architecture, which, due to many successful applications, gained a lot of attention from the medical image computing community. The network
-performs analysis in the left part, where feature maps are downsampled. The right synthesis part of the network upsamples feature maps and concatenates feature maps coming from corresponding analysis path levels to deliver a fine output in the input resolution.
-You can find my implementation of the U-net model in the blog repository[^3].
+performs analysis in the left part, where feature maps are downsampled. The right synthesis part of the network upsamples feature maps and concatenates ones coming from corresponding analysis path levels to deliver a fine output in the input resolution.
+You can find my implementation of the U-Net model in the blog repository[^3].
 ![UNet]({{ "/assets/profiling-tf-models/unet.png" | absolute_url }})
 *Figure credit: Olaf Ronneberger et al.[^2]*
 
@@ -33,8 +33,8 @@ def parameter_count(graph):
 31030658
 ```
 
-### Memory consumption
-To check the model's peak memory consumption a helper function `mem_util.peak_memory` from the OpenAI repository[^1] can be used. I equipped the `UNet` class with `train` and `inference` methods accepting `RunOptions` and `RunMetadata`, which collect debug/profiling information from a `session.run()` call. The following function returns a dict containing a per device peak memory consumption in bytes:
+### Peak memory consumption
+Peak memory consumption of a model is the factor determining, whether a model will fit on a GPU. A helper function `mem_util.peak_memory` from the OpenAI repository[^1] can be used to check the model's memory consumption. I equipped the `UNet` class with `train` and `inference` methods accepting `RunOptions` and `RunMetadata`, which collect debug/profiling information from a `session.run()` call. The following function returns a dict containing a per device peak memory consumption in bytes:
 ```python
 import tensorflow as tf
 import numpy as np
@@ -79,6 +79,9 @@ self._train_op = optimizer.apply_gradients(grads_and_vars=list(zip(grads, tf.tra
 ```
 For example, for batch size of 8, the peak memory usage can be reduced by 20% with the memory saving gradients.
 
+Peak memory analysis can also be used for understanding how the model memory footpring changes with architectural modifications. For instance, let's plot the train memory footprint of a network with and without batch normalization[^4] before each nonlinearity.
+![BatchNorm_NoBatchNorm]({{ "/assets/profiling-tf-models/bn_nobn.png" | absolute_url }})
+
 ### Timeline
 In order to get more information about the running time of graph operations we can use the `tf.profiler.profile` function.
 The code snippet below writes a timeline file:
@@ -113,7 +116,7 @@ def timeline(model, filename, mode='train'):
 >>> timeline(UNet(), 'timeline_train.json', mode='train')
 ```
 The saved timeline can be opened with a Chrome browser under URL `chrome://tracing`. From the timeline we can learn about the operation execution order
-and how long each operation took. In the U-Net case, train ops take around 16 s in comparison to only 5 s required by inference ops.
+and how long each operation takes. In the U-Net case (running on a CPU), train ops take around 16 s in comparison to only 5 s required by inference ops.
 ![Timeline_Train]({{ "/assets/profiling-tf-models/timeline_train.png" | absolute_url }})
 
 ### Graph visualization
@@ -137,3 +140,4 @@ def write_graph(self, filepath):
 [^1]: [openai/gradient-checkpointing](https://github.com/openai/gradient-checkpointing)
 [^2]: Ronneberger et al., [*U-Net: Convolutional Networks for Biomedical Image Segmentation*](https://link.springer.com/chapter/10.1007%2F978-3-319-24574-4_28). MICCAI, 2015.
 [^3]: [U-Net implementation](https://github.com/gchlebus/gchlebus.github.io/blob/master/code/profiling-tf-models/u_net.py)
+[^4]: Ioffe et al., [*Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift*](http://proceedings.mlr.press/v37/ioffe15.html). 2015.
