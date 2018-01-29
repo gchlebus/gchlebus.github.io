@@ -52,7 +52,7 @@ class UNet(object):
         #elif gradient_type == GradientType.GRADIENTS_SPEED:
         #  grads = gradients_speed(self._loss_op, tf.trainable_variables())
         elif gradient_type == GradientType.GRADIENTS_MEMORY:
-          grads = gradients_memory(self._loss_op, tf.trainable_variables(),gate_gradients=True)
+          grads = gradients_memory(self._loss_op, tf.trainable_variables(), gate_gradients=True)
         elif gradient_type == GradientType.GRADIENTS_COLLECTION:
           grads = gradients_collection(self._loss_op, tf.trainable_variables(), gate_gradients=True)
         if grads:
