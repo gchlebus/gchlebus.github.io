@@ -1,16 +1,16 @@
 ---
 layout: post
 title: "Profiling tensorflow models"
-excerpt: "Check time and memory requirements of your tf models."
+excerpt: "How to check time and memory requirements of tensorflow models."
 categories: neural networks
 ---
 
-In this post I will show you how to get more insight into your tensorflow model. We'll cover graph visualization, trainable parameter count, memory consumption and timing of operations.
+In this post I will show you how to get more insights into tensorflow models. We'll cover graph visualization, counting trainable parameters, memory consumption and timing of operations.
 
 ### Base architecture
 All examples in this post use the U-Net[^2] neural net architecture, which, due to many successful applications, gained a lot of attention from the medical image computing community. The network
 performs analysis in the left part, where feature maps are downsampled. The right synthesis part of the network upsamples feature maps and concatenates feature maps coming from corresponding analysis path levels to deliver a fine output in the input resolution.
-You can find my implementation of the U-net model in my repository[^3].
+You can find my implementation of the U-net model in the blog repository[^3].
 ![UNet]({{ "/assets/profiling-tf-models/unet.png" | absolute_url }})
 *Figure credit: Olaf Ronneberger et al.[^2]*
 
@@ -33,7 +33,7 @@ def parameter_count(graph):
 ```
 
 ### Memory consumption
-To check the model's memory consumption I will use the `mem_util.peak_memory` helper from the OpenAI repository[^1]. I equipped the `UNet` class with `train` and `inference` methods accepting `RunOptions` and `RunMetadata`, which collect debug/profiling information from a `session.run()` call. The following function returns a dict containing per device peak memory consumption in bytes:
+To check the model's peak memory consumption a helper function `mem_util.peak_memory` from the OpenAI repository[^1] can be used. I equipped the `UNet` class with `train` and `inference` methods accepting `RunOptions` and `RunMetadata`, which collect debug/profiling information from a `session.run()` call. The following function returns a dict containing a per device peak memory consumption in bytes:
 ```python
 import tensorflow as tf
 import numpy as np
@@ -62,7 +62,7 @@ def peak_memory(model, batch_size=1, mode='train'):
 {'/cpu:0': 180936736}
 ```
 From the above we can see, that the U-Net model requires 180 MB in the inference and ca. 2 GB in the train mode due to the gradient computation.
-We can run the above code to obtain train peak memory for different batch sizes.
+We can use the `peak_memory` function to plot train peak memory vs. batch size.
 ![Memory_BatchSize]({{ "/assets/profiling-tf-models/memory_batchsize.png" | absolute_url }})
 The memory increases linearly with bigger batch size, when we use the standard tensorflow method for gradient computation `tf.gradients()`:
 ```python
@@ -76,10 +76,10 @@ optimizer = tf.train.AdamOptimizer()
 grads = gradients_memory(self._loss_op, tf.trainable_variables(), gate_gradients=True)
 self._train_op = optimizer.apply_gradients(grads_and_vars=list(zip(grads, tf.trainable_variables())))
 ```
-For example, for batch size of 8, the peak memory usage can be reduced by 20% when using the memory saving gradients.
+For example, for batch size of 8, the peak memory usage can be reduced by 20% with the memory saving gradients.
 
 ### Timeline
-In order to get more information about the running time of graph operations we can use the `tf.profiler.profile`.
+In order to get more information about the running time of graph operations we can use the `tf.profiler.profile` function.
 The code snippet below writes a timeline file:
 ```python
 import tensorflow as tf
@@ -112,7 +112,7 @@ def timeline(model, filename, mode='train'):
 >>> timeline(UNet(), 'timeline_train.json', mode='train')
 ```
 The saved timeline can be opened with a Chrome browser under URL `chrome://tracing`. From the timeline we can learn about the operation execution order
-and how long each operation took. In the case of my U-Net, train ops take around 16 s in comparison to only 5 s reuqired for inference ops.
+and how long each operation took. In the U-Net case, train ops take around 16 s in comparison to only 5 s required by inference ops.
 ![Timeline_Train]({{ "/assets/profiling-tf-models/timeline_train.png" | absolute_url }})
 
 ### Graph visualization
@@ -120,7 +120,7 @@ I find it useful to take a look at my model using TensorBoard to see whether any
 The graph definition can be written using the `tf.summary.FileWriter` class and then displayed using TensorBoard.
 I recommend using `tf.variable_scope` for better graph readability.
 ```python
-# in UNet class definition
+# In UNet class definition.
 def write_graph(self, filepath):
     writer = tf.summary.FileWriter(filepath, tf.get_default_graph())
 ```
