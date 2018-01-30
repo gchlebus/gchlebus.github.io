@@ -79,7 +79,7 @@ self._train_op = optimizer.apply_gradients(grads_and_vars=list(zip(grads, tf.tra
 ```
 For example, for batch size of 8, the peak memory usage can be reduced by 20% with the memory saving gradients.
 
-Peak memory analysis can also be used for understanding how the model memory footpring changes with architectural modifications. For instance, let's plot the train memory footprint of a network with and without batch normalization[^4] before each nonlinearity.
+Peak memory analysis can also be used for understanding how the model memory footprint changes with architectural modifications. For instance, let's plot the train memory footprint of a network with and without batch normalization[^4] before each nonlinearity.
 ![BatchNorm_NoBatchNorm]({{ "/assets/profiling-tf-models/bn_nobn.png" | absolute_url }})
 
 ### Timeline
