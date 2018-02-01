@@ -35,7 +35,7 @@ class UNet(object):
 
   @staticmethod
   def softmax(inference_op):
-    logits = inference_op - tf.reduce_max(inference_op, axis=-1, keep_dims=True)
+    logits = inference_op - tf.reduce_max(inference_op, axis=-1, keepdims=True)
     return tf.nn.softmax(logits, axis=-1)
 
   @staticmethod
