@@ -9,7 +9,7 @@ date: 2018-01-29
 In this post I will show you how to get more insights into tensorflow models. We'll cover graph visualization, counting trainable parameters, memory consumption and timing of operations.
 
 ### Base architecture
-All examples in this post use the U-Net[^2] neural net architecture, which, due to many successful applications, gained a lot of attention from the medical image computing community. The network
+All examples in this post use the U-Net[^2] neural net architecture, which, thanks to many successful applications, gained a lot of attention from the medical image computing community. The network
 performs analysis in the left part, where feature maps are downsampled. The right synthesis part of the network upsamples feature maps and concatenates ones coming from corresponding analysis path levels to deliver a fine output in the input resolution.
 You can find my implementation of the U-Net model in the blog repository[^3].
 ![UNet]({{ "/assets/profiling-tf-models/unet.png" | absolute_url }})
