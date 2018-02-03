@@ -10,3 +10,4 @@ __pycache__
 MNIST_DATA
 *.pyc
 graph
+*.pkl
