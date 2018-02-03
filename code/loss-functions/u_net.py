@@ -2,12 +2,18 @@
 __author__ = 'gchlebus'
 
 import tensorflow as tf
+from enum import Enum
+
+class TrainLoss(Enum):
+  CCE = 'CCE'
+  DICE_FG = 'DICE_FG'
+  DICE = 'DICE'
 
 class UNet(object):
   INPUT_SHAPE = [572, 572, 1]
   OUTPUT_SHAPE = [572, 572, 2]
 
-  def __init__(self, filters=64, dropout=0, batch_norm=False):
+  def __init__(self, filters=64, dropout=0, batch_norm=False, train_loss=TrainLoss.CCE):
     tf.reset_default_graph()
     self._input = tf.placeholder(tf.float32, shape=[None, None, None, 1])
     self._labels = tf.placeholder(tf.float32, shape=[None, None, None, 2])
@@ -19,19 +25,32 @@ class UNet(object):
     self._cce_loss_op = self.cce_loss(self._probabilities_op, self._labels)
     self._dicefg_loss_op = self.dice_loss(self._probabilities_op, self._labels, fg_only=True)
     self._dice_loss_op = self.dice_loss(self._probabilities_op, self._labels, fg_only=False)
+
+    labels  = tf.argmax(self._labels, axis=-1)
+    predictions = tf.argmax(self._inference_op, axis=-1)
+    self._accuracy_op, self._accuracy_update_op = tf.metrics.accuracy(labels, predictions, name='accuracy')
+    vars = tf.get_collection(tf.GraphKeys.LOCAL_VARIABLES, scope='accuracy')
+    self._vars_initializer = tf.variables_initializer(var_list=vars)
+
     update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
     with tf.control_dependencies(update_ops):
       optimizer = tf.train.AdamOptimizer()
 
-      grads_and_vars = optimizer.compute_gradients(self._cce_loss_op)
-      self._cce_grad_norm_op = tf.global_norm([g for g,v in grads_and_vars])
+      cce_grads_and_vars = optimizer.compute_gradients(self._cce_loss_op)
+      self._cce_grad_norm_op = tf.global_norm([g for g,v in cce_grads_and_vars])
 
-      grads_and_vars = optimizer.compute_gradients(self._dicefg_loss_op)
-      self._dicefg_grad_norm_op = tf.global_norm([g for g,v in grads_and_vars])
+      dice_fg_grads_and_vars = optimizer.compute_gradients(self._dicefg_loss_op)
+      self._dicefg_grad_norm_op = tf.global_norm([g for g,v in dice_fg_grads_and_vars])
 
-      grads_and_vars = optimizer.compute_gradients(self._dice_loss_op)
-      self._dice_grad_norm_op = tf.global_norm([g for g,v in grads_and_vars])
-      self._train_op = optimizer.apply_gradients(grads_and_vars)
+      dice_grads_and_vars = optimizer.compute_gradients(self._dice_loss_op)
+      self._dice_grad_norm_op = tf.global_norm([g for g,v in dice_grads_and_vars])
+
+      if train_loss == TrainLoss.CCE:
+        self._train_op = optimizer.apply_gradients(cce_grads_and_vars)
+      elif train_loss == TrainLoss.DICE_FG:
+        self._train_op = optimizer.apply_gradients(dice_fg_grads_and_vars)
+      elif train_loss == TrainLoss.DICE:
+        self._train_op = optimizer.apply_gradients(dice_grads_and_vars)
 
   @staticmethod
   def softmax(inference_op):
@@ -120,8 +139,24 @@ class UNet(object):
       self._labels: output_batch,
       self._training: True
     }
-    return session.run([self._train_op,
+    _, cce_loss, cce_grad, dice_fg_loss, dice_fg_grad, dice_loss, dice_grad =  session.run([self._train_op,
       self._cce_loss_op, self._cce_grad_norm_op,
       self._dicefg_loss_op, self._dicefg_grad_norm_op,
       self._dice_loss_op, self._dice_grad_norm_op
       ], feed_dict=feed_dict)
+    return {
+      'cce_loss': cce_loss, 'cce_grad': cce_grad,
+      'dice_fg_loss': dice_fg_loss, 'dice_fg_grad': dice_fg_grad,
+      'dice_loss': dice_loss, 'dice_grad': dice_grad
+    }
+
+  def accuracy(self, session, input_batch, output_batch):
+    session.run(self._vars_initializer)
+
+    feed_dict = {
+      self._input: input_batch,
+      self._labels: output_batch,
+      self._training: True
+    }
+    session.run(self._accuracy_update_op, feed_dict=feed_dict)
+    return session.run(self._accuracy_op)
