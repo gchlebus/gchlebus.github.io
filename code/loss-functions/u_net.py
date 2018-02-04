@@ -2,6 +2,7 @@
 __author__ = 'gchlebus'
 
 import tensorflow as tf
+import numpy as np
 from enum import Enum
 
 class TrainLoss(Enum):
@@ -15,12 +16,14 @@ class UNet(object):
 
   def __init__(self, filters=64, dropout=0, batch_norm=False, train_loss=TrainLoss.CCE, summary_dir=None):
     tf.reset_default_graph()
+    self.session = None
     self._input = tf.placeholder(tf.float32, shape=[None, None, None, 1])
     self._labels = tf.placeholder(tf.float32, shape=[None, None, None, 2])
     self._training = tf.placeholder(tf.bool, shape=None)
     self._iteration = 0
 
     self._inference_op = self.build_model(self._input, filters, 2, dropout, batch_norm, self._training)
+    self._outshape_op = tf.shape(self._inference_op)
     tf.summary.histogram('logits', self._inference_op)
     self._probabilities_op = self.softmax(self._inference_op)
     tf.summary.histogram('probabilities', self._probabilities_op)
@@ -98,20 +101,21 @@ class UNet(object):
   @classmethod
   def build_model(cls, input, filters, n_conv, dropout, batch_norm, training):
     with tf.variable_scope('model'):
-      left0 = cls.unet_block(input, filters, n_conv, dropout, batch_norm, training, 'left0')
-      down0 = cls.transition_down(left0)
-      left1 = cls.unet_block(down0, 2*filters, n_conv, dropout, batch_norm, training, 'left1')
-      down1 = cls.transition_down(left1)
-      across = cls.unet_block(down1, 4*filters, n_conv, dropout, batch_norm, training, 'across')
-      up1 = cls.transition_up(across, 2*filters)
-      with tf.variable_scope('concat1'):
-        concat1 = tf.concat([left1, up1], axis=-1)
-      right1 = cls.unet_block(concat1, 2*filters, n_conv, dropout, batch_norm, training, 'right1')
-      up0 = cls.transition_up(right1, filters)
-      with tf.variable_scope('concat0'):
-        concat0 = tf.concat([left0, up0], axis=-1)
-      right0 = cls.unet_block(concat0, filters, n_conv, dropout, batch_norm, training, 'right0')
-      out = tf.layers.conv2d(right0, filters=2, kernel_size=1)
+      out = cls.unet_block(input, filters, 1, dropout, batch_norm, training, name='conv')
+      # left0 = cls.unet_block(input, filters, n_conv, dropout, batch_norm, training, 'left0')
+      # down0 = cls.transition_down(left0)
+      # left1 = cls.unet_block(down0, 2*filters, n_conv, dropout, batch_norm, training, 'left1')
+      # down1 = cls.transition_down(left1)
+      # across = cls.unet_block(down1, 4*filters, n_conv, dropout, batch_norm, training, 'across')
+      # up1 = cls.transition_up(across, 2*filters)
+      # with tf.variable_scope('concat1'):
+      #   concat1 = tf.concat([left1, up1], axis=-1)
+      # right1 = cls.unet_block(concat1, 2*filters, n_conv, dropout, batch_norm, training, 'right1')
+      # up0 = cls.transition_up(right1, filters)
+      # with tf.variable_scope('concat0'):
+      #   concat0 = tf.concat([left0, up0], axis=-1)
+      # right0 = cls.unet_block(concat0, filters, n_conv, dropout, batch_norm, training, 'right0')
+      out = tf.layers.conv2d(out, filters=2, kernel_size=1)
       return out
 
   @staticmethod
@@ -151,21 +155,22 @@ class UNet(object):
     return session.run(self._inference_op, feed_dict=feed_dict)
 
   def train(self, session, input_batch, output_batch):
+    self.ensure_session()
     session.run(self._vars_initializer)
-    
+
     feed_dict = {
       self._input: input_batch,
       self._labels: output_batch,
       self._training: True
     }
-    _, _, cce_loss, cce_grad, dice_fg_loss, dice_fg_grad, dice_loss, dice_grad =  session.run([self._check_op, self._train_op,
+    _, _, cce_loss, cce_grad, dice_fg_loss, dice_fg_grad, dice_loss, dice_grad =  self.session.run([self._check_op, self._train_op,
       self._cce_loss_op, self._cce_grad_norm_op,
       self._dicefg_loss_op, self._dicefg_grad_norm_op,
       self._dice_loss_op, self._dice_grad_norm_op
       ], feed_dict=feed_dict)
 
     if self._summary_writer:
-      summary = session.run(self._summary_op, feed_dict=feed_dict)
+      summary = self.session.run(self._summary_op, feed_dict=feed_dict)
       self._summary_writer.add_summary(summary, global_step=self._iteration)
       self._summary_writer.flush()
 
@@ -176,13 +181,28 @@ class UNet(object):
       'dice_loss': dice_loss, 'dice_grad': dice_grad
     }
 
+  def get_output_shape(self, input_shape):
+    self.ensure_session()
+    feed_dict = {
+      self._input: np.ones([1,] + input_shape),
+      self._training: False
+    }
+    return self.session.run(self._outshape_op, feed_dict=feed_dict)
+
   def accuracy(self, session, input_batch, output_batch):
-    session.run(self._vars_initializer)
+    self.ensure_session()
+    self.session.run(self._vars_initializer)
 
     feed_dict = {
       self._input: input_batch,
       self._labels: output_batch,
       self._training: True
     }
-    session.run(self._accuracy_update_op, feed_dict=feed_dict)
-    return session.run(self._accuracy_op)
+    self.session.run(self._accuracy_update_op, feed_dict=feed_dict)
+    return self.session.run(self._accuracy_op)
+
+  def ensure_session(self):
+    if not self.session:
+      self.session = tf.Session()
+      self.session.run(tf.global_variables_initializer())
+
