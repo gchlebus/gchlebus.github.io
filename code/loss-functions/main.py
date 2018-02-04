@@ -23,8 +23,8 @@ def get_data(threshold, size=1):
   #print('Class distribution bg: %.2g%% fg: %.2g%%' % (bg_percent, 100-bg_percent))
   return input_batch, output_batch
 
-def experiment(threshold, iterations, train_loss, batch_norm=False):
-  model = UNet(filters=4, train_loss=train_loss, batch_norm=batch_norm)
+def experiment(threshold, iterations, train_loss, batch_norm=False, summary_dir=None):
+  model = UNet(filters=4, train_loss=train_loss, batch_norm=batch_norm, summary_dir=summary_dir)
   sess = tf.Session()
   sess.run(tf.global_variables_initializer())
   ret = dict()

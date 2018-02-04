@@ -13,24 +13,21 @@ class UNet(object):
   INPUT_SHAPE = [572, 572, 1]
   OUTPUT_SHAPE = [572, 572, 2]
 
-  def __init__(self, filters=64, dropout=0, batch_norm=False, train_loss=TrainLoss.CCE):
+  def __init__(self, filters=64, dropout=0, batch_norm=False, train_loss=TrainLoss.CCE, summary_dir=None):
     tf.reset_default_graph()
     self._input = tf.placeholder(tf.float32, shape=[None, None, None, 1])
     self._labels = tf.placeholder(tf.float32, shape=[None, None, None, 2])
     self._training = tf.placeholder(tf.bool, shape=None)
+    self._iteration = 0
 
     self._inference_op = self.build_model(self._input, filters, 2, dropout, batch_norm, self._training)
+    tf.summary.histogram('logits', self._inference_op)
     self._probabilities_op = self.softmax(self._inference_op)
+    tf.summary.histogram('probabilities', self._probabilities_op)
 
     self._cce_loss_op = self.cce_loss(self._probabilities_op, self._labels)
     self._dicefg_loss_op = self.dice_loss(self._probabilities_op, self._labels, fg_only=True)
     self._dice_loss_op = self.dice_loss(self._probabilities_op, self._labels, fg_only=False)
-
-    labels  = tf.argmax(self._labels, axis=-1)
-    predictions = tf.argmax(self._inference_op, axis=-1)
-    self._accuracy_op, self._accuracy_update_op = tf.metrics.accuracy(labels, predictions, name='accuracy')
-    vars = tf.get_collection(tf.GraphKeys.LOCAL_VARIABLES, scope='accuracy')
-    self._vars_initializer = tf.variables_initializer(var_list=vars)
 
     update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
     with tf.control_dependencies(update_ops):
@@ -51,6 +48,25 @@ class UNet(object):
         self._train_op = optimizer.apply_gradients(dice_fg_grads_and_vars)
       elif train_loss == TrainLoss.DICE:
         self._train_op = optimizer.apply_gradients(dice_grads_and_vars)
+    self._check_op = tf.add_check_numerics_ops()
+
+    self.setup_accuracy()
+    self.setup_summaries(summary_dir)
+
+  def setup_accuracy(self):
+    labels  = tf.argmax(self._labels, axis=-1)
+    predictions = tf.argmax(self._inference_op, axis=-1)
+    self._accuracy_op, self._accuracy_update_op = tf.metrics.accuracy(labels, predictions, name='accuracy')
+    vars = tf.get_collection(tf.GraphKeys.LOCAL_VARIABLES, scope='accuracy')
+    self._vars_initializer = tf.variables_initializer(var_list=vars)
+
+  def setup_summaries(self, summary_dir):
+    self._summary_writer = None
+    if summary_dir:
+      for v in tf.trainable_variables():
+        tf.summary.histogram(v.name.split(':')[0], v)
+      self._summary_writer = tf.summary.FileWriter(summary_dir, tf.get_default_graph())
+      self._summary_op = tf.summary.merge_all()
 
   @staticmethod
   def softmax(inference_op):
@@ -95,7 +111,8 @@ class UNet(object):
       with tf.variable_scope('concat0'):
         concat0 = tf.concat([left0, up0], axis=-1)
       right0 = cls.unet_block(concat0, filters, n_conv, dropout, batch_norm, training, 'right0')
-      return tf.layers.conv2d(right0, filters=2, kernel_size=1)
+      out = tf.layers.conv2d(right0, filters=2, kernel_size=1)
+      return out
 
   @staticmethod
   def unet_block(input, filters=32, n_conv=2, dropout=0, batch_norm=False, training=False, name=None):
@@ -134,16 +151,25 @@ class UNet(object):
     return session.run(self._inference_op, feed_dict=feed_dict)
 
   def train(self, session, input_batch, output_batch):
+    session.run(self._vars_initializer)
+    
     feed_dict = {
       self._input: input_batch,
       self._labels: output_batch,
       self._training: True
     }
-    _, cce_loss, cce_grad, dice_fg_loss, dice_fg_grad, dice_loss, dice_grad =  session.run([self._train_op,
+    _, _, cce_loss, cce_grad, dice_fg_loss, dice_fg_grad, dice_loss, dice_grad =  session.run([self._check_op, self._train_op,
       self._cce_loss_op, self._cce_grad_norm_op,
       self._dicefg_loss_op, self._dicefg_grad_norm_op,
       self._dice_loss_op, self._dice_grad_norm_op
       ], feed_dict=feed_dict)
+
+    if self._summary_writer:
+      summary = session.run(self._summary_op, feed_dict=feed_dict)
+      self._summary_writer.add_summary(summary, global_step=self._iteration)
+      self._summary_writer.flush()
+
+    self._iteration += 1
     return {
       'cce_loss': cce_loss, 'cce_grad': cce_grad,
       'dice_fg_loss': dice_fg_loss, 'dice_fg_grad': dice_fg_grad,
