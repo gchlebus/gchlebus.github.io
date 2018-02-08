@@ -1,0 +1,873 @@
+// MDL v1 utf8
+mevislabVersion = 3.1a
+network  {
+  watchlist = ""
+}
+module ImageLoad {
+  internal  {
+    frame = "617 605 128 56"
+    moduleGroupName = ""
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "1212 741 458 402"
+        sizeHint = "458 402"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = ImageLoad
+    filename = /Volumes/internalProjects-1/SIRTOP/Data/LiverSegmentation/lits/labels-40.mlimage
+    autoLoad = TRUE
+    readRaw = FALSE
+    rawX = 1
+    rawY = 1
+    rawZ = 1
+    rawC = 1
+    rawT = 1
+    rawU = 1
+    dataTypeRaw = "unsigned int8"
+    planarConfig = Contiguous
+    byteOrder = LittleEndian
+    dataOffset = 0
+    pageSizeHint = "0 0 0 0 0 0"
+    suppressErrorLog = FALSE
+    dicomIgnoreHalfVoxelShift = FALSE
+    enableCheckSumTests = FALSE
+  }
+}
+module ImageLoad {
+  internal  {
+    frame = "453 661 136 56"
+    moduleGroupName = ""
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "1050 540 458 402"
+        sizeHint = "458 402"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = ImageLoad1
+    filename = /Volumes/internalProjects-1/SIRTOP/Data/LiverSegmentation/lits/volume-0.mlimage
+    autoLoad = TRUE
+    readRaw = FALSE
+    rawX = 1
+    rawY = 1
+    rawZ = 1
+    rawC = 1
+    rawT = 1
+    rawU = 1
+    dataTypeRaw = "unsigned int8"
+    planarConfig = Contiguous
+    byteOrder = LittleEndian
+    dataOffset = 0
+    pageSizeHint = "0 0 0 0 0 0"
+    suppressErrorLog = FALSE
+    dicomIgnoreHalfVoxelShift = FALSE
+    enableCheckSumTests = FALSE
+  }
+}
+module Threshold {
+  internal  {
+    frame = "633 469 96 72"
+    moduleGroupName = ""
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "1157 581 277 320"
+        sizeHint = "244 320"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Threshold
+    threshold = 2
+    relativeThreshold = FALSE
+    comparisonOperator = Equal
+    conditionTrueWriteValue = UserDef
+    userConditionTrueValue = 1
+    conditionFalseWriteValue = UserDef
+    userConditionFalseValue = 0
+  }
+}
+module EuclideanDistanceTransform {
+  internal  {
+    frame = "493 61 232 56"
+    moduleGroupName = ""
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "1384 866 496 363"
+        sizeHint = "443 363"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = EuclideanDistanceTransform
+    outputMode = DistanceAndVoronoiDivision
+    distanceMode = ForegroundVoxelCenter
+    dtfPrecision = FloatPrecision
+    distanceScaling = 1
+    applyTime = OnRequest
+    dimension = 2D
+    minValue = 1
+    maxValue = 1024
+    autoUpdateMode = AutoUpdate
+    autoUpdateTime = ImmediatelyOnInputChange
+  }
+}
+module ComputeConnectedComponents {
+  internal  {
+    frame = "785 341 256 56"
+    moduleGroupName = ""
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "1090 564 424 355"
+        sizeHint = "378 355"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = ComputeConnectedComponents
+    updateMode = AutoUpdate
+    neighborhoodRelation = NBH_3D_18_XYZ
+    backgroundValue = 0
+    useBackgroundValue = TRUE
+    useMask = FALSE
+    clusterMode = IdenticalIntensities
+    userDataDefault = ImageValue
+    similarityToleranceIntensities = 0
+    similarityToleranceVectors = 0.98
+  }
+}
+module ConnectedComponentsToImage {
+  internal  {
+    frame = "789 237 248 56"
+    moduleGroupName = ""
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "1195 865 367 188"
+        sizeHint = "367 188"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = ConnectedComponentsToImage
+    updateMode = AutoUpdate
+    writeToImageMode = Rank
+    clusterValue = 1
+    backgroundValue = 0
+    useBoundingBoxOfSelectedClusters = FALSE
+  }
+}
+module MinMaxScan {
+  internal  {
+    frame = "577 -51 144 72"
+    moduleGroupName = ""
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "1052 571 475 341"
+        sizeHint = "455 341"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = MinMaxScan
+    updateMode = AutoUpdate
+    typeSelect = "Proposed Data Type"
+    preferredIntType = PreferUnsigned
+  }
+}
+module View2D {
+  internal  {
+    frame = "685 -187 120 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "212 538 593 562"
+        sizeHint = "400 400"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = View2D
+    inventorInputOn = TRUE
+    inventorOutputOn = FALSE
+    view2DExtensionsOn = TRUE
+    startSlice = 102
+    numSlices = 1
+    numXSlices = 1
+    sliceStep = 1
+    slab = 1
+    blendMode = BLEND_REPLACE
+    timePoint = 0
+    maxTimePoint = 0
+    filterMode = FILTER_LINEAR
+    standardKeys = TRUE
+    cineMode = CINE_ZT
+    cineDirection = CINE_FORWARD
+    cineRepeat = CINE_ONCE
+    cineSpeed = 0.1
+    cineAlwaysReset = TRUE
+    snapToCenter = TRUE
+    zoomMode = VIEW2D_AUTO_ZOOM
+    unzoomOnImageChange = FALSE
+    sliceZoom = 1
+    sliceZoomSynced = 1
+    baseColor = "1 1 1"
+    margin = "2 2"
+    sliceOrigin = "0 0"
+    useShaders = TRUE
+    useManagedInteraction = FALSE
+    lutCenter = 7.51999759674072
+    lutWidth = 9.63999176025391
+    annotationOn = TRUE
+    annotationMode = ANNO_MODE_AUTO
+    annotationSizeMode = ANNO_SHOW_DETAILED
+    annotationCol = "0.899999976158142 0.899999976158142 0.899999976158142"
+    annotationFontSize = ANNO_SIZE_AUTO
+    annoCoords = Voxel
+    annoCTValue = AsIs
+    borderOn = FALSE
+    borderColor = "0.899999976158142 0.899999976158142 0.899999976158142"
+    valueHighPrecision = TRUE
+    showColorChannelValues = FALSE
+    colorChannelSeparator = " / "
+    maxPrecision = 4
+    enableSlicing = TRUE
+    useRelativeLUTIfNoInputImage = TRUE
+    hiResRendering = TRUE
+  }
+}
+module SoView2DOverlay {
+  internal  {
+    frame = "733 -43 168 56"
+    moduleGroupName = ""
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "1048 496 462 491"
+        sizeHint = "462 491"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = SoView2DOverlay
+    interactionProviderID = ""
+    drawingOn = TRUE
+    editingOn = TRUE
+    fixZOn = TRUE
+    color = "1 1 1"
+    selectionTolerance = 4
+    needsValidVoxel = TRUE
+    button1 = IGNORED
+    button2 = IGNORED
+    button3 = IGNORED
+    shift = IGNORED
+    control = IGNORED
+    alt = IGNORED
+    wantsAllEvents = TRUE
+    wantsKeyEvents = TRUE
+    wantsMouseWheelEvents = FALSE
+    setEventHandled = FALSE
+    ignoreHandledEvents = FALSE
+    createNewMode = FALSE
+    renderOnSlab = TRUE
+    clipToSlice = TRUE
+    cursorShape = UNDEFINED_CURSOR
+    overlayName = ""
+    cacheTextures = TRUE
+    blendMode = BLEND_BLEND
+    overwriteCurrentTimePoint = FALSE
+    timePoint = 0
+    maxTimePoint = 0
+    filterMode = FILTER_LINEAR
+    inheritFilterMode = TRUE
+    lutPrecision = VIEW2D_LUT_AUTO
+    alphaFactor = 1
+    baseColor = "0.988235294818878 0.00784313771873713 1"
+    useWorldCoords = TRUE
+    applyLut = TRUE
+    isCheckerTiling = FALSE
+    checkerTileSize = 2
+    areCheckerTilesInverted = FALSE
+  }
+}
+module FastMorphology {
+  internal  {
+    frame = "825 445 160 72"
+    moduleGroupName = ""
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "1107 536 346 411"
+        sizeHint = "345 411"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = FastMorphology
+    morphologicOperation = Dilation
+    xSize = 1
+    ySize = 1
+    zSize = 0
+    cSize = 0
+    tSize = 0
+    uSize = 0
+    useInputMaxValue = FALSE
+    userSetMaxValue = 1
+    autoUpdate = TRUE
+    useGreyScaleMorphology = FALSE
+    boundaryHandling = "Propagate boundary values"
+    boundaryFillValue = 0
+  }
+}
+module Arithmetic2 {
+  internal  {
+    frame = "861 69 104 72"
+    moduleGroupName = ""
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "1100 691 359 100"
+        sizeHint = "359 100"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Arithmetic2
+    function = Multiply
+    outputImageSize = InvalidateOutputIfSizesDiffer
+    constant = 0
+    autoReplicate = FALSE
+  }
+}
+module RunPythonScript {
+  internal  {
+    frame = "993 -563 160 56"
+    moduleGroupName = ""
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "449 748 654 299"
+        sizeHint = "654 299"
+        wasOpen = yes
+      }
+    }
+  }
+  fields  {
+    instanceName = RunPythonScript
+    in0 = ""
+    in1 = ""
+    in2 = ""
+    in3 = ""
+    in4 = ""
+    in5 = ""
+    in6 = ""
+    in7 = ""
+    in8 = ""
+    in9 = ""
+    inComment0 = in0
+    inComment1 = in1
+    inComment2 = in2
+    inComment3 = in3
+    inComment4 = in4
+    inComment5 = in5
+    inComment6 = in6
+    inComment7 = in7
+    inComment8 = in8
+    inComment9 = in9
+    autoApply0 = TRUE
+    autoApply1 = TRUE
+    autoApply2 = TRUE
+    autoApply3 = TRUE
+    autoApply4 = TRUE
+    autoApply5 = TRUE
+    autoApply6 = TRUE
+    autoApply7 = TRUE
+    autoApply8 = TRUE
+    autoApply9 = TRUE
+    out0 = ""
+    out1 = ""
+    out2 = ""
+    out3 = ""
+    out4 = ""
+    out5 = ""
+    out6 = ""
+    out7 = ""
+    out8 = ""
+    out9 = ""
+    outComment0 = out0
+    outComment1 = out1
+    outComment2 = out2
+    outComment3 = out3
+    outComment4 = out4
+    outComment5 = out5
+    outComment6 = out6
+    outComment7 = out7
+    outComment8 = out8
+    outComment9 = out9
+    initCode = "# For backward compatibility, set up CTX as alias for ctx
+CTX = ctx # ctx is the network's context, not RunPythonScript's"
+    wakeUpCode = ""
+    code = "*for i in range(ctx.field("ConnectedComponentsInfo.numClusters").value):
+  ctx.field("Threshold2.threshold").updateValue(i+1)
+  ctx.field("CompareMasks.update").touch()
+  print('[%d]: dice: %.3f' % (i+1, ctx.field("CompareMasks.diceCoefficient").value))*"
+    finalizeCode = ""
+    showFields = FALSE
+    showInitCode = FALSE
+    showWakeUpCode = FALSE
+    showCode = TRUE
+    showFinalizeCode = FALSE
+    showConsole = FALSE
+  }
+}
+module SubImage {
+  internal  {
+    frame = "485 -219 88 72"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "699 841 403 552"
+        sizeHint = "403 552"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Voronoi
+    boxInput = "0 0 0 0 0 0 -1 -1 -1 -1 -1 -1"
+    autoApplyBox = FALSE
+    correctForNegativeSubImageExtents = FALSE
+    enableBoxClamping = FALSE
+    x = 0
+    sx = 511
+    modifyX = FALSE
+    y = 0
+    sy = 511
+    modifyY = FALSE
+    z = 80
+    sz = 81
+    modifyZ = TRUE
+    c = 0
+    sc = 0
+    modifyC = FALSE
+    t = 0
+    st = 0
+    modifyT = FALSE
+    u = 0
+    su = 0
+    modifyU = FALSE
+    fillValue = 0
+    mode = VoxelStartEnd
+    autoApply = TRUE
+  }
+}
+module SubImage {
+  internal  {
+    frame = "637 -283 88 72"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "1148 784 403 552"
+        sizeHint = "403 552"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Labels
+    boxInput = "0 0 0 0 0 0 -1 -1 -1 -1 -1 -1"
+    autoApplyBox = FALSE
+    correctForNegativeSubImageExtents = FALSE
+    enableBoxClamping = FALSE
+    x = 0
+    sx = 511
+    modifyX = FALSE
+    y = 0
+    sy = 511
+    modifyY = FALSE
+    z = 80
+    sz = 81
+    modifyZ = TRUE
+    c = 0
+    sc = 0
+    modifyC = FALSE
+    t = 0
+    st = 0
+    modifyT = FALSE
+    u = 0
+    su = 0
+    modifyU = FALSE
+    fillValue = 0
+    mode = VoxelStartEnd
+    autoApply = TRUE
+  }
+}
+module AddNoise {
+  internal  {
+    frame = "1181 -59 88 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "1100 630 374 223"
+        sizeHint = "358 223"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = AddNoise
+    amplitude = 1
+    addInput = TRUE
+    randSeed = -1
+    noiseType = Uniform
+    mean = 0
+    sigma = 1
+    sigmaIn = 0
+    sigmaOut = 0
+    amplitude2 = 100
+    density = 0.050000001
+  }
+}
+module Threshold {
+  internal  {
+    frame = "1177 13 96 72"
+    moduleGroupName = ""
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "1157 581 277 320"
+        sizeHint = "244 320"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Threshold1
+    threshold = 0
+    relativeThreshold = FALSE
+    comparisonOperator = Greater
+    conditionTrueWriteValue = UserDef
+    userConditionTrueValue = 0
+    conditionFalseWriteValue = UserDef
+    userConditionFalseValue = 0
+  }
+}
+module Arithmetic2 {
+  internal  {
+    frame = "797 -283 104 88"
+    moduleGroupName = ""
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "1100 691 359 100"
+        sizeHint = "359 100"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Prediction
+    function = Multiply
+    outputImageSize = InvalidateOutputIfSizesDiffer
+    constant = 0
+    autoReplicate = FALSE
+  }
+}
+module ComputeConnectedComponents {
+  internal  {
+    frame = "393 -403 256 56"
+    moduleGroupName = ""
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "1090 564 424 355"
+        sizeHint = "378 355"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = ComputeConnectedComponents1
+    updateMode = AutoUpdate
+    neighborhoodRelation = NBH_2D_8_XY
+    backgroundValue = 0
+    useBackgroundValue = FALSE
+    useMask = FALSE
+    clusterMode = IdenticalIntensities
+    userDataDefault = ImageValue
+    similarityToleranceIntensities = 0
+    similarityToleranceVectors = 0.98
+  }
+}
+module ConnectedComponentsInfo {
+  internal  {
+    frame = "249 -507 192 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "1056 492 444 498"
+        sizeHint = "444 498"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = ConnectedComponentsInfo
+    updateMode = AutoUpdate
+    infoClusterSelectionMode = SelectByPosition
+    selectInfoClusterByVoxelPosition = "0 0 0"
+    selectInfoClusterByRank = 1
+  }
+}
+module ConnectedComponentsToImage {
+  internal  {
+    frame = "449 -523 256 56"
+    moduleGroupName = ""
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "1096 647 367 188"
+        sizeHint = "367 188"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = ConnectedComponentsToImage1
+    updateMode = AutoUpdate
+    writeToImageMode = Rank
+    clusterValue = 1
+    backgroundValue = 0
+    useBoundingBoxOfSelectedClusters = FALSE
+  }
+}
+module Threshold {
+  internal  {
+    frame = "553 -659 96 72"
+    moduleGroupName = ""
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "1157 581 277 320"
+        sizeHint = "244 320"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Threshold2
+    threshold = 9
+    relativeThreshold = FALSE
+    comparisonOperator = Equal
+    conditionTrueWriteValue = UserDef
+    userConditionTrueValue = 1
+    conditionFalseWriteValue = UserDef
+    userConditionFalseValue = 0
+  }
+}
+module Mask {
+  internal  {
+    frame = "685 -739 120 72"
+    moduleGroupName = ""
+    showNetworkPanel = true
+  }
+  fields  {
+    instanceName = Mask
+    mode = MaskedOriginal
+    outputImageSize = InvalidateOutputIfSizesDiffer
+    blending = 0.5
+    background = 0
+  }
+}
+module Mask {
+  internal  {
+    frame = "885 -731 120 72"
+    moduleGroupName = ""
+    showNetworkPanel = true
+  }
+  fields  {
+    instanceName = Mask1
+    mode = MaskedOriginal
+    outputImageSize = InvalidateOutputIfSizesDiffer
+    blending = 0.5
+    background = 0
+  }
+}
+module CompareMasks {
+  internal  {
+    frame = "837 -867 120 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "1613 558 627 519"
+        sizeHint = "627 519"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = CompareMasks
+    structure = LiverTumor
+    computeSymmetricVolDiamDiff = FALSE
+    useInputMaskVolDiam = FALSE
+    inputMaskVol = 0
+    inputMaskDiam = 0
+    useTwoReferences = FALSE
+  }
+}
+module RunPythonScript {
+  internal  {
+    frame = "125 -763 168 56"
+    moduleGroupName = ""
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "114 936 654 299"
+        sizeHint = "654 299"
+        wasOpen = yes
+      }
+    }
+  }
+  fields  {
+    instanceName = RunPythonScript1
+    in0 = ""
+    in1 = ""
+    in2 = ""
+    in3 = ""
+    in4 = ""
+    in5 = ""
+    in6 = ""
+    in7 = ""
+    in8 = ""
+    in9 = ""
+    inComment0 = in0
+    inComment1 = in1
+    inComment2 = in2
+    inComment3 = in3
+    inComment4 = in4
+    inComment5 = in5
+    inComment6 = in6
+    inComment7 = in7
+    inComment8 = in8
+    inComment9 = in9
+    autoApply0 = TRUE
+    autoApply1 = TRUE
+    autoApply2 = TRUE
+    autoApply3 = TRUE
+    autoApply4 = TRUE
+    autoApply5 = TRUE
+    autoApply6 = TRUE
+    autoApply7 = TRUE
+    autoApply8 = TRUE
+    autoApply9 = TRUE
+    out0 = ""
+    out1 = ""
+    out2 = ""
+    out3 = ""
+    out4 = ""
+    out5 = ""
+    out6 = ""
+    out7 = ""
+    out8 = ""
+    out9 = ""
+    outComment0 = out0
+    outComment1 = out1
+    outComment2 = out2
+    outComment3 = out3
+    outComment4 = out4
+    outComment5 = out5
+    outComment6 = out6
+    outComment7 = out7
+    outComment8 = out8
+    outComment9 = out9
+    initCode = "# For backward compatibility, set up CTX as alias for ctx
+CTX = ctx # ctx is the network's context, not RunPythonScript's"
+    wakeUpCode = ""
+    code = "*import numpy as np
+
+voronoi = ctx.field("ConnectedComponentsToImage1.output0").object()
+labels = ctx.field("Labels.output0").object()
+prediction = ctx.field("Prediction.output0").object()
+
+voronoi_tile = voronoi.getTile((0,)*3, (voronoi.UseImageExtent,)*3)
+labels_tile = labels.getTile((0,)*3, (labels.UseImageExtent,)*3)
+prediction_tile = prediction.getTile((0,)*3, (prediction.UseImageExtent,)*3)
+
+np.savez('/Users/gchlebus/Documents/gchlebus.github.io/code/loss-functions/images',
+  voronoi=voronoi_tile, labels=labels_tile, prediction=prediction_tile)
+
+*"
+    finalizeCode = ""
+    showFields = FALSE
+    showInitCode = FALSE
+    showWakeUpCode = FALSE
+    showCode = TRUE
+    showFinalizeCode = FALSE
+    showConsole = FALSE
+  }
+}
+module MinMaxScan {
+  internal  {
+    frame = "449 -307 144 72"
+    moduleGroupName = ""
+    showNetworkPanel = true
+  }
+  fields  {
+    instanceName = MinMaxScan1
+    updateMode = AutoUpdate
+    typeSelect = "Proposed Data Type"
+    preferredIntType = PreferUnsigned
+  }
+}
+connections  {
+  Threshold.input0 = ImageLoad.output0
+  EuclideanDistanceTransform.input0 = Arithmetic2.output0
+  ComputeConnectedComponents.input0 = FastMorphology.output0
+  ConnectedComponentsToImage.inClusters = ComputeConnectedComponents.outClusters
+  MinMaxScan.input0 = EuclideanDistanceTransform.output1
+  View2D.inImage = MinMaxScan.output0
+  View2D.inInvPreLUT = SoView2DOverlay.self
+  SoView2DOverlay.image = Threshold.output0
+  FastMorphology.input0 = Threshold.output0
+  Arithmetic2.input0 = ConnectedComponentsToImage.output0
+  Arithmetic2.input1 = Threshold.output0
+  Voronoi.input0 = EuclideanDistanceTransform.output1
+  Labels.input0 = Threshold.output0
+  Labels.z = Voronoi.z
+  Labels.sz = Voronoi.sz
+  AddNoise.input0 = Threshold1.output0
+  Threshold1.input0 = Labels.output0
+  Prediction.input0 = Labels.output0
+  Prediction.input1 = AddNoise.output0
+  ComputeConnectedComponents1.input0 = MinMaxScan1.output0
+  ConnectedComponentsInfo.inClusters = ComputeConnectedComponents1.outClusters
+  ConnectedComponentsToImage1.inClusters = ComputeConnectedComponents1.outClusters
+  Threshold2.input0 = ConnectedComponentsToImage1.output0
+  Mask.input0 = Labels.output0
+  Mask.input1 = Threshold2.output0
+  Mask1.input0 = Prediction.output0
+  Mask1.input1 = Threshold2.output0
+  CompareMasks.testMask = Mask1.output0
+  CompareMasks.referenceMask = Mask.output0
+  MinMaxScan1.input0 = Voronoi.output0
+}
+networkModel = ""
