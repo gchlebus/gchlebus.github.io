@@ -20,7 +20,6 @@ def cond(i, iter_count, *args):
 def body(i, iter_count, dicesum, unique_ids, voronoi, labels, pred):
   idx = unique_ids[i]
   mask = tf.cast(tf.equal(voronoi, idx), tf.float32)
-  #mask = tf.Print(mask, [tf.shape(mask)], message='mask:', summarize=20)
   masked_labels = (labels * mask)[:, 1:]
   masked_pred = (pred * mask)[:, 1:]
 
