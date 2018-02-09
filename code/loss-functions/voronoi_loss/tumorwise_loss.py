@@ -41,25 +41,30 @@ if __name__ == '__main__':
   print('labels.shape', labels.shape)
   print('pred.shape', pred.shape)
 
+  voronoi_ph = tf.placeholder(tf.float32, shape=[None, 1, None, None])
+  labels_ph = tf.placeholder(tf.float32, shape=[None, 2, None, None])
+  pred_ph = tf.placeholder(tf.float32, shape=[None, 2, None, None])
+
   i = tf.constant(0)
   initdicesum = tf.constant(0, dtype=tf.float32)
-  voronoi_var = tf.Variable(voronoi)
-  labels_var = tf.Variable(labels)
-  pred_var = tf.Variable(pred)
-
   dice_per_patch = []
   for patch_index in range(2):
     idx = slice(patch_index, patch_index+1)
-    unique_ids, _ = tf.unique(tf.reshape(voronoi_var[idx], [-1]))
+    unique_ids, _ = tf.unique(tf.reshape(voronoi_ph[idx], [-1]))
     size = tf.size(unique_ids)
-    _, _, dicesum, *_ = tf.while_loop(cond, body, [i, size, initdicesum, unique_ids, voronoi_var[idx], labels_var[idx], pred_var[idx]])
+    _, _, dicesum, *_ = tf.while_loop(cond, body, [i, size, initdicesum, unique_ids, voronoi_ph[idx], labels_ph[idx], pred_ph[idx]])
     dice = dicesum / tf.cast(size, tf.float32)
     dice_per_patch.append(dice)
 
   final_dice = tf.reduce_mean(dice_per_patch)
   with tf.Session() as s:
+    feed_dict = {
+      voronoi_ph: voronoi,
+      labels_ph: labels,
+      pred_ph: pred
+    }
     s.run(tf.global_variables_initializer())
-    ret= s.run(final_dice)
+    ret= s.run(final_dice, feed_dict=feed_dict)
     print('First run', ret)
-    ret= s.run(final_dice)
+    ret= s.run(final_dice, feed_dict=feed_dict)
     print('Second run', ret)
