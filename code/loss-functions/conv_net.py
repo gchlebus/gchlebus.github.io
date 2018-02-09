@@ -10,11 +10,11 @@ class TrainLoss(Enum):
   DICE_FG = 'DICE_FG'
   DICE = 'DICE'
 
-class UNet(object):
-  INPUT_SHAPE = [572, 572, 1]
-  OUTPUT_SHAPE = [572, 572, 2]
+class ConvNet(object):
+  INPUT_SHAPE = [32, 32, 1]
+  OUTPUT_SHAPE = [32, 32, 2]
 
-  def __init__(self, filters=64, dropout=0, batch_norm=False, train_loss=TrainLoss.CCE, summary_dir=None):
+  def __init__(self, filters, n_conv, dropout=0, batch_norm=False, train_loss=TrainLoss.CCE, summary_dir=None):
     tf.reset_default_graph()
     self.session = None
     self._input = tf.placeholder(tf.float32, shape=[None, None, None, 1])
@@ -22,15 +22,15 @@ class UNet(object):
     self._training = tf.placeholder(tf.bool, shape=None)
     self._iteration = 0
 
-    self._inference_op = self.build_model(self._input, filters, 2, dropout, batch_norm, self._training)
+    self._inference_op = self.build_model(self._input, filters, n_conv, dropout, batch_norm, self._training)
     self._outshape_op = tf.shape(self._inference_op)
     tf.summary.histogram('logits', self._inference_op)
-    self._probabilities_op = self.softmax(self._inference_op)
-    tf.summary.histogram('probabilities', self._probabilities_op)
+    self._softmax_op = self.softmax(self._inference_op)
+    tf.summary.histogram('probabilities', self._softmax_op)
 
-    self._cce_loss_op = self.cce_loss(self._probabilities_op, self._labels)
-    self._dicefg_loss_op = self.dice_loss(self._probabilities_op, self._labels, fg_only=True)
-    self._dice_loss_op = self.dice_loss(self._probabilities_op, self._labels, fg_only=False)
+    self._cce_loss_op = self.cce_loss(self._softmax_op, self._labels)
+    self._dicefg_loss_op = self.dice_loss(self._softmax_op, self._labels, fg_only=True)
+    self._dice_loss_op = self.dice_loss(self._softmax_op, self._labels, fg_only=False)
 
     update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
     with tf.control_dependencies(update_ops):
@@ -46,15 +46,17 @@ class UNet(object):
       self._dice_grad_norm_op = tf.global_norm([g for g,v in dice_grads_and_vars])
 
       if train_loss == TrainLoss.CCE:
-        self._train_op = optimizer.apply_gradients(cce_grads_and_vars)
+        grads_and_vars = cce_grads_and_vars
       elif train_loss == TrainLoss.DICE_FG:
-        self._train_op = optimizer.apply_gradients(dice_fg_grads_and_vars)
+        grads_and_vars = dice_fg_grads_and_vars
       elif train_loss == TrainLoss.DICE:
-        self._train_op = optimizer.apply_gradients(dice_grads_and_vars)
+        grads_and_vars = dice_grads_and_vars
+      self._train_op = optimizer.apply_gradients(grads_and_vars)
+      self.setup_summaries(summary_dir, grads_and_vars)
     self._check_op = tf.add_check_numerics_ops()
 
     self.setup_accuracy()
-    self.setup_summaries(summary_dir)
+
 
   def setup_accuracy(self):
     labels  = tf.argmax(self._labels, axis=-1)
@@ -63,63 +65,51 @@ class UNet(object):
     vars = tf.get_collection(tf.GraphKeys.LOCAL_VARIABLES, scope='accuracy')
     self._vars_initializer = tf.variables_initializer(var_list=vars)
 
-  def setup_summaries(self, summary_dir):
+  def setup_summaries(self, summary_dir, grads_and_vars):
     self._summary_writer = None
     if summary_dir:
-      for v in tf.trainable_variables():
+      for g, v in grads_and_vars:
         tf.summary.histogram(v.name.split(':')[0], v)
+        tf.summary.histogram(v.name.split(':')[0] + '/grad', g)
       self._summary_writer = tf.summary.FileWriter(summary_dir, tf.get_default_graph())
       self._summary_op = tf.summary.merge_all()
 
   @staticmethod
   def softmax(inference_op):
-    logits = inference_op - tf.reduce_max(inference_op, axis=-1, keepdims=True)
-    return tf.nn.softmax(logits, axis=-1)
+    logits = inference_op - tf.reduce_max(inference_op, axis=-1, keep_dims=True)
+    return tf.nn.softmax(logits, dim=-1)
 
   @staticmethod
-  def cce_loss(probabilities, labels):
+  def cce_loss(softmax_output, labels):
     eps = 1e-7
-    log_p = -tf.log(tf.clip_by_value(probabilities, eps, 1-eps))
+    log_p = -tf.log(tf.clip_by_value(softmax_output, eps, 1-eps))
     loss = tf.reduce_sum(labels * log_p, axis=-1)
     return tf.reduce_mean(loss)
 
   @staticmethod
-  def dice_loss(probabilities, labels, fg_only=False):
+  def dice_loss(softmax_output, labels, fg_only=False):
     if fg_only:
-      true_fg = labels[..., 1:]
-      pred_fg = probabilities[..., 1:]
-    else:
-      true_fg = labels
-      pred_fg = probabilities
+      labels = labels[..., 1:]
+      softmax_output = softmax_output[..., 1:]
+    # else:
+    #   y = labels
+    #   y_hat = softmax_output
     axis = (0,1,2)
-    tp = tf.reduce_sum(true_fg, axis=axis)
-    pp = tf.reduce_sum(pred_fg, axis=axis)
-    intersection = tf.reduce_sum(pred_fg * true_fg, axis=axis)
-    loss = 1 - tf.reduce_mean((2 * intersection) / (tp + pp))
+    eps = 1e-7
+    nom = (2 * tf.reduce_sum(labels * softmax_output, axis=axis) + eps)
+    denom = tf.reduce_sum(labels, axis=axis) + tf.reduce_sum(softmax_output, axis=axis) + eps
+    loss = 1 - tf.reduce_mean(nom / denom)
     return loss
 
   @classmethod
   def build_model(cls, input, filters, n_conv, dropout, batch_norm, training):
     with tf.variable_scope('model'):
-      out = cls.unet_block(input, filters, 1, dropout, batch_norm, training, name='conv')
-      # left0 = cls.unet_block(input, filters, n_conv, dropout, batch_norm, training, 'left0')
-      # down0 = cls.transition_down(left0)
-      # left1 = cls.unet_block(down0, 2*filters, n_conv, dropout, batch_norm, training, 'left1')
-      # down1 = cls.transition_down(left1)
-      # across = cls.unet_block(down1, 4*filters, n_conv, dropout, batch_norm, training, 'across')
-      # up1 = cls.transition_up(across, 2*filters)
-      # with tf.variable_scope('concat1'):
-      #   concat1 = tf.concat([left1, up1], axis=-1)
-      # right1 = cls.unet_block(concat1, 2*filters, n_conv, dropout, batch_norm, training, 'right1')
-      # up0 = cls.transition_up(right1, filters)
-      # with tf.variable_scope('concat0'):
-      #   concat0 = tf.concat([left0, up0], axis=-1)
-      # right0 = cls.unet_block(concat0, filters, n_conv, dropout, batch_norm, training, 'right0')
+      out = cls.conv_block(input, filters, n_conv, dropout, batch_norm, training, name='conv')
       out = tf.layers.conv2d(out, filters=2, kernel_size=1)
       return out
 
   @staticmethod
-  def unet_block(input, filters=32, n_conv=2, dropout=0, batch_norm=False, training=False, name=None):
+  def conv_block(input, filters=32, n_conv=2, dropout=0, batch_norm=False, training=False, name=None):
     out = input
     with tf.variable_scope(name):
       for idx in range(n_conv):
@@ -133,20 +123,6 @@ class UNet(object):
           out = tf.nn.relu(out)
     return out
 
-  @staticmethod
-  def transition_down(input):
-    return tf.layers.max_pooling2d(input, pool_size=2, strides=2, data_format='channels_last')
-
-  @staticmethod
-  def transition_up(input, filters=32):
-    return tf.layers.conv2d_transpose(input, filters=filters, kernel_size=2, strides=2,
-            data_format='channels_last')
-
-  @staticmethod
-  def center_crop(input, target):
-    crop = tf.cast((tf.shape(input) - tf.shape(target)) / 2, tf.int32)
-    return input[:, crop[1]:-crop[1], crop[2]:-crop[2]]
-
   def inference(self, session, input_batch):
     feed_dict = {
       self._input: input_batch,
@@ -154,9 +130,9 @@ class UNet(object):
     }
     return session.run(self._inference_op, feed_dict=feed_dict)
 
-  def train(self, session, input_batch, output_batch):
+  def train(self, input_batch, output_batch):
     self.ensure_session()
-    session.run(self._vars_initializer)
+    self.session.run(self._vars_initializer)
 
     feed_dict = {
       self._input: input_batch,
@@ -181,15 +157,18 @@ class UNet(object):
       'dice_loss': dice_loss, 'dice_grad': dice_grad
     }
 
-  def get_output_shape(self, input_shape):
+  def get_output_shape(self, input_shape=None):
     self.ensure_session()
+    if input_shape is None:
+      return self._inference_op.shape
+
     feed_dict = {
       self._input: np.ones([1,] + input_shape),
       self._training: False
     }
     return self.session.run(self._outshape_op, feed_dict=feed_dict)
 
-  def accuracy(self, session, input_batch, output_batch):
+  def accuracy(self, input_batch, output_batch):
     self.ensure_session()
     self.session.run(self._vars_initializer)
 
@@ -205,4 +184,10 @@ class UNet(object):
     if not self.session:
       self.session = tf.Session()
       self.session.run(tf.global_variables_initializer())
+
+if __name__ == '__main__':
+  model = ConvNet(4,1)
+  print(model.get_output_shape(None))
+  print(model.get_output_shape(input_shape=[100, 100, 1]))
+
 

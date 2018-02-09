@@ -11,3 +11,6 @@ MNIST_DATA
 *.pyc
 graph
 *.pkl
+log_*
+*.auto
+*.npz
