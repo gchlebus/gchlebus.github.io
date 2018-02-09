@@ -97,14 +97,14 @@ module Threshold {
 }
 module EuclideanDistanceTransform {
   internal  {
-    frame = "493 61 232 56"
+    frame = "485 101 232 56"
     moduleGroupName = ""
     showNetworkPanel = true
     windows  {
       window _default {
-        geometry = "1384 866 496 363"
+        geometry = "1300 702 501 363"
         sizeHint = "443 363"
-        wasOpen = no
+        wasOpen = yes
       }
     }
   }
@@ -172,7 +172,7 @@ module ConnectedComponentsToImage {
 }
 module MinMaxScan {
   internal  {
-    frame = "577 -51 144 72"
+    frame = "545 -35 144 72"
     moduleGroupName = ""
     showNetworkPanel = true
     windows  {
@@ -207,7 +207,7 @@ module View2D {
     inventorInputOn = TRUE
     inventorOutputOn = FALSE
     view2DExtensionsOn = TRUE
-    startSlice = 102
+    startSlice = 61
     numSlices = 1
     numXSlices = 1
     sliceStep = 1
@@ -232,8 +232,8 @@ module View2D {
     sliceOrigin = "0 0"
     useShaders = TRUE
     useManagedInteraction = FALSE
-    lutCenter = 7.51999759674072
-    lutWidth = 9.63999176025391
+    lutCenter = 8
+    lutWidth = 16
     annotationOn = TRUE
     annotationMode = ANNO_MODE_AUTO
     annotationSizeMode = ANNO_SHOW_DETAILED
@@ -365,9 +365,9 @@ module RunPythonScript {
     showNetworkPanel = true
     windows  {
       window _default {
-        geometry = "449 748 654 299"
+        geometry = "1057 357 654 299"
         sizeHint = "654 299"
-        wasOpen = yes
+        wasOpen = no
       }
     }
   }
@@ -741,9 +741,9 @@ module RunPythonScript {
     showNetworkPanel = true
     windows  {
       window _default {
-        geometry = "114 936 654 299"
+        geometry = "646 603 1120 384"
         sizeHint = "654 299"
-        wasOpen = yes
+        wasOpen = no
       }
     }
   }
@@ -812,7 +812,7 @@ voronoi_tile = voronoi.getTile((0,)*3, (voronoi.UseImageExtent,)*3)
 labels_tile = labels.getTile((0,)*3, (labels.UseImageExtent,)*3)
 prediction_tile = prediction.getTile((0,)*3, (prediction.UseImageExtent,)*3)
 
-np.savez('/Users/gchlebus/Documents/gchlebus.github.io/code/loss-functions/images',
+np.savez('/Users/gchlebus/Documents/gchlebus.github.io/code/loss-functions/voronoi_loss/images',
   voronoi=voronoi_tile, labels=labels_tile, prediction=prediction_tile)
 
 *"
@@ -836,6 +836,26 @@ module MinMaxScan {
     updateMode = AutoUpdate
     typeSelect = "Proposed Data Type"
     preferredIntType = PreferUnsigned
+  }
+}
+module ConnectedComponentsInfo {
+  internal  {
+    frame = "1085 197 200 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "1289 669 444 498"
+        sizeHint = "444 498"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = ConnectedComponentsInfo1
+    updateMode = AutoUpdate
+    infoClusterSelectionMode = SelectByPosition
+    selectInfoClusterByVoxelPosition = "0 0 0"
+    selectInfoClusterByRank = 1
   }
 }
 connections  {
@@ -869,5 +889,6 @@ connections  {
   CompareMasks.testMask = Mask1.output0
   CompareMasks.referenceMask = Mask.output0
   MinMaxScan1.input0 = Voronoi.output0
+  ConnectedComponentsInfo1.inClusters = ComputeConnectedComponents.outClusters
 }
 networkModel = ""
