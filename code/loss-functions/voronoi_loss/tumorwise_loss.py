@@ -13,11 +13,13 @@ def load_data():
   pred = np.concatenate([pred==0, pred==1], axis=1).astype(np.float32)
   return voronoi, labels, pred
 
-def loss(voronoi, labels, pred):
+def loss(allchannels, voronoi, labels, pred):
   patch_count = tf.shape(labels)[0]
   smooth = 1e-7
-  allchannels = False
   axis = (0,2,3)
+  if not allchannels:
+    labels = labels[:,1:]
+    pred = pred[:,1:]
 
   def cond1(patch_index, *args):
     return tf.less(patch_index, patch_count)
@@ -40,21 +42,18 @@ def loss(voronoi, labels, pred):
     mask = tf.cast(tf.equal(voronoi_patch, voronoi_ids[voronoi_index]), tf.float32)
     masked_labels = (mask * labels_patch)
     masked_pred = (mask * pred_patch)
-    if not allchannels:
-      masked_labels = masked_labels[:, 1:]
-      masked_pred = masked_pred[:, 1:]
     true_fg = tf.reduce_sum(masked_labels, axis=axis)
     pred_fg = tf.reduce_sum(masked_pred, axis=axis)
     intersection = tf.reduce_sum(masked_labels * masked_pred, axis=axis)
     dice = (2*intersection + smooth) / (true_fg + pred_fg + smooth)
-    dice = tf.reduce_sum(dice)
+    dice = tf.reduce_mean(dice)
     dice = tf.Print(dice, [dice], message='dice=')
     return tf.add(voronoi_index, 1), voronoi_ids, tf.add(sum_dice, dice), tf.add(counter, 1), voronoi_patch, labels_patch, pred_patch
 
-  _, sum_dice, counter, *_ = tf.while_loop(cond1, loop1, [
+  _, sum_dice, counter = tf.while_loop(cond1, loop1, [
     tf.constant(0), tf.constant(0, tf.float32), tf.constant(0, tf.float32)
   ])
-  return sum_dice / counter
+  return tf.reduce_mean(sum_dice / counter)
 
 if __name__ == '__main__':
   voronoi, labels, pred = load_data()
@@ -66,7 +65,9 @@ if __name__ == '__main__':
   labels_ph = tf.placeholder(tf.float32, shape=[None, 2, None, None])
   pred_ph = tf.placeholder(tf.float32, shape=[None, 2, None, None])
 
-  final_dice = loss(voronoi_ph, labels_ph, pred_ph)
+
+  allchannels = False
+  final_dice = loss(allchannels, voronoi_ph, labels_ph, pred_ph)
   with tf.Session() as s:
     feed_dict = {
       voronoi_ph: voronoi,
