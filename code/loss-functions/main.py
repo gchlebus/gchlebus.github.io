@@ -43,33 +43,4 @@ def experiment(threshold, iterations, train_loss, n_conv, batch_size=1, batch_no
       ret['accuracy'].append((i, accuracy))
       #print('[%d] accuracy: %.3g' % (i, accuracy))
   return ret
-
-if __name__ == '__main__':
-  ref = np.array([
-    [[0, 1], [0, 1], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [0, 1], [0, 1], [0, 1], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [0, 1]],
-    [[0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [1, 0], [1, 0], [1, 0], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]],
-  ])
-  pred = np.array([
-    [[0, 1], [0, 1], [0, 1], [1, 0], [1, 0], [0, 1], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [0, 1], [0, 1], [0, 1], [0, 1], [1, 0], [1, 0], [0, 1], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [0, 1]],
-    [[0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [1, 0], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]],
-  ])
-  print(pred.shape)
-
-  #ref = ref[...,0:1]
-  #pred = pred[...,0:1]
-  # regular dice
-  axis = (0,1)
-  tp = np.sum(ref, axis=axis)
-  pp = np.sum(pred, axis=axis)
-  intersection = np.sum(pred * ref, axis=axis)
-  dice = (2 * intersection) / (tp + pp)
-  dice = np.mean((2 * intersection) / (tp + pp))
-  print('reg dice:', dice)
-
-  axis = (1,)
-  tp = np.sum(ref, axis=axis)
-  pp = np.sum(pred, axis=axis)
-  intersection = np.sum(pred * ref, axis=axis)
-  dice = (2 * intersection) / (tp + pp)
-  dice = np.mean((2 * intersection) / (tp + pp))
-  print('per_patch dice:', dice)
+  

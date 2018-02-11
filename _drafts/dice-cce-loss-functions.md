@@ -6,10 +6,11 @@ categories: neural networks tensorflow
 ---
 ### Introduction
 
-*Categorical cross entropy* (CCE) and *Dice index* are popular loss functions for training of neural networks for semantic segmentation.
+Categorical cross entropy *CCE* and Dice index *DICE* are popular loss functions for training of neural networks for semantic segmentation.
 In medical field images being analyzed consist mainly of background pixels with few pixels belonging to objects of interest.
-Such cases of high class imbalance cause networks to be biased towards background when trained with CCE. To account for that, weighting of foreground and background pixels can be applied.
-In contrast to CCE, usage of the dice loss doesn't require weighting to successfully train models with imbalanced datasets[^1].
+Such cases of high class imbalance cause networks to be biased towards background when trained with *CCE*.
+To account for that, weighting of foreground and background pixels can be applied.
+In contrast to *CCE*, usage of *DICE* doesn't require weighting to successfully train models with imbalanced datasets[^1].
 
 ### Loss functions
 
@@ -34,15 +35,15 @@ def cce_loss(softmax_output, labels):
 ```
 
 #### Dice
-The Dice loss function can be defined as:
+The Dice loss function *DICE* can be defined as:
 
 $$\textrm{dice\_loss} = 1 - \frac{1}{c}\sum_{i=0}^{c}\frac{\sum_j^N 2y_i^j\hat{y}_i^j + \epsilon}{\sum_j^Ny_i^j + \sum_j^N\hat{y}_i^j + \epsilon}$$
 
-or using squares in the denominator as proposed by Milletari[^1]:
+or using squares in the denominator (*DICE_SQUARE*) as proposed by Milletari[^1]:
 
 $$\textrm{dice\_loss\_square} = 1 - \frac{1}{c}\sum_{i=0}^{c}\frac{\sum_j^N 2y_i^j\hat{y}_i^j + \epsilon}{\sum_j^N y_i^jy_i^j + \sum_j^N\hat{y}_i^j\hat{y}_i^j + \epsilon}$$
 
-$$\epsilon$$ is used to avoid division by 0 (denominator) and to learn from patches containing no labels in the reference (nominator). The multiplication by $$\frac{1}{c}$$ gives a nice property, that the loss is within $$[0, 1]$$ regardless of the channel count. Optionally, the dice loss can be computed only for foreground channels (ignoring the background channel), because it punishes false positives.
+$$\epsilon$$ is used to avoid division by 0 (denominator) and to learn from patches containing no labels in the reference (nominator). The multiplication by $$\frac{1}{c}$$ gives a nice property, that the loss is within $$[0, 1]$$ regardless of the channel count. Optionally, the dice loss can be computed only for foreground channels (*DICEFG*, *DICEFG_SQUARE*), because it punishes false positives.
 
 ```python
 def dice_loss(softmax_output, labels, ignore_background=False, square=False):
@@ -60,37 +61,42 @@ def dice_loss(softmax_output, labels, ignore_background=False, square=False):
 ```
 
 ### Experiments
-I prepared a toy segmentation task with one foreground class. I used `np.random.rand` to generate input images and a pixel belongs to the foreground if its value is bigger than some threshold $$\theta$$. By tinkering with $$\theta$$ we can set the balance between output classes:
+I prepared a toy segmentation task with one foreground class. I used `np.random.rand` to generate input images.
+A pixel is foreground if its value is bigger than some threshold $$\theta$$. By tinkering with $$\theta$$ we can set the balance between output classes:
 
-- $$\theta = 0.95$$: $$95\%$$ bg, $$5\%$$ fg
-- $$\theta = 0.5$$: $$50\%$$ bg, $$50\%$$ fg
+- $$\theta$$ = 0.95: 95% bg, 5% fg
+- $$\theta$$ = 0.5: 50% bg, 50% fg
 
-To investigate the behavior of different loss functions I trained a model for different bg/fg ratios with one of them and saved loss values and global gradient norms of all of them. Exemplary results are plotted below (column name denotes the loss function used for training. All plots can be found here[^2].
-
-#### Observations
-
-- $$5\%$$ foreground
-  - One time using CCE model didn't converge.
-  - DICEFG and DICEFG_SQUARE yielded bigger gradients than other loss functions.
-  - The smallest gradients come from CCE.
-  - DICEFG outputs the biggest loss values.
-
-- $$50\%$$ foreground
-  - CCE yields the biggest gradients, other gradients are very similar.
-
-- $$95\%$$ foreground
-  - The training didn't converge for all runs with DICEFG used for training.
-  - DICE and DICE_SQUARE yielded the biggest gradients.
-
-Strange observation: DICE and DICE_SQUARE yielded bigger gradients for the $$5\%$$ fg case than for the $$95\%$$ fg case. Since the loss functions took into account both channels, a simiar behavior was to be expected.
-
+To investigate the behavior of different loss functions I trained a model for various bg/fg ratios with one of them and saved loss values and global gradient norms of all of them. Some results are plotted below (column name denotes the loss function used for training). All plots can be found here[^2].
 
 ##### Please zoom in for better readability.
 ![5FG]({{ "/assets/dice-cce-loss-function/5fg_run3.png" | absolute_url }})
 ![50FG]({{ "/assets/dice-cce-loss-function/50fg_run0.png" | absolute_url }})
 ![95FG]({{ "/assets/dice-cce-loss-function/95fg_run2.png" | absolute_url }})
 
+#### Observations
+
+**5% foreground:**
+In all experiments but one (when trained with *CCE*) the model converged around 99.5% accuracy.
+*DICEFG* and *DICEFG_SQUARE* yielded the biggest, *CCE* the smallest global gradient norms.
+Values for *DICEFG* loss were bigger than for other loss functions.
+
+**50% foreground:**
+All models converged.
+*CCE* resulted in the biggest gradients, other gradients were similar in magnitude.
+
+**95% foreground:**
+None of models trained with *DICEFG* converged.
+*DICE* and *DICE_SQUARE* yielded the biggest gradients.
+
+I observed that the magnitude of gradients of *DICE* and *DICE_SQUARE* for the 5% fg case were bigger than for the 95% fg case.
+This is very strange, because both situations should be indistinguishable from the point of view of the loss functions, since they take bg and fg channels equally into account.
+Maybe there is a bug in the code I've written for the experiments.
+Feel free to take a look at it and I encourage you to run further experiments using my ipython notebook[^3].
+
+
 ---
 #### References
 [^1]: Milletari at al., [*V-Net: Fully Convolutional Neural Network for Volumetric Medical Image Segmentation*](https://arxiv.org/abs/1606.04797). 2016.
-[^2]: [Plots.](https://github.com/gchlebus/gchlebus.github.io/tree/master/assets/dice-cce-loss-function)
+[^2]: [Plots from all experiments.](https://github.com/gchlebus/gchlebus.github.io/tree/master/assets/dice-cce-loss-function)
+[^3]: [Code used for the experiments.](https://github.com/gchlebus/gchlebus.github.io/tree/master/code/loss-functions)
