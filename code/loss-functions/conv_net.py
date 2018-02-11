@@ -7,9 +7,9 @@ from enum import Enum
 
 class TrainLoss(Enum):
   CCE = 'CCE'
-  DICE_FG = 'DICE_FG'
+  DICEFG = 'DICEFG'
   DICE = 'DICE'
-  DICE_FG_SQUARE = 'DICE_FG_SQUARE'
+  DICEFG_SQUARE = 'DICEFG_SQUARE'
   DICE_SQUARE = 'DICE_SQUARE'
 
 class ConvNet(object):
@@ -31,10 +31,10 @@ class ConvNet(object):
     tf.summary.histogram('probabilities', self._softmax_op)
 
     self._cce_loss_op = self.cce_loss(self._softmax_op, self._labels)
-    self._dicefg_loss_op = self.dice_loss(self._softmax_op, self._labels, fg_only=True, square=False)
-    self._dice_loss_op = self.dice_loss(self._softmax_op, self._labels, fg_only=False, square=False)
-    self._dicefg_square_loss_op = self.dice_loss(self._softmax_op, self._labels, fg_only=True, square=True)
-    self._dice_square_loss_op = self.dice_loss(self._softmax_op, self._labels, fg_only=False, square=True)
+    self._dicefg_loss_op = self.dice_loss(self._softmax_op, self._labels, ignore_background=True, square=False)
+    self._dice_loss_op = self.dice_loss(self._softmax_op, self._labels, ignore_background=False, square=False)
+    self._dicefg_square_loss_op = self.dice_loss(self._softmax_op, self._labels, ignore_background=True, square=True)
+    self._dice_square_loss_op = self.dice_loss(self._softmax_op, self._labels, ignore_background=False, square=True)
 
     update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
     with tf.control_dependencies(update_ops):
@@ -57,11 +57,11 @@ class ConvNet(object):
 
       if train_loss == TrainLoss.CCE:
         grads_and_vars = cce_grads_and_vars
-      elif train_loss == TrainLoss.DICE_FG:
+      elif train_loss == TrainLoss.DICEFG:
         grads_and_vars = dicefg_grads_and_vars
       elif train_loss == TrainLoss.DICE:
         grads_and_vars = dice_grads_and_vars
-      elif train_loss == TrainLoss.DICE_FG_SQUARE:
+      elif train_loss == TrainLoss.DICEFG_SQUARE:
         grads_and_vars = dicefg_square_grads_and_vars
       elif train_loss == TrainLoss.DICE_SQUARE:
         grads_and_vars = dice_square_grads_and_vars
@@ -102,19 +102,18 @@ class ConvNet(object):
     return tf.reduce_mean(loss)
 
   @staticmethod
-  def dice_loss(softmax_output, labels, fg_only=False, square=False):
-    if fg_only:
+  def dice_loss(softmax_output, labels, ignore_background=False, square=False):
+    if ignore_background:
       labels = labels[..., 1:]
       softmax_output = softmax_output[..., 1:]
     axis = (0,1,2)
     eps = 1e-7
     nom = (2 * tf.reduce_sum(labels * softmax_output, axis=axis) + eps)
     if square:
-      denom = tf.reduce_sum(tf.square(labels), axis=axis) + tf.reduce_sum(tf.square(softmax_output), axis=axis) + eps  
-    else:
-      denom = tf.reduce_sum(labels, axis=axis) + tf.reduce_sum(softmax_output, axis=axis) + eps
-    loss = 1 - tf.reduce_mean(nom / denom)
-    return loss
+      labels = tf.square(labels)
+      softmax_output = tf.square(softmax_output)
+    denom = tf.reduce_sum(labels, axis=axis) + tf.reduce_sum(softmax_output, axis=axis) + eps
+    return 1 - tf.reduce_mean(nom / denom)
 
   @classmethod
   def build_model(cls, input, filters, n_conv, dropout, batch_norm, training):
@@ -154,12 +153,13 @@ class ConvNet(object):
       self._labels: output_batch,
       self._training: True
     }
-    _, _, cce_loss, cce_grad, dicefg_loss, dicefg_grad, dice_loss, dice_grad, dicefg_square_loss, dicefg_square_grad, dice_square_loss, dice_square_grad = 
+    _, _, cce_loss, cce_grad, dicefg_loss, dicefg_grad, dice_loss, dice_grad, \
+    dicefg_square_loss, dicefg_square_grad, dice_square_loss, dice_square_grad = \
       self.session.run([self._check_op, self._train_op,
         self._cce_loss_op, self._cce_grad_norm_op,
         self._dicefg_loss_op, self._dicefg_grad_norm_op,
         self._dice_loss_op, self._dice_grad_norm_op,
-        self._dicefg_square_loss_op, self._dicefg_grad_norm_op,
+        self._dicefg_square_loss_op, self._dicefg_square_grad_norm_op,
         self._dice_square_loss_op, self._dice_square_grad_norm_op
       ], feed_dict=feed_dict)
 
@@ -209,5 +209,3 @@ if __name__ == '__main__':
   model = ConvNet(4,1)
   print(model.get_output_shape(None))
   print(model.get_output_shape(input_shape=[100, 100, 1]))
-
-
