@@ -9,14 +9,19 @@ class TrainLoss(Enum):
   CCE = 'CCE'
   DICEFG = 'DICEFG'
   DICE = 'DICE'
-  DICEFG_SQUARE = 'DICEFG_SQUARE'
-  DICE_SQUARE = 'DICE_SQUARE'
+  #DICEFG_SQUARE = 'DICEFG_SQUARE'
+  #DICE_SQUARE = 'DICE_SQUARE'
+
+class Optimizer(Enum):
+  ADAM = 'ADAM'
+  SGD = 'SGD'
 
 class ConvNet(object):
   INPUT_SHAPE = [32, 32, 1]
   OUTPUT_SHAPE = [32, 32, 2]
 
-  def __init__(self, filters, n_conv, dropout=0, batch_norm=False, train_loss=TrainLoss.CCE, summary_dir=None):
+  def __init__(self, filters, n_conv, dropout=0, batch_norm=False, train_loss=TrainLoss.CCE, optimizer=Optimizer.ADAM, learning_rate=1e-3,
+    summary_dir=None):
     tf.reset_default_graph()
     self.session = None
     self._input = tf.placeholder(tf.float32, shape=[None, None, None, 1])
@@ -33,12 +38,15 @@ class ConvNet(object):
     self._cce_loss_op = self.cce_loss(self._softmax_op, self._labels)
     self._dicefg_loss_op = self.dice_loss(self._softmax_op, self._labels, ignore_background=True, square=False)
     self._dice_loss_op = self.dice_loss(self._softmax_op, self._labels, ignore_background=False, square=False)
-    self._dicefg_square_loss_op = self.dice_loss(self._softmax_op, self._labels, ignore_background=True, square=True)
-    self._dice_square_loss_op = self.dice_loss(self._softmax_op, self._labels, ignore_background=False, square=True)
+    #self._dicefg_square_loss_op = self.dice_loss(self._softmax_op, self._labels, ignore_background=True, square=True)
+    #self._dice_square_loss_op = self.dice_loss(self._softmax_op, self._labels, ignore_background=False, square=True)
 
     update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
     with tf.control_dependencies(update_ops):
-      optimizer = tf.train.AdamOptimizer()
+      if optimizer == Optimizer.ADAM:
+        optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+      elif optimizer == Optimizer.SGD:
+        optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate)
 
       cce_grads_and_vars = optimizer.compute_gradients(self._cce_loss_op)
       self._cce_grad_norm_op = tf.global_norm([g for g,v in cce_grads_and_vars])
@@ -49,11 +57,11 @@ class ConvNet(object):
       dice_grads_and_vars = optimizer.compute_gradients(self._dice_loss_op)
       self._dice_grad_norm_op = tf.global_norm([g for g,v in dice_grads_and_vars])
 
-      dicefg_square_grads_and_vars = optimizer.compute_gradients(self._dicefg_square_loss_op)
-      self._dicefg_square_grad_norm_op = tf.global_norm([g for g,v in dicefg_square_grads_and_vars])
+      #dicefg_square_grads_and_vars = optimizer.compute_gradients(self._dicefg_square_loss_op)
+      #self._dicefg_square_grad_norm_op = tf.global_norm([g for g,v in dicefg_square_grads_and_vars])
 
-      dice_square_grads_and_vars = optimizer.compute_gradients(self._dice_square_loss_op)
-      self._dice_square_grad_norm_op = tf.global_norm([g for g,v in dice_square_grads_and_vars])
+      #dice_square_grads_and_vars = optimizer.compute_gradients(self._dice_square_loss_op)
+      #self._dice_square_grad_norm_op = tf.global_norm([g for g,v in dice_square_grads_and_vars])
 
       if train_loss == TrainLoss.CCE:
         grads_and_vars = cce_grads_and_vars
@@ -61,14 +69,14 @@ class ConvNet(object):
         grads_and_vars = dicefg_grads_and_vars
       elif train_loss == TrainLoss.DICE:
         grads_and_vars = dice_grads_and_vars
-      elif train_loss == TrainLoss.DICEFG_SQUARE:
-        grads_and_vars = dicefg_square_grads_and_vars
-      elif train_loss == TrainLoss.DICE_SQUARE:
-        grads_and_vars = dice_square_grads_and_vars
+      # elif train_loss == TrainLoss.DICEFG_SQUARE:
+      #   grads_and_vars = dicefg_square_grads_and_vars
+      # elif train_loss == TrainLoss.DICE_SQUARE:
+      #   grads_and_vars = dice_square_grads_and_vars
 
       self._train_op = optimizer.apply_gradients(grads_and_vars)
       self.setup_summaries(summary_dir, grads_and_vars)
-    self._check_op = tf.add_check_numerics_ops()
+    #self._check_op = tf.add_check_numerics_ops() #  not compatibile with BN
 
     self.setup_accuracy()
 
@@ -131,7 +139,8 @@ class ConvNet(object):
           if dropout:
             out = tf.layers.dropout(out, rate=dropout, training=training)
           out = tf.layers.conv2d(out, filters=filters, kernel_size=3, data_format='channels_last',
-                                use_bias=not batch_norm, padding='same')
+                                use_bias=not batch_norm, padding='same',
+                                kernel_initializer=tf.contrib.layers.xavier_initializer())
           if batch_norm:
             out = tf.layers.batch_normalization(out, training=training, axis=-1)
           out = tf.nn.relu(out)
@@ -140,7 +149,7 @@ class ConvNet(object):
   def inference(self, session, input_batch):
     feed_dict = {
       self._input: input_batch,
-      self._training: True
+      self._training: False
     }
     return session.run(self._inference_op, feed_dict=feed_dict)
 
@@ -153,14 +162,16 @@ class ConvNet(object):
       self._labels: output_batch,
       self._training: True
     }
-    _, _, cce_loss, cce_grad, dicefg_loss, dicefg_grad, dice_loss, dice_grad, \
-    dicefg_square_loss, dicefg_square_grad, dice_square_loss, dice_square_grad = \
-      self.session.run([self._check_op, self._train_op,
+
+    #_, _, cce_loss, cce_grad, dicefg_loss, dicefg_grad, dice_loss, dice_grad, \
+    # dicefg_square_loss, dicefg_square_grad, dice_square_loss, dice_square_grad = \
+    _, cce_loss, cce_grad, dicefg_loss, dicefg_grad, dice_loss, dice_grad = \
+      self.session.run([self._train_op,
         self._cce_loss_op, self._cce_grad_norm_op,
         self._dicefg_loss_op, self._dicefg_grad_norm_op,
         self._dice_loss_op, self._dice_grad_norm_op,
-        self._dicefg_square_loss_op, self._dicefg_square_grad_norm_op,
-        self._dice_square_loss_op, self._dice_square_grad_norm_op
+        # self._dicefg_square_loss_op, self._dicefg_square_grad_norm_op,
+        # self._dice_square_loss_op, self._dice_square_grad_norm_op
       ], feed_dict=feed_dict)
 
     if self._summary_writer:
@@ -173,8 +184,8 @@ class ConvNet(object):
       'cce_loss': cce_loss, 'cce_grad': cce_grad,
       'dicefg_loss': dicefg_loss, 'dicefg_grad': dicefg_grad,
       'dice_loss': dice_loss, 'dice_grad': dice_grad,
-      'dicefg_square_loss': dicefg_square_loss, 'dicefg_square_grad': dicefg_square_grad,
-      'dice_square_loss': dice_square_loss, 'dice_square_grad': dice_square_grad,
+      # 'dicefg_square_loss': dicefg_square_loss, 'dicefg_square_grad': dicefg_square_grad,
+      # 'dice_square_loss': dice_square_loss, 'dice_square_grad': dice_square_grad,
     }
 
   def get_output_shape(self, input_shape=None):
@@ -195,7 +206,7 @@ class ConvNet(object):
     feed_dict = {
       self._input: input_batch,
       self._labels: output_batch,
-      self._training: True
+      self._training: False
     }
     self.session.run(self._accuracy_update_op, feed_dict=feed_dict)
     return self.session.run(self._accuracy_op)

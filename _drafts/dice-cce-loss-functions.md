@@ -67,32 +67,28 @@ A pixel is foreground if its value is bigger than some threshold $$\theta$$. By 
 - $$\theta$$ = 0.95: 95% bg, 5% fg
 - $$\theta$$ = 0.5: 50% bg, 50% fg
 
-To investigate the behavior of different loss functions I trained a model for various bg/fg ratios with one of them and saved loss values and global gradient norms of all of them. Some results are plotted below (column name denotes the loss function used for training). All plots can be found here[^2].
+To investigate the behavior of different loss functions I trained a model for various bg/fg ratios with one of them and saved loss values and global gradient norms of all of them.
+I also trained models with and without batch normalization (*BN*) before each nonlinearity and used *ADAM* and *SGD* optimizers.
+
+You can find my code used for the experiments here[^3]. Feel free to take a look at it and I encourage you to run further experiments using the ipython notebook.
+Some results are plotted below (column name denotes the loss function used for training). All plots can be found here[^2].
+
+#### Results
 
 ##### Please zoom in for better readability.
-![5FG]({{ "/assets/dice-cce-loss-function/5fg_run3.png" | absolute_url }})
-![50FG]({{ "/assets/dice-cce-loss-function/50fg_run0.png" | absolute_url }})
-![95FG]({{ "/assets/dice-cce-loss-function/95fg_run2.png" | absolute_url }})
+![5FG]({{ "/assets/dice-cce-loss-function/ADAM-nconv2-batchsize2-batchnormFalse_5fg_run1.png" | absolute_url }})
+![50FG]({{ "/assets/dice-cce-loss-function/ADAM-nconv2-batchsize2-batchnormFalse_50fg_run1.png" | absolute_url }})
+![95FG]({{ "/assets/dice-cce-loss-function/ADAM-nconv2-batchsize2-batchnormFalse_95fg_run1.png" | absolute_url }})
+![95FG_BN]({{ "/assets/dice-cce-loss-function/ADAM-nconv2-batchsize2-batchnormTrue_95fg_run0.png" | absolute_url }})
+![95FG_SGD]({{ "/assets/dice-cce-loss-function/SGD-nconv2-batchsize2-batchnormTrue_95fg_run0.png" | absolute_url }})
+
 
 #### Observations
+None of the models converged when optimized with *SGD*, whether *BN* was used or not.
+Optimizing with *ADAM* made all models without *BN* converge except for the one trained with *DICEFG* on the 95% fg data.
+Using *BN* before each activation improved models accuracy and helped to train the model with *DICEFG* on the 95% fg data successfully.
 
-**5% foreground:**
-In all experiments but one (when trained with *CCE*) the model converged around 99.5% accuracy.
-*DICEFG* and *DICEFG_SQUARE* yielded the biggest, *CCE* the smallest global gradient norms.
-Values for *DICEFG* loss were bigger than for other loss functions.
-
-**50% foreground:**
-All models converged.
-*CCE* resulted in the biggest gradients, other gradients were similar in magnitude.
-
-**95% foreground:**
-None of models trained with *DICEFG* converged.
-*DICE* and *DICE_SQUARE* yielded the biggest gradients.
-
-I observed that the magnitude of gradients of *DICE* and *DICE_SQUARE* for the 5% fg case were bigger than for the 95% fg case.
-This is very strange, because both situations should be indistinguishable from the point of view of the loss functions, since they take bg and fg channels equally into account.
-Maybe there is a bug in the code I've written for the experiments.
-Feel free to take a look at it and I encourage you to run further experiments using my ipython notebook[^3].
+It is interesting to note, that the gradient norms for the 95% fg case are smaller than those for the 5% fg case. It is a strange observation, because, for example from the point of view of the *DICE* and *CCE* loss functions, both situations should be indistinguishable, since they take bg and fg equally into account.
 
 
 ---
