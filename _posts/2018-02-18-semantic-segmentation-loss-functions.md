@@ -1,13 +1,14 @@
 ---
 layout: post
-title: "Dice vs. Categorical Cross Entropy"
+title: "Loss functions for semantic segmentation"
 excerpt: "See how dice and categorical cross entropy loss functions perform when training a semantic segmentation model."
 categories: neural networks tensorflow
+date: 2018-02-18
 ---
 ### Introduction
 
 Categorical cross entropy *CCE* and Dice index *DICE* are popular loss functions for training of neural networks for semantic segmentation.
-In medical field images being analyzed consist mainly of background pixels with few pixels belonging to objects of interest.
+In medical field images being analyzed consist mainly of background pixels with a few pixels belonging to objects of interest.
 Such cases of high class imbalance cause networks to be biased towards background when trained with *CCE*.
 To account for that, weighting of foreground and background pixels can be applied.
 In contrast to *CCE*, usage of *DICE* doesn't require weighting to successfully train models with imbalanced datasets[^1].
@@ -17,7 +18,7 @@ In contrast to *CCE*, usage of *DICE* doesn't require weighting to successfully 
 **Notation:** In the following, $$y_i^j$$ and $$\hat{y}_i^j$$ denote $$i$$th channel at the $$j$$th pixel location of the reference labels and neural network softmax output, respectively.
 $$y^j$$ is a one-hot vector of length $$c$$ with $$1$$ at the reference class location and $$0$$ elsewhere.
 I use $$c$$ to denote the total channel count, $$N$$ to denote total pixel count in a mini-batch and $$\epsilon$$ as a small constant plugged to avoid numerical problems.
-The code examples use `tensorflow` and assume that models are fed with 4-D tensors of shape `(batch_dim, y_dim, x_dim, channel_dim)`.
+The code examples below use `tensorflow` and assume that models are fed with 4-D tensors of shape `(batch_dim, y_dim, x_dim, channel_dim)`.
 
 **Softmax output:** The loss functions are computed on the softmax output which interprets the model output as unnormalized log probabilities and squashes them into $$[0,1]$$ range such that for a given pixel location $$\sum_{i=0}^c \hat{y}_i = 1$$.
 
@@ -43,7 +44,7 @@ or using squares in the denominator (*DICE_SQUARE*) as proposed by Milletari[^1]
 
 $$\textrm{dice\_loss\_square} = 1 - \frac{1}{c}\sum_{i=0}^{c}\frac{\sum_j^N 2y_i^j\hat{y}_i^j + \epsilon}{\sum_j^N y_i^jy_i^j + \sum_j^N\hat{y}_i^j\hat{y}_i^j + \epsilon}$$
 
-$$\epsilon$$ is used to avoid division by 0 (denominator) and to learn from patches containing no labels in the reference (nominator). The multiplication by $$\frac{1}{c}$$ gives a nice property, that the loss is within $$[0, 1]$$ regardless of the channel count. Optionally, the dice loss can be computed only for foreground channels (*DICEFG*, *DICEFG_SQUARE*), because it punishes false positives.
+$$\epsilon$$ is used to avoid division by 0 (denominator) and to learn from patches containing no pixels of $$i$$th class in the reference (nominator). The multiplication by $$\frac{1}{c}$$ gives a nice property, that the loss is within $$[0, 1]$$ regardless of the channel count. Optionally, the dice loss can be computed only for foreground channels (*DICEFG*, *DICEFG_SQUARE*), because it punishes false positives.
 
 ```python
 def dice_loss(softmax_output, labels, ignore_background=False, square=False):
@@ -67,7 +68,7 @@ A pixel is foreground if its value is bigger than some threshold $$\theta$$. By 
 - $$\theta$$ = 0.95: 95% bg, 5% fg
 - $$\theta$$ = 0.5: 50% bg, 50% fg
 
-To investigate the behavior of different loss functions I trained a model for various bg/fg ratios with one of them and saved loss values and global gradient norms of all of them.
+To investigate the behavior of different loss functions I trained a model with one of them for various bg/fg ratios and saved loss values and global gradient norms of all of them.
 I also trained models with and without batch normalization (*BN*) before each nonlinearity and used *ADAM* and *SGD* optimizers.
 
 You can find my code used for the experiments here[^3]. Feel free to take a look at it and I encourage you to run further experiments using the ipython notebook.
@@ -76,11 +77,11 @@ Some results are plotted below (column name denotes the loss function used for t
 #### Results
 
 ##### Please zoom in for better readability.
-![5FG]({{ "/assets/dice-cce-loss-function/ADAM-nconv2-batchsize2-batchnormFalse_5fg_run1.png" | absolute_url }})
-![50FG]({{ "/assets/dice-cce-loss-function/ADAM-nconv2-batchsize2-batchnormFalse_50fg_run1.png" | absolute_url }})
-![95FG]({{ "/assets/dice-cce-loss-function/ADAM-nconv2-batchsize2-batchnormFalse_95fg_run1.png" | absolute_url }})
-![95FG_BN]({{ "/assets/dice-cce-loss-function/ADAM-nconv2-batchsize2-batchnormTrue_95fg_run0.png" | absolute_url }})
-![95FG_SGD]({{ "/assets/dice-cce-loss-function/SGD-nconv2-batchsize2-batchnormTrue_95fg_run0.png" | absolute_url }})
+![5FG]({{ "/assets/semantic-segmentation-loss-functions/ADAM-nconv2-batchsize2-batchnormFalse_5fg_run1.png" | absolute_url }})
+![50FG]({{ "/assets/semantic-segmentation-loss-functions/ADAM-nconv2-batchsize2-batchnormFalse_50fg_run1.png" | absolute_url }})
+![95FG]({{ "/assets/semantic-segmentation-loss-functions/ADAM-nconv2-batchsize2-batchnormFalse_95fg_run1.png" | absolute_url }})
+![95FG_BN]({{ "/assets/semantic-segmentation-loss-functions/ADAM-nconv2-batchsize2-batchnormTrue_95fg_run0.png" | absolute_url }})
+![95FG_SGD]({{ "/assets/semantic-segmentation-loss-functions/SGD-nconv2-batchsize2-batchnormTrue_95fg_run0.png" | absolute_url }})
 
 
 #### Observations
@@ -92,11 +93,11 @@ When training with *DICEFG*, the *CCE* loss and gradient norm skyrocketed in the
 It is interesting to note, that the gradient norms for the 95% fg case are smaller than those for the 5% fg case. It is a strange observation, because, for example from the point of view of the *DICE* and *CCE* loss functions, both situations should be indistinguishable, since they take bg and fg equally into account.
 
 #### Conclusions
-For this toy segmentation task, all models with batch normalization achieved a good accuracy on all bg/fg configurations regardless of the used loss function. 
-Batch normalization improves models performance and was essential to make the model trained with *DICEFG* converge on the 95% fg dataset.
+For this toy segmentation task, all models with batch normalization achieved a good accuracy on all bg/fg configurations regardless of the used loss function.
+Batch normalization improved models performance and was essential to make the model trained with *DICEFG* converge on the 95% fg dataset.
 
 ---
 #### References
 [^1]: Milletari at al., [*V-Net: Fully Convolutional Neural Network for Volumetric Medical Image Segmentation*](https://arxiv.org/abs/1606.04797). 2016.
-[^2]: [Plots from all experiments.](https://github.com/gchlebus/gchlebus.github.io/tree/master/assets/dice-cce-loss-function)
-[^3]: [Code used for the experiments.](https://github.com/gchlebus/gchlebus.github.io/tree/master/code/loss-functions)
+[^2]: [Plots from all experiments.](https://github.com/gchlebus/gchlebus.github.io/tree/master/assets/semantic-segmentation-loss-functions)
+[^3]: [Code used for the experiments.](https://github.com/gchlebus/gchlebus.github.io/tree/master/code/semantic-segmentation-loss-functions)
