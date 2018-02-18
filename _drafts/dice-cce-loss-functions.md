@@ -87,9 +87,13 @@ Some results are plotted below (column name denotes the loss function used for t
 None of the models converged when optimized with *SGD*, whether *BN* was used or not.
 Optimizing with *ADAM* made all models without *BN* converge except for the one trained with *DICEFG* on the 95% fg data.
 Using *BN* before each activation improved models accuracy and helped to train the model with *DICEFG* on the 95% fg data successfully.
+When training with *DICEFG*, the *CCE* loss and gradient norm skyrocketed in the beginning for the 50% fg dataset.
 
 It is interesting to note, that the gradient norms for the 95% fg case are smaller than those for the 5% fg case. It is a strange observation, because, for example from the point of view of the *DICE* and *CCE* loss functions, both situations should be indistinguishable, since they take bg and fg equally into account.
 
+#### Conclusions
+For this toy segmentation task, all models with batch normalization achieved a good accuracy on all bg/fg configurations regardless of the used loss function. 
+Batch normalization improves models performance and was essential to make the model trained with *DICEFG* converge on the 95% fg dataset.
 
 ---
 #### References
