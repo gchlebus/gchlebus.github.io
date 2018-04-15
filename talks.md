@@ -12,7 +12,7 @@ permalink: /talks/
   </div>
   <div style="margin-left:10px;">
     <h4>Neural Network Based Automatic Liver and Liver Tumor Segmentation</h4>
-    <p>LiTS Workshop @ MICCAI 2017, Quebec, Canada.</p>
+    <p>LiTS Workshop @ MICCAI 2017, Quebec, Canada</p>
     <p>
       [<a href="https://github.com/gchlebus/gchlebus.github.io/blob/master/assets/talks/LITS_v3.pdf">slides</a>]
     </p>
@@ -27,7 +27,7 @@ permalink: /talks/
   </div>
   <div style="margin-left:10px;">
     <h4>Comparison of Deep Learning and Shape Modeling for Automatic CT-based Liver Segmentation</h4>
-    <p>3rd Conference on Image-Guided Interventions, Magdeburg, Germany.</p>
+    <p>3rd Conference on Image-Guided Interventions, Magdeburg, Germany</p>
     <p>
       [<a href="https://github.com/gchlebus/gchlebus.github.io/blob/master/assets/talks/IGIC_Abstract_v4.pdf">abstract</a>]
       [<a href="https://github.com/gchlebus/gchlebus.github.io/blob/master/assets/talks/IGIC_v1_wo_gif.pdf">slides</a>]
@@ -44,7 +44,7 @@ permalink: /talks/
   </div>
   <div style="margin-left:10px;">
     <h4>Comparison of Model Initialization Methods for Liver Segmentation using Statistical Shape Models</h4>
-    <p>CARS 2017, Barcelona, Spain.</p>
+    <p>CARS 2017, Barcelona, Spain</p>
     <p>
       [<a href="https://github.com/gchlebus/gchlebus.github.io/blob/master/assets/talks/CARS_2017_GChlebus_Abstract.pdf">abstract</a>]
     </p>
