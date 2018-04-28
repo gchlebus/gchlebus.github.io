@@ -1,11 +1,12 @@
 ---
 layout: post
-title: On Evaluation of Liver Tumor Segmentation
+title: On Evaluation of Tumor Segmentation
 excerpt: "Development of automatic segmentation method requires careful selection of evaluation criteria, which ideally should correspond to the expected clinical utility. This post describes various approaches to assess tumor segmentation."
 categories: segmentation evalation metrics
+date: 2018-04-28
 ---
 
-The problem of automatic liver tumor segmentation is a problem which occupies a lot of researches in the medical imaging field. Having a reliable, automatic segmentation tool would allow for a better and more accurate diagnosis, therapy planing and therapy response assessment. Currently, the standard way to measure the therapy response is to compare the largest diameters of tumors, which clearly neglects the volume change and texture features. With the recent advancements in the field of machine learning, it is only a matter of time before clinicians would have good automatic segmentation tools at their disposal.
+The problem of automatic tumor segmentation is a problem which occupies a lot of researches in the medical imaging field. Having a reliable, automatic segmentation tool would allow for a better and more accurate diagnosis, therapy planing and therapy response assessment. Currently, the standard way to measure the therapy response is to compare the largest diameters of tumors, which clearly neglects the volume change and texture features. With the recent advancements in the field of machine learning, it is only a matter of time before clinicians would have good automatic segmentation tools at their disposal.
 
 ### Problem
 Given **reference** tumor segmentation produced by a clinical expert and **test** segmentation output produced by some algorithm for a group of patients, we would like to measure how good the **test** segmentation is. A patient can have zero or more tumors segmented in the **reference**. The evaluation should consider two points:
@@ -47,7 +48,7 @@ The Jaccard index[^1] (aka Intersection over Union *IoU*) is a common metric for
 $$0 \leq J(A, B) = \frac{|A \cap B|}{|A \cup B|} = \frac{TP}{TP + FP + FN}\leq 1$$
 
 For empty $$A$$ and $$B$$ the $$J(A,B)=1$$. The Jaccard index can be considered a metric, since it satisfies the triangle inequality. Assuming a constant error in terms of missclassified voxels and a variable size of the object to be segmented, the behavior of the Jaccard index as depicted in the following figure can be observed. Note, that Jaccard index yields higher scores for the $$FP=100$$ case than for the $$FN=100$$.
-![Jaccard]({{ "/assets/liver-tumor-segmentation-evaluation/jaccard.png" | absolute_url }})
+![Jaccard]({{ "/assets/tumor-segmentation-evaluation/jaccard.png" | absolute_url }})
 
 #### Dice index or F-1 score
 The Dice index[^2] (aka Dice's coefficient) is a metric defined very similarly to the Jaccard index, but it does not satisfy the triangle inequality.
@@ -55,7 +56,7 @@ The Dice index[^2] (aka Dice's coefficient) is a metric defined very similarly t
 $$0 \leq DSC(A,B) = \frac{2|A \cap B|}{|A|+|B|} = \frac{2J(A,B)}{1+J(A,B)} = \frac{2TP}{2TP + FP + FN} \leq 1$$
 
 Dice and Jaccard indices can be in most situations used interchangeably, since Jaccard can be derived from Dice and vice versa. They exhibit the following relationship:
-![JaccardVsDice]({{ "/assets/liver-tumor-segmentation-evaluation/jaccard_vs_dice.png" | absolute_url }})
+![JaccardVsDice]({{ "/assets/tumor-segmentation-evaluation/jaccard_vs_dice.png" | absolute_url }})
 
 #### Tversky index
 The Tversky index[^7] is a generalization of the Dice and Jaccard index, where one can weight how the $$FP$$ and $$FN$$ are weighted. Assuming that $$A$$ is a subject of comparison and $$B$$ is the referent we can write:
