@@ -67,54 +67,6 @@ By tinkering with $$\alpha$$ and $$\beta$$ the focus of the comparison can be sh
 #### Free-Response Receiver Operating Characteristic (FROC)
 FROC[^4] is an extension to the conventional ROC[^5] which tries to overcome the limitiation of the ROC which is only one decision per case and only two decision alternatives. The FROC allows for analysis of experiments where number of lesions per case may be zero or more and the reader is allowed to take multiple decisions per image. A typical FROC plot would have *Sensitivity* on the y-axis and *FP per image* on the x-axis. It should be noted, that there are currently no established methods to test for significance of differences between two FROC curves as well as no single index summarizing the FROC plot (e.g, ROC has the area under the curve index).
 
-### How to define corresponding tumors?
-Calculation of detection measures requires defintion of a hit to count how many of reference tumors were found by the output of an automatic method.
-Because multiple tumors can be present, we need to define a method for establishing tumor correspondences. 
-
-
-![TumorCases]({{ "/assets/liver-tumor-segmentation-evaluation/cases.png" | absolute_url }})
-
-
-
-In order to determine which of the output tumors are true positives, we define a function measuring overlap (DICE index) between output and reference:
-
-$$DICE(M^{out}[T^{out}], M^{ref}[T^{ref}])$$
-
-
- we need to define a test function $$f(\textbf{T}^{out}, \textbf{T}^{ref})$$ and a threshold $$\theta_{TP}$$ such that:
-
-$$f(\textbf{T}^{out}, \textbf{T}^{ref}) > \theta_{TP}, \textbf{T}^{out} \: is \: true \: positive$$
-
-where $$\textbf{T}^{out}$$ is a set of output tumors corresponding to a set of reference tumors $$\textbf{T}^{ref}$$. By a tumor I mean each connected component in the segmentation mask. Let's take a look at example segmentations below:
-
-
-
-The case **(a)** represents a simple $$1:1$$ correspondence, where $$\textbf{T}^{out}=\{T_1^{out}\} $$ and $$\textbf{T}^{ref}=\{T_1^{ref}\}$$. The case **(b)** shows a situation, where two output tumors correspond to one reference tumor. Thus, if $$f(\{T_1^{out},T_2^{out}\},\{T_1^{ref}\}) > \theta_{TP}$$, we should count two output tumors as a one $$TP$$. In situation **(c)** one output tumor corresponds to three reference tumors. Therefore, if $$f(\{T_1^{out}\},\{T_1^{ref},T_2^{ref},T_3^{ref}\}) > \theta_{TP}$$, we should count it as three $$TPs$$. **(d)** depicts a case where $$\textbf{T}^{out}=\{T_1^{out}, T_2^{out}\} $$ and $$\textbf{T}^{ref}=\{T_1^{ref}, T_2^{ref}\}$$. Although in case **(e)** the output tumor overlaps with two reference tumors, it should be tested for being test positive only with the smaller one, since the overlap with the bigger one is marginal.
-
-An algorithm to find and evaluate a $$\textbf{T}^{out}$$ and $$\textbf{T}^{ref}$$ pair could be as follows:
-
----
-Input: threshold $$\theta_{TP}$$ and output tumor index $$i$$.
-
-1. $$\textbf{T}^{out} = \{T_i^{out}\}$$, where $$T_i^{out}$$ is a tumor with a given index $$i$$ from the output tumor mask.
-2. $$size_{ref} = 0$$, $$\textbf{C} = \{\}$$, $$\textbf{s} = \{\}$$
-3. While true:
-    1. Collect all reference tumors overlaping with tumors from $$\textbf{T}^{out}$$ in $$\textbf{T}^{ref}$$.
-    2. if $$size_{ref} == \|\textbf{T}^{ref}\|$$, then break, else $$size_{ref} = \|\textbf{T}^{ref}\|$$.
-    3. Append $$\{ {\textbf{T}^{ref}\choose{k}}_{k=1,2,...,\|\textbf{T}^{ref}\|}, \textbf{T}^{out}\}$$ to $$\textbf{C}$$.
-    5. Collect all output tumors overlaping with tumors from $$\textbf{T}^{ref}$$ in $$\textbf{T}^{out}$$.
-    6. Append $$\{ {\textbf{T}^{ref}\choose{k}}_{k=1,2,...,\|\textbf{T}^{ref}\|}, \textbf{T}^{out}\}$$ to $$\textbf{C}$$.
-4. For each $$\{\textbf{T}^{out'}, \textbf{T}^{ref'}\}$$ in $$\textbf{C}$$:
-    1. Append $$f(\textbf{T}^{out'}, \textbf{T}^{ref'})$$ to $$\textbf{s}$$
-5. if $$max(\textbf{s}) > \theta_{TP}$$:
-    1. $$\{\textbf{T}^{out}, \textbf{T}^{ref}\} = \textbf{C}[argmax(\textbf{s})]$$.
-    2. Remove tumors in $$\textbf{T}^{out}$$ from the output tumor mask.
-    3. Remove tumors in $$\textbf{T}^{ref}$$ from the reference tumor mask.
-    4. Count that $$\|\textbf{T}^{ref}\|$$ true positives were found.
-
----
-The above algorithm should be called repeatadly for each tumor in the output tumor mask. All output tumors left in the output mask should be counted as false positives.
-
 ---
 #### References
 [^1]: [Wikipedia article on Jaccard index](https://en.wikipedia.org/wiki/Jaccard_index)
