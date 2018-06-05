@@ -47,19 +47,23 @@ class ConvNet(object):
     self._average_gradients = average_gradients
     self._loss_op = tf.losses.softmax_cross_entropy(onehot_labels=self._labels, logits=self._inference_op)
     optimizer = tf.train.AdamOptimizer(learning_rate=lr)
+
     if average_gradients == 1:
+      # This 'train_op' computes gradients and applies them in one step.
       self._train_op = optimizer.minimize(self._loss_op)
     else:
+      # here 'train_op' only applies gradients passed via placeholders stored
+      # in 'grads_placeholders. The gradient computation is done with 'grad_op'.
       grads_and_vars = optimizer.compute_gradients(self._loss_op)
       avg_grads_and_vars = []
       self._grad_placeholders = []
       for grad, var in grads_and_vars:
-        grad_ph = tf.placeholder(grad.dtype,  grad.shape)
+        grad_ph = tf.placeholder(grad.dtype, grad.shape)
         self._grad_placeholders.append(grad_ph)
         avg_grads_and_vars.append((grad_ph, var))
       self._grad_op = [x[0] for x in grads_and_vars]
       self._train_op = optimizer.apply_gradients(avg_grads_and_vars)
-      self._gradients = []
+      self._gradients = [] # list to store gradients
 
   def train(self, session, input_batch, output_batch):
     feed_dict = {

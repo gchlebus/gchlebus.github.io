@@ -38,7 +38,7 @@ def run_experiment(average_gradients, batch_size, iterations, verbose):
       if (i+1) % 100 == 0:
         accuracy = net.evaluate(sess, validation_batch, validation_labels)
         training_log.append((accuracy, i+1))
-        if args.verbose:
+        if verbose:
           print('[{:d}/{:d}] loss: {:.3g}, accuracy: {:.3g}%'.format(i+1, iterations, loss, accuracy))
     accuracy = net.evaluate(sess, validation_batch, validation_labels)
     training_log.append((accuracy, iterations))
