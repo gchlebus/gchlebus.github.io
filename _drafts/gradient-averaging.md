@@ -9,7 +9,7 @@ When training big neural networks, it can happen that the biggest mini-batch siz
 In such cases training can get very inefficient and even not converge due to very noisy gradients.
 Gradient averaging is a technique allowing to increase the effective mini-batch size arbitralily despite GPU memory constraints.
 The key idea is to separate gradients computation from applying them.
-If you do so, you can compute gradients in each iteration and apply an average of them less freuently.
+If you do so, you can compute gradients in each iteration and apply an average of them less frequently.
 Let's take a look at a code examples (full code can be found here[^1]).
 
 **Separate gradient computation**
@@ -63,6 +63,21 @@ def train(self, session, input_batch, output_batch):
 
 Let's see, how gradient averaging affects model performance.
 For that, I trained the same network with different mini-batch sizes, but the gradients were applied always after the network has seen 100 samples.
+Moreover, the maximum number of iterations was set such that in each case the same count of training steps was performed.
+
+```
+>>> python main.py --average-gradients=1 --batch-size=100 --iterations=1000
+mean accuracy (10 runs): 95 +/- 0.172
+
+>>> python main.py --average-gradients=5 --batch-size=20 --iterations=5000
+mean accuracy (10 runs): 94.9 +/- 0.325
+
+>>> python main.py --average-gradients=10 --batch-size=10 --iterations=10000
+mean accuracy (10 runs): 95.1 +/- 0.36
+
+>>> python main.py --average-gradients=20 --batch-size=5 --iterations=20000
+mean accuracy (10 runs): 95.2 +/- 0.303
+```
 
 #### References
 [^1]: [Gradient averaging code example](https://github.com/gchlebus/gchlebus.github.io/tree/master/code/gradient-averaging)
