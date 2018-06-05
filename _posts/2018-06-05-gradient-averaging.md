@@ -3,6 +3,7 @@ layout: post
 title: "Gradient averaging with TensorFlow"
 excerpt: "Gradient averaging over multiple training steps is a very useful technique, which can help you overcome the limitations of your GPU."
 categories: neural networks
+date: 2018-06-05
 ---
 
 When training big neural networks, it can happen that the biggest mini-batch size you can afford is one.
