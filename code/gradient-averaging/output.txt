@@ -1,0 +1,72 @@
+Extracting MNIST_DATA/train-images-idx3-ubyte.gz
+Extracting MNIST_DATA/train-labels-idx1-ubyte.gz
+Extracting MNIST_DATA/t10k-images-idx3-ubyte.gz
+Extracting MNIST_DATA/t10k-labels-idx1-ubyte.gz
+EXPERIMENT STARTED
+Namespace(average_gradients=1, batch_size=100, iterations=1000, reps=10, verbose=False)
+Training finished. Best accuracy: 95.4 at iteration 1000.
+Training finished. Best accuracy: 95 at iteration 1000.
+Training finished. Best accuracy: 94.9 at iteration 1000.
+Training finished. Best accuracy: 94.8 at iteration 900.
+Training finished. Best accuracy: 94.9 at iteration 1000.
+Training finished. Best accuracy: 94.8 at iteration 900.
+Training finished. Best accuracy: 95.1 at iteration 1000.
+Training finished. Best accuracy: 95.2 at iteration 1000.
+Training finished. Best accuracy: 95 at iteration 1000.
+Training finished. Best accuracy: 94.9 at iteration 1000.
+EXPERIMENT FINISHED
+mean accuracy (10 runs): 95 +/- 0.172
+Extracting MNIST_DATA/train-images-idx3-ubyte.gz
+Extracting MNIST_DATA/train-labels-idx1-ubyte.gz
+Extracting MNIST_DATA/t10k-images-idx3-ubyte.gz
+Extracting MNIST_DATA/t10k-labels-idx1-ubyte.gz
+EXPERIMENT STARTED
+Namespace(average_gradients=5, batch_size=20, iterations=5000, reps=10, verbose=False)
+Training finished. Best accuracy: 94.8 at iteration 4900.
+Training finished. Best accuracy: 94.7 at iteration 4500.
+Training finished. Best accuracy: 95 at iteration 5000.
+Training finished. Best accuracy: 95.4 at iteration 5000.
+Training finished. Best accuracy: 94.6 at iteration 4800.
+Training finished. Best accuracy: 95.6 at iteration 4900.
+Training finished. Best accuracy: 94.6 at iteration 5000.
+Training finished. Best accuracy: 94.7 at iteration 4800.
+Training finished. Best accuracy: 95.1 at iteration 5000.
+Training finished. Best accuracy: 94.7 at iteration 5000.
+EXPERIMENT FINISHED
+mean accuracy (10 runs): 94.9 +/- 0.325
+Extracting MNIST_DATA/train-images-idx3-ubyte.gz
+Extracting MNIST_DATA/train-labels-idx1-ubyte.gz
+Extracting MNIST_DATA/t10k-images-idx3-ubyte.gz
+Extracting MNIST_DATA/t10k-labels-idx1-ubyte.gz
+EXPERIMENT STARTED
+Namespace(average_gradients=10, batch_size=10, iterations=10000, reps=10, verbose=False)
+Training finished. Best accuracy: 95.1 at iteration 10000.
+Training finished. Best accuracy: 94.9 at iteration 10000.
+Training finished. Best accuracy: 95.7 at iteration 9600.
+Training finished. Best accuracy: 94.2 at iteration 9100.
+Training finished. Best accuracy: 95.2 at iteration 9600.
+Training finished. Best accuracy: 95.1 at iteration 10000.
+Training finished. Best accuracy: 95.3 at iteration 9700.
+Training finished. Best accuracy: 95.2 at iteration 9400.
+Training finished. Best accuracy: 94.8 at iteration 9300.
+Training finished. Best accuracy: 95 at iteration 9500.
+EXPERIMENT FINISHED
+mean accuracy (10 runs): 95.1 +/- 0.36
+Extracting MNIST_DATA/train-images-idx3-ubyte.gz
+Extracting MNIST_DATA/train-labels-idx1-ubyte.gz
+Extracting MNIST_DATA/t10k-images-idx3-ubyte.gz
+Extracting MNIST_DATA/t10k-labels-idx1-ubyte.gz
+EXPERIMENT STARTED
+Namespace(average_gradients=20, batch_size=5, iterations=20000, reps=10, verbose=False)
+Training finished. Best accuracy: 95.8 at iteration 19800.
+Training finished. Best accuracy: 95.1 at iteration 20000.
+Training finished. Best accuracy: 94.7 at iteration 19500.
+Training finished. Best accuracy: 95.6 at iteration 19500.
+Training finished. Best accuracy: 95.2 at iteration 20000.
+Training finished. Best accuracy: 95.3 at iteration 20000.
+Training finished. Best accuracy: 95.1 at iteration 20000.
+Training finished. Best accuracy: 95.2 at iteration 18100.
+Training finished. Best accuracy: 95.4 at iteration 20000.
+Training finished. Best accuracy: 94.9 at iteration 19800.
+EXPERIMENT FINISHED
+mean accuracy (10 runs): 95.2 +/- 0.303
