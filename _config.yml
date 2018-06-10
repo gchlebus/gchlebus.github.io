@@ -19,7 +19,7 @@ email: gchlebus@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   ML enthusiast's blog.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://gchlebus.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  gchlebus
 linkedin_username: gchlebus
 disqus:
