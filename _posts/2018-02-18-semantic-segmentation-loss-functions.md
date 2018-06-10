@@ -4,6 +4,7 @@ title: "Loss functions for semantic segmentation"
 excerpt: "See how dice and categorical cross entropy loss functions perform when training a semantic segmentation model."
 categories: neural networks tensorflow
 date: 2018-02-18
+comments: true
 ---
 ### Introduction
 

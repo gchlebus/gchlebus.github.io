@@ -4,6 +4,7 @@ title: "Looking under the hood of tensorflow models"
 excerpt: "Get more insights into tensorflow models."
 categories: neural networks
 date: 2018-01-29
+comments: true
 ---
 
 In this post I will show you how to get more insights into tensorflow models. We'll cover graph visualization, counting trainable parameters, memory consumption and timing of operations.

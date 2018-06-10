@@ -4,6 +4,7 @@ title: On Evaluation of Tumor Segmentation
 excerpt: "Development of automatic segmentation method requires careful selection of evaluation criteria, which ideally should correspond to the expected clinical utility. This post describes various approaches to assess tumor segmentation."
 categories: segmentation evalation metrics
 date: 2018-04-28
+comments: true
 ---
 
 The problem of automatic tumor segmentation is a problem which occupies a lot of researches in the medical imaging field. Having a reliable, automatic segmentation tool would allow for a better and more accurate diagnosis, therapy planing and therapy response assessment. Currently, the standard way to measure the therapy response is to compare the largest diameters of tumors, which clearly neglects the volume change and texture features. With the recent advancements in the field of machine learning, it is only a matter of time before clinicians would have good automatic segmentation tools at their disposal.
