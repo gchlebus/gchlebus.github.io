@@ -27,21 +27,19 @@ The evalation criteria should be chosen having the appliaction of an algorithm i
 #### Detection
 Detection measures are typically functions of real positives $$P$$ (the number of positives in the reference data), real negatives $$N$$, true positives $$TP$$ (the number of correctly found real positives), true negatives $$TN$$, false negatives $$FN$$ (the number of missclassified real negatives) and false positives $$FP$$. Some of the most common measures are Sensitivity, Specificity, Precision and Recall[^3]:
 
-$$Sensitivity = \frac{TP}{P}$$
+$$ \textrm{Recall} = \textrm{Sensitivity} = \frac{TP}{P} $$
 
-$$Specificity = \frac{TN}{N}$$
+$$ \textrm{Specificity} = \frac{TN}{N} $$
 
-$$Precision = \frac{TP}{TP + FP}$$
-
-$$Recall = \frac{TP}{P} = \frac{TP}{TP + FN}$$
+$$ \textrm{Precision} = \frac{TP}{TP + FP} $$
 
 Precision answers *How many relevant items were selected?*
 Recall answers *How many selected items are relevant?*
 
 #### Relative volume error
-Relative volume error $$RVE$$ for a test volume $$A$$ and reference volume $$B$$ is defined as:
+Relative volume error $$\textrm{RVE}$$ for a test volume $$A$$ and reference volume $$B$$ is defined as:
 
-$$RVE = \frac{||A|-|B|}{|B|} \cdot 100$$
+$$ \textrm{RVE} = \frac{||A|-|B|}{|B|} \cdot 100$$
 
 #### Jaccard index
 The Jaccard index[^1] (aka Intersection over Union *IoU*) is a common metric for evaluation of segmentation quality.
