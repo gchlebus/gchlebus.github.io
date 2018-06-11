@@ -2,7 +2,6 @@
 layout: post
 title: "Looking under the hood of tensorflow models"
 excerpt: "Get more insights into tensorflow models."
-categories: neural networks
 date: 2018-01-29
 comments: true
 ---

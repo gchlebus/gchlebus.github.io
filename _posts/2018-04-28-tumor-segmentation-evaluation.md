@@ -2,7 +2,6 @@
 layout: post
 title: On Evaluation of Tumor Segmentation
 excerpt: "Development of automatic segmentation method requires careful selection of evaluation criteria, which ideally should correspond to the expected clinical utility. This post describes various approaches to assess tumor segmentation."
-categories: segmentation evalation metrics
 date: 2018-04-28
 comments: true
 ---
