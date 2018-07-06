@@ -1,0 +1,78 @@
+\usetikzlibrary{shapes.misc,positioning,graphs,arrows}
+\large
+\def\scale{0.5}
+
+\begin{tikzpicture}[scale=\scale]
+\tikzset{>=stealth'}
+\tikzset{every edge/.append style={thick, shorten >=2pt, shorten <=2pt}}
+\tikzset{node distance=5mm and 20mm}
+\tikzset{layer/.style={
+	circle,minimum height=15mm,
+	draw=black,
+	fill=#1!30,
+	scale=\scale
+	},
+	layer/.default={yellow}
+}
+
+\node[layer] (in0) {};
+\foreach \x in {1,2}
+{
+  \pgfmathtruncatemacro{\i}{\x - 1}
+  \node[layer, below=of in\i] (in\x) {};	
+}
+
+\def\name{l0}
+\def\color{green}
+\node[layer=\color, right=of in0, yshift=12.5mm] (\name0) {};
+\foreach \x in {1,...,3}
+{
+  \pgfmathtruncatemacro{\i}{\x - 1}
+  \node[layer=\color, below=of \name\i] (\name\x) {};	
+}
+
+\foreach \x in {0,...,2}
+  \foreach \y in {0,...,3}
+  	\path (in\x) edge[->] (l0\y);
+
+\def\name{l1}
+\def\color{blue}
+\node[layer=\color, right=of l00, yshift=12.5mm] (\name0) {};
+\foreach \x in {1,...,4}
+{
+  \pgfmathtruncatemacro{\i}{\x - 1}
+  \node[layer=\color, below=of \name\i] (\name\x) {};	
+}
+
+\foreach \x in {0,...,3}
+  \foreach \y in {0,...,4}
+  	\path (l0\x) edge[->] (l1\y);
+
+
+\def\name{l2}
+\def\color{blue}
+\node[layer=\color, right=of l10] (\name0) {};
+\foreach \x in {1,...,4}
+{
+  \pgfmathtruncatemacro{\i}{\x - 1}
+  \node[layer=\color, below=of \name\i] (\name\x) {};	
+}
+
+\foreach \x in {0,...,4}
+  \foreach \y in {0,...,4}
+  	\path (l1\x) edge[->] (l2\y);
+
+\def\name{out}
+\def\color{red}
+\node[layer=\color, right=of l22, yshift=12.5mm] (\name0) {};
+\foreach \x in {1}
+{
+  \pgfmathtruncatemacro{\i}{\x - 1}
+  \node[layer=\color, below=of \name\i] (\name\x) {};	
+}
+
+\foreach \x in {0,...,4}
+  \foreach \y in {0,1}
+  	\path (l2\x) edge[->] (out\y);
+
+\end{tikzpicture}

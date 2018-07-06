@@ -4,6 +4,22 @@ title: Talks
 permalink: /talks/
 ---
 
+### 2018
+<div style="display: flex;align-items:stretch;flex-wrap:wrap">
+  <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
+    <img src="/assets/talks/ComputerVision2.0/neuralnet.pdf" style="max-width: 200px;">
+  </div>
+  <div style="margin-left:10px;flex:1 1 400px;">
+    <h4>Computer Vision 2.0</h4>
+    <p>Science Night @ SBMC 2018, Bremen, Germany</p>
+    <p>
+      [<a href="https://github.com/gchlebus/gchlebus.github.io/blob/master/assets/talks/ComputerVision2.0/ComputerVision2.0.pdf">slides</a>]
+    </p>
+  </div>
+</div>
+
+##### Deep neural networks have significantly changed the way we design image processing pipelines. Thanks to their ability to accumulate knowledge from big data sets, neural networks are the core of many state-of-the-art computer vision algorithms. In this talk a brief history of computer vision will be given and examplary medical applications will be presented.
+
 ### 2017
 
 <div style="display: flex;align-items:stretch;flex-wrap:wrap">
