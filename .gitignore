@@ -14,3 +14,4 @@ graph
 log_*
 *.auto
 *.npz
+*#
