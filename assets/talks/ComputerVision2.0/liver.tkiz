@@ -1,0 +1,71 @@
+\usetikzlibrary{shapes.misc,positioning,graphs,arrows}
+\large
+\def\scale{0.5}
+
+\begin{tikzpicture}[scale=\scale]
+\tikzset{>=stealth'}
+\tikzset{every edge/.append style={thick, shorten >=2pt, shorten <=2pt}}
+%\tikzset{node distance=5mm and 20mm}
+\tikzset{layer/.style={
+	circle,minimum height=60mm,
+	draw=black,
+	fill=#1!50,
+	scale=\scale
+	},
+	layer/.default={brown}
+}
+
+%\node (liver_img) at (0,0)
+%      {\includegraphics{liver.png}};
+
+\node[layer] at (-68.5, 0) (n1) {};
+\node[layer] at (-67.5, 10) (n2) {};
+\node[layer] at (-65.2, 20) (n3) {};
+\node[layer] at (-61.2, 30) (n4) {};
+\node[layer] at (-53.2, 40) (n5) {};
+\node[layer] at (-43, 46) (n6) {};
+\node[layer] at (-33, 48.5) (n7) {};
+\node[layer] at (-23, 48.3) (n8) {};
+\node[layer] at (-13, 47) (n9) {};
+\node[layer] at (-3, 44.5) (n10) {};
+\node[layer] at (7, 42) (n11) {};
+\node[layer] at (17, 40.5) (n12) {};
+\node[layer] at (27, 40) (n13) {};
+\node[layer] at (37, 41) (n14) {};
+\node[layer] at (47, 42) (n15) {};
+\node[layer] at (57, 42) (n16) {};
+\node[layer] at (67, 36) (n17) {};
+\node[layer] at (67, 26) (n18) {};
+\node[layer] at (61, 16) (n19) {};
+\node[layer] at (49, 6) (n20) {};
+\node[layer] at (38, 0) (n21) {};
+\node[layer] at (25, -4) (n22) {};
+\node[layer] at (10, -7) (n23) {};
+\node[layer] at (0, -14) (n24) {};
+\node[layer] at (-10, -24) (n25) {};
+\node[layer] at (-20, -33) (n26) {};
+\node[layer] at (-20, -33) (n27) {};
+\node[layer] at (-30, -40) (n28) {};
+\node[layer] at (-40, -44) (n29) {};
+\node[layer] at (-50, -47.5) (n30) {};
+\node[layer] at (-60, -47.5) (n31) {};
+\node[layer] at (-62, -37.5) (n32) {};
+\node[layer] at (-63.5, -27.5) (n33) {};
+\node[layer] at (-66.5, -17.5) (n34) {};
+\node[layer] at (-68, -8.5) (n35) {};
+
+
+\foreach \x in {1,...,35}
+  \foreach \y in {15,...,20}
+    \pgfmathtruncatemacro{\i}{Mod(\x + \y, 35)+1}
+  	\path (n\x) edge[->] (n\i);
+
+    
+\foreach \x in {1,...,34}
+  \pgfmathtruncatemacro{\i}{\x + 1}
+  \path (n\x) edge[->] (n\i);
+
+\path (n35) edge[->] (n1);
+
+
+\end{tikzpicture}
