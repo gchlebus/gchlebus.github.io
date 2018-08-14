@@ -1,0 +1,85 @@
+\usetikzlibrary{shapes.misc,positioning,graphs,arrows}
+\pgfmathsetseed{\number\pdfrandomseed}
+\large
+\def\scale{0.5}
+
+\begin{tikzpicture}[scale=\scale]
+\tikzset{>=stealth'}
+\tikzset{every edge/.append style={very thick, shorten >=2pt, shorten <=2pt, line width=4}}
+%\tikzset{node distance=5mm and 20mm}
+\tikzset{layer/.style={
+	circle,minimum height=60mm,
+	draw=black,
+	fill=#1!50,
+	scale=\scale,
+  line width=4,
+	},
+	layer/.default={brown}
+}
+
+
+\def\count{2}
+\def\step{2}
+
+\newcommand\connect[2]{
+  \pgfmathtruncatemacro{\a}{#2}
+  \pgfmathtruncatemacro{\b}{#2 + \step}
+  \pgfmathtruncatemacro{\c}{#2 + 2*\step}
+  \path (in#1) edge[->] (n\a);
+  \path (in#1) edge[->] (n\b);
+  \path (in#1) edge[->] (n\c);
+}
+
+\node[layer] at (-40, -44) (in1) {};
+\node[layer] at (-50, -47.5) (in2) {};
+\node[layer] at (-60, -47.5) (in3) {};
+\node[layer] at (-62, -37.5) (in4) {};
+\node[layer] at (-63.5, -27.5) (in5) {};
+\node[layer] at (-66.5, -17.5) (in6) {};
+\node[layer] at (-68, -8.5) (in7) {};
+\node[layer] at (-68.5, 0) (in8) {};
+\node[layer] at (-67.5, 10) (in9) {};
+\node[layer] at (-65.2, 20) (in10) {};
+\node[layer] at (-61.2, 30) (in11) {};
+\node[layer] at (-53.2, 40) (in12) {};
+\node[layer] at (-43, 46) (in13) {};
+\node[layer] at (-33, 48.5) (in14) {};
+\node[layer] at (-23, 48.3) (in15) {};
+
+\node[layer] at (-13, 47) (n1) {};
+\node[layer] at (-3, 44.5) (n2) {};
+\node[layer] at (7, 42) (n3) {};
+\node[layer] at (17, 40.5) (n4) {};
+\node[layer] at (27, 40) (n5) {};
+\node[layer] at (37, 41) (n6) {};
+\node[layer] at (47, 42) (n7) {};
+\node[layer] at (57, 42) (n8) {};
+\node[layer] at (67, 36) (n9) {};
+\node[layer] at (67, 26) (n10) {};
+\node[layer] at (61, 16) (n11) {};
+\node[layer] at (49, 6) (n12) {};
+\node[layer] at (38, 0) (n13) {};
+\node[layer] at (25, -4) (n14) {};
+\node[layer] at (10, -7) (n15) {};
+\node[layer] at (0, -14) (n16) {};
+\node[layer] at (-10, -24) (n17) {};
+\node[layer] at (-20, -33) (n18) {};
+\node[layer] at (-30, -40) (n19) {};
+
+\foreach \x in {1,...,15}
+  \connect{\x}{\x};
+    
+\foreach \x in {1,...,14}
+  \pgfmathtruncatemacro{\i}{\x + 1}
+  \path (in\x) edge[->] (in\i);
+
+\foreach \x in {19,...,2}
+  \pgfmathtruncatemacro{\i}{\x - 1}
+  \path (n\x) edge[->] (n\i);
+
+\path (in15) edge[->] (n1);
+\path (in1) edge[->] (n19);
+
+
+\end{tikzpicture}
+
