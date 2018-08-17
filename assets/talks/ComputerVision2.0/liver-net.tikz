@@ -5,14 +5,14 @@
 
 \begin{tikzpicture}[scale=\scale]
 \tikzset{>=stealth'}
-\tikzset{every edge/.append style={very thick, shorten >=2pt, shorten <=2pt, line width=4}}
+\tikzset{every edge/.append style={very thick, shorten >=5pt, shorten <=5pt, line width=6}}
 %\tikzset{node distance=5mm and 20mm}
 \tikzset{layer/.style={
 	circle,minimum height=60mm,
 	draw=black,
 	fill=#1!50,
 	scale=\scale,
-  line width=4,
+  line width=6,
 	},
 	layer/.default={brown}
 }
@@ -29,6 +29,9 @@
   \path (in#1) edge[->] (n\b);
   \path (in#1) edge[->] (n\c);
 }
+
+\node[inner sep=0pt] (russell) at (0,0)
+    {\includegraphics[]{liver2.png}};
 
 \node[layer] at (-40, -44) (in1) {};
 \node[layer] at (-50, -47.5) (in2) {};
@@ -66,8 +69,17 @@
 \node[layer] at (-20, -33) (n18) {};
 \node[layer] at (-30, -40) (n19) {};
 
-\foreach \x in {1,...,15}
-  \connect{\x}{\x};
+\node[layer=gray] at (-40, -20) (w1) {};
+\node[layer=gray] at (-48, 15) (w2) {};
+%\node[layer=gray] at (-32, 35) {};
+\node[layer=gray] at (-20, 0) (w3) {};
+\node[layer=gray] at (-18, 25) (w4) {};
+\node[layer=gray] at (15, 12) (w5) {};
+\node[layer=gray] at (40, 25) (w6) {};
+
+
+%\foreach \x in {1,...,15}
+%  \connect{\x}{\x};
     
 \foreach \x in {1,...,14}
   \pgfmathtruncatemacro{\i}{\x + 1}
@@ -79,6 +91,41 @@
 
 \path (in15) edge[->] (n1);
 \path (in1) edge[->] (n19);
+
+\path (in1) edge[->] (w1);
+\path (in4) edge[->] (w1);
+\path (in7) edge[->] (w1);
+
+\path (in7) edge[->] (w2);
+\path (in10) edge[->] (w2);
+\path (in13) edge[->] (w2);
+
+\path (w1) edge[->] (w2);
+\path (w1) edge[->] (w3);
+\path (w2) edge[->] (w3);
+\path (w2) edge[->] (w4);
+\path (w3) edge[->] (w4);
+\path (w3) edge[->] (w5);
+\path (w4) edge[->] (w5);
+\path (w4) edge[->] (w6);
+\path (w5) edge[->] (w6);
+
+\path (w6) edge[->] (n10);
+\path (w6) edge[->] (n8);
+\path (w6) edge[->] (n12);
+
+\path (w5) edge[->] (n14);
+
+\path (in15) edge[->] (w4);
+\path (w4) edge[->] (n3);
+
+\path (n5) edge[->] (w6);
+
+\path (n18) edge[->] (w3);
+\path (w3) edge[->] (n16);
+
+
+
 
 
 \end{tikzpicture}
