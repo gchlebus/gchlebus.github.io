@@ -7,7 +7,7 @@ permalink: /talks/
 ### 2018
 <div style="display: flex;align-items:stretch;flex-wrap:wrap">
   <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
-    <img src="/assets/talks/curac2018/liver-net.pdf" style="max-width: 200px;">
+    <img src="/assets/talks/curac2018/liver-net.png" style="max-width: 200px;">
   </div>
   <div style="margin-left:10px;flex:1 1 400px;">
     <h4>Automatic Liver and Tumor Segmentation in Late-Phase MRI Using Fully Convolutional Neural Networks</h4>
@@ -23,7 +23,7 @@ permalink: /talks/
 
 <div style="display: flex;align-items:stretch;flex-wrap:wrap">
   <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
-    <img src="/assets/talks/ComputerVision2.0/neuralnet.pdf" style="max-width: 200px;">
+    <img src="/assets/talks/ComputerVision2.0/neuralnet.png" style="max-width: 200px;">
   </div>
   <div style="margin-left:10px;flex:1 1 400px;">
     <h4>Computer Vision 2.0</h4>

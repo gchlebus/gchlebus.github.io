@@ -7,7 +7,8 @@ permalink: /publications/
 ### 2018
 
 - Chlebus G, Meine H, Abolmaali N, Schenk A. "Automatic Liver and Tumor Segmentation in Late-Phase
-  MRI Using Fully Convolutional Neural Networks", *Proceedings of the CURAC Conference*.
+  MRI Using Fully Convolutional Neural Networks", *Proceedings of the Annual Meeting of the German
+  Society of Computer- and Robot-Assisted Surgery*.
 
 - Schenk A, Chlebus G, Meine H, Thoduka S, Abolmaali N. "Deep Learning for Liver Segmentation and
   Volumetry in Late Phase MRI", *European Congress of Radiology*.
@@ -47,7 +48,7 @@ permalink: /publications/
 
 - Weiler F, Chlebus G, Rieder C, Moltz J, Waring A, Brachmann C, Traulsen N, Corr D, Wirtz S, Krass
   S, Hahn HK. "Building Blocks for Clinical Research in Adaptive Radiotherapy", *Proceedings of the
-  CURAC Conference*.
+  Annual Meeting of the German Society of Computer- and Robot-Assisted Surgery*.
 
 - Weiler F, Brachmann C, Traulsen N, Nijhuis R, Chlebus G, Schenk M, Corr D, Wirtz S, Ganswindt U,
   Thieke C, Belka C, Hahn HK. "Fast automated non-linear contour propagation for adaptive head and
