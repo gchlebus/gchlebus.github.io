@@ -4,12 +4,10 @@ title: Publications
 permalink: /publications/
 ---
 
-### Accepted or to appear
+### 2018
 
 - Chlebus G, Meine H, Abolmaali N, Schenk A. "Automatic Liver and Tumor Segmentation in Late-Phase
   MRI Using Fully Convolutional Neural Networks", *Proceedings of the CURAC Conference*.
-
-### 2018
 
 - Schenk A, Chlebus G, Meine H, Thoduka S, Abolmaali N. "Deep Learning for Liver Segmentation and
   Volumetry in Late Phase MRI", *European Congress of Radiology*.

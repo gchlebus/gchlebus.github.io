@@ -7,6 +7,22 @@ permalink: /talks/
 ### 2018
 <div style="display: flex;align-items:stretch;flex-wrap:wrap">
   <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
+    <img src="/assets/talks/curac2018/liver-net.pdf" style="max-width: 200px;">
+  </div>
+  <div style="margin-left:10px;flex:1 1 400px;">
+    <h4>Automatic Liver and Tumor Segmentation in Late-Phase MRI Using Fully Convolutional Neural Networks</h4>
+    <p>CURAC 2018, Leipzig, Germany</p>
+    <p>
+      [<a href="https://github.com/gchlebus/gchlebus.github.io/blob/master/assets/talks/curac2018/curac2018.pdf">slides</a>]
+    </p>
+  </div>
+</div>
+
+##### Liver and tumor segmentation plays an important role for many liver interventions. Automation of segmentation steps will bring a substantial improvement to clinical workflows by reducing the planning time and decreasing the inter-observer variability. While liver and tumor segmentation in CT data is a well-studied subject, only few publications are available for MRI data. We present an automatic segmentation approach based on 2D fully convolutional neural networks, which can be applied to both segmentation tasks not only in CT, but also in MR images. For the challenging MRI data, we evaluated two algorithms, one using an axial network and a second one based on three orthogonal models. The latter and better method resulted in a mean Dice index of 0.95 and 0.65 for liver and tumor segmentation, respectively.  The liver segmentation quality of the method matches that of experienced clinical users and is higher compared to other automatic approaches and results in the literature.  The tumor segmentation requires further improvements to make it comparable to the results of human experts.
+
+
+<div style="display: flex;align-items:stretch;flex-wrap:wrap">
+  <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
     <img src="/assets/talks/ComputerVision2.0/neuralnet.pdf" style="max-width: 200px;">
   </div>
   <div style="margin-left:10px;flex:1 1 400px;">
