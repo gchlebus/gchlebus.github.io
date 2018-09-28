@@ -7,6 +7,22 @@ permalink: /talks/
 ### 2018
 <div style="display: flex;align-items:stretch;flex-wrap:wrap">
   <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
+    <img src="/assets/talks/sirtop-workshop-2018/sirtop-workshop-2018.png" style="max-width: 200px;">
+  </div>
+  <div style="margin-left:10px;flex:1 1 400px;">
+    <h4>Deep Learning Algorithms for Liver and Tumor Segmentation</h4>
+    <p><i>Invited talk</i></p>
+    <p>SIRTOP Workshop @ Jahreskongress der TGRN e.V. und SRG e.V. in Kooperation mit HGMS e.V., Weimar, Germany</p>
+    <p>
+      [<a href="https://github.com/gchlebus/gchlebus.github.io/blob/master/assets/talks/sirtop-workshop-2018/sirtop-workshop-2018.pdf">slides</a>]
+    </p>
+  </div>
+</div>
+
+##### Deep learning algorithms have the capability of automating many tedious and time-consuming medical image analysis tasks. In this talk a brief introduction into deep learning will be given as well as an overview of AI applications in the radioembolization context. Moreover, a study regarding automatic deep learning based liver and tumor segmentation in MRI and CT will be presented.
+
+<div style="display: flex;align-items:stretch;flex-wrap:wrap">
+  <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
     <img src="/assets/talks/curac2018/liver-net.png" style="max-width: 200px;">
   </div>
   <div style="margin-left:10px;flex:1 1 400px;">
