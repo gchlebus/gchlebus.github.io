@@ -43,6 +43,13 @@ Internship @ Regional Hospital, Raciborz, Poland
 
 ### Education
 
+**2017 - Present** <br>
+External PhD Candidate @ Radboud University Medical Center, Nijmegen, The Netherlands
+<ul style="margin-top:-18px">
+  <li>Research Topic: "Automatic Liver Analysis with Deep Learning."</li>
+  <li>Supervisors: Prof. Bram van Ginneken, Prof. Horst Karl Hahn.</li>
+</ul>
+
 **2013** <br>
 Visiting Student @ ETH Zurich, Zurich, Switzerland
 <ul style="margin-top:-18px">
@@ -78,7 +85,7 @@ BSc in Biomedical Engineering @ Wrocław University of Technology, Wrocław, Pol
   <li>Received  the Zeno Karl Schindler Foundation Scholarship Grant for carrying research at ETH Zurich.</li>
 </ul>
 
-**2008-2011**
+**2008 - 2011**
 <ul style="margin-top:-18px">
   <li>Continuous recipient of the the Ministry of Higher Education Scholarship awarded nationwide to approximately top 5% students enrolled in the highest priority majors.</li>
 </ul>
