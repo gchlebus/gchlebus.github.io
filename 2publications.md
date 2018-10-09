@@ -26,9 +26,14 @@ permalink: /publications/
 - Chlebus G, Meine H, Moltz JH, Schenk A. "Neural Network-Based Automatic Liver Tumor Segmentation
   With Random Forest-Based Candidate Filtering", *arXiv preprint arXiv:1706.00842*.
 
-- Chlebus G, Schenk A, Thoduka S, Abolmaali N, Endo I, Meine H. "Comparison of Model Initialization
-  Methods for Liver Segmentation using Statistical Shape Models", *International Journal of Computer
-  Assisted Radiology and Surgery*.
+- Chlebus G, Meine H, Endo I, Schenk A. "Comparison of Deep Learning and Shape Modeling
+  for Automatic CT-based Liver Segmentation", *3rd Conference on Image-Guided
+  Interventions*.
+
+
+- Chlebus G, Schenk A, Thoduka S, Abolmaali N, Endo I, Meine H. "Comparison of Model
+  Initialization Methods for Liver Segmentation using Statistical Shape Models",
+  *International Journal of Computer Assisted Radiology and Surgery*.
 
 - Traulsen N, Schilling P, Thoduka S, Abolmaali N, Chlebus G, Strehlow J, Schenk A. "SIRT activity
   and dose calculation using an optimized territorial model for the liver", *International Journal
