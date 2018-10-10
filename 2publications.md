@@ -10,6 +10,9 @@ permalink: /publications/
 
 ### 2018
 
+- Meine H, Chlebus G, Ghafoorian M, Endo I, Schenk A. "Comparison of U-net-based
+  Convolutional Neural Networks for Liver Segmentation in CT", *arXiv preprint arXiv:1810.04017*.
+
 - Chlebus G, Meine H, Abolmaali N, Schenk A. "Automatic Liver and Tumor Segmentation in Late-Phase
   MRI Using Fully Convolutional Neural Networks", *Proceedings of the Annual Meeting of the German
   Society of Computer- and Robot-Assisted Surgery*.
