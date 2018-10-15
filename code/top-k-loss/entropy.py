@@ -16,27 +16,16 @@ Conclusions
   BCE has to be used for mulit-label problems.
   BCE considers class A vs. non class A
 """
-def one_hot_encoding(array):
-  one_hot_dimensions = (np.newaxis, ) * 3 + (slice(None),)
-  labels = np.asarray(list(range(NUM_CLASSES)))
-  a = (array == labels[one_hot_dimensions])
-  #a[0, 0, 0, 0] = 1
-  return a
 
-def softmax(array):
-  logits = array - np.max(array, axis=-1, keepdims=True)
-  logits = np.exp(logits)
-  softmax = logits / np.sum(logits, axis=-1, keepdims=True)
-  return softmax
-
-def cce(y, y_target):
+def categorical_cross_entropy(y, y_target):
+  y /= tf.reduce_sum(y, -1, True)
   logProbabilities = tf.log(tf.clip_by_value(y, 1e-7, 1.0-1e-7))
   #loss = -tf.reduce_sum(y_target * logProbabilities, axis=-1)
   loss = -y_target * logProbabilities
   return loss
   return tf.reduce_mean(loss)
 
-def binary_entropy(y, y_target):
+def binary_cross_entropy(y, y_target):
   distance = tf.abs(y - y_target)
   logDistance = tf.log(1 - tf.clip_by_value(distance, 1e-7, 1.0 - 1e-7))
   return -logDistance
@@ -50,16 +39,16 @@ def keras_binary(output, target, from_logits=False):
       output = tf.log(output / (1 - output))
   loss = tf.nn.sigmoid_cross_entropy_with_logits(labels=target, logits=output)
   return loss
-  return tf.reduce_mean(loss)
+  #return tf.reduce_mean(loss)
 
 def keras_cce(output, target, from_logits=False, axis=-1):
-  if not from_logits:
+  if not from_logits: # here a sigmoid or softmax is assumed, 
     # scale preds so that the class probas of each sample sum to 1
     output /= tf.reduce_sum(output, axis, True)
     # manual computation of crossentropy
     _epsilon = 1e-7
     output = tf.clip_by_value(output, _epsilon, 1. - _epsilon)
-    #loss = - tf.reduce_sum(target * tf.log(output), axis)
+    #loss = - tf.reduce_sum(target * tf.log(output), axis) 
     loss = - target * tf.log(output)
   else:
     loss = tf.nn.softmax_cross_entropy_with_logits(labels=target,
@@ -68,35 +57,53 @@ def keras_cce(output, target, from_logits=False, axis=-1):
   return tf.reduce_mean(loss)
 
 
-in_shape = (1, 1, 1, 1)
-out_shape = (1, 1, 1, NUM_CLASSES)
-input_t = np.random.randint(0, NUM_CLASSES, size=in_shape)
-output_t = np.random.random(out_shape)
-output_t = softmax(output_t)
-input_one_hot = one_hot_encoding(input_t).astype(np.int32)
 
-print("input_one_hot.shape", input_one_hot.shape)
-print("input_one_hot[0, 0, 0, :]", input_one_hot[0, 0, 0, :])
-print("output_t.shape", output_t.shape)
-print("output_t[0, 0, 0, :]", output_t[0, 0, 0, :])
+# logits - unscaled log probabilities
+def softmax(logits):
+  logits -= np.max(logits, axis=-1, keepdims=True)
+  exp_logits = np.exp(logits)
+  return exp_logits / np.sum(exp_logits, axis=-1, keepdims=True)
 
+def sigmoid(logits):
+  return 1 / (1 + np.exp(-logits))
 
+def get_losses_dict(output, target):
+  tf.reset_default_graph()
+  output_ph = tf.placeholder(tf.float32, shape=[1, len(output[0])])
+  target_ph = tf.placeholder(tf.float32, shape=[1, len(output[0])])
+  cce_loss = categorical_cross_entropy(output, target)
+  bce_loss = binary_cross_entropy(output, target)
+  keras_bce_loss = keras_binary(output_ph, target_ph)
+  keras_cce_loss = keras_cce(output_ph, target_ph)
+  with tf.Session() as sess:
+    sess.run(tf.global_variables_initializer())
+    ret = sess.run([cce_loss, bce_loss, keras_cce_loss, keras_bce_loss], feed_dict={
+      output_ph: output,
+      target_ph: target
+    })
+    ret = [x.squeeze() for x in ret]
+    return dict(
+      categorical_cross_entropy=ret[0],
+      binary_cross_entropy=ret[1],
+      keras_categorical_cross_entropy=ret[2],
+      keras_binary_cross_entropy=ret[3]
+    )
 
-input_ph = tf.placeholder(tf.float32, shape=[None, None, None, NUM_CLASSES])
-output_ph = tf.placeholder(tf.float32, shape=[None, None, None, NUM_CLASSES])
+def print_losses(output, target, activation_fn):
+  output = np.asarray(output).astype(np.float32)[np.newaxis, :]
+  target = np.asarray(target).astype(np.float32)[np.newaxis, :]
+  if output.shape != target.shape:
+    raise RuntimeError("target/output shape mismatch")
 
+  print('Output:', output.squeeze())
+  #output = activation_fn(output)
+  #print('Output after %s:' % activation_fn.__name__, output.squeeze())
+  print('Target:', target.squeeze())
 
-cce_loss = cce(output_ph, input_ph)
-binary_loss = binary_entropy(output_ph, input_ph)
-keras_binary_loss =keras_binary(output_ph, input_ph)
-keras_cce = keras_cce(output_ph, input_ph)
+  for loss_name, loss_output in get_losses_dict(output, target).items():
+    print("%s = " % loss_name, loss_output)
 
-with tf.Session() as s:
-    feed_dict = {
-      input_ph: input_one_hot,
-      output_ph: output_t
-    }
-    s.run(tf.global_variables_initializer())
-    ret = s.run([cce_loss, binary_loss, keras_binary_loss, keras_cce], feed_dict=feed_dict)
-    for name, value in zip('cce binary keras_binary keras_cce'.split(), ret):
-      print(name, value)
+if __name__ == '__main__':
+  output = [0.8, 0.7, 0.3, 0]
+  target = [1, 0, 1, 0]
+  print_losses(output, target, sigmoid)
