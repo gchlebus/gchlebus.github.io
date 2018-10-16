@@ -22,14 +22,14 @@ def categorical_cross_entropy(y, y_target):
   logProbabilities = tf.log(tf.clip_by_value(y, 1e-7, 1.0-1e-7))
   #loss = -tf.reduce_sum(y_target * logProbabilities, axis=-1)
   loss = -y_target * logProbabilities
-  return loss
+  #return loss
   return tf.reduce_mean(loss)
 
 def binary_cross_entropy(y, y_target):
   distance = tf.abs(y - y_target)
-  logDistance = tf.log(1 - tf.clip_by_value(distance, 1e-7, 1.0 - 1e-7))
-  return -logDistance
-  return -tf.reduce_mean(logDistance)
+  logDistance = -tf.log(1 - tf.clip_by_value(distance, 1e-7, 1.0 - 1e-7))
+  #return logDistance
+  return tf.reduce_mean(logDistance)
 
 def keras_binary(output, target, from_logits=False):
   if not from_logits:
@@ -38,8 +38,8 @@ def keras_binary(output, target, from_logits=False):
       output = tf.clip_by_value(output, _epsilon, 1 - _epsilon)
       output = tf.log(output / (1 - output))
   loss = tf.nn.sigmoid_cross_entropy_with_logits(labels=target, logits=output)
-  return loss
-  #return tf.reduce_mean(loss)
+  #return loss
+  return tf.reduce_mean(loss)
 
 def keras_cce(output, target, from_logits=False, axis=-1):
   if not from_logits: # here a sigmoid or softmax is assumed, 
@@ -53,7 +53,7 @@ def keras_cce(output, target, from_logits=False, axis=-1):
   else:
     loss = tf.nn.softmax_cross_entropy_with_logits(labels=target,
                                                        logits=output)
-  return loss
+  #return loss
   return tf.reduce_mean(loss)
 
 
@@ -104,6 +104,6 @@ def print_losses(output, target, activation_fn):
     print("%s = " % loss_name, loss_output)
 
 if __name__ == '__main__':
-  output = [0.8, 0.7, 0.3, 0]
-  target = [1, 0, 1, 0]
+  output = [0.3, 0.6, 0.1]
+  target = [0, 1, 0]
   print_losses(output, target, sigmoid)
