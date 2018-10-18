@@ -43,9 +43,9 @@ total loss. Model outputs for the other classes are influenced indirectly by the
 activation, which works according to the "winner takes it all" principle.
 
 ### Binary cross-entropy
-The binary cross-entropy $$\textrm{BCE}$$ function considers each class score produced by
-the model independently, which makes this loss function suitable also for multi-label
-problems, where each input can belong to more than one class. Unlike $$\textrm{CCE}$$,
+The binary cross-entropy $$\textrm{BCE}$$ considers each class score produced by the model
+independently, which makes this loss function suitable also for multi-label problems,
+where each input can belong to more than one class. Unlike $$\textrm{CCE}$$,
 $$\textrm{BCE}$$ doesn't assume a specific activation function of the final network layer.
 For a problem with 3 output classes (A, B, C) the binary cross-entropy considers three
 independent binary classification problems:
