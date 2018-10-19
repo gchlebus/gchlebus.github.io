@@ -4,11 +4,11 @@ title: Publications
 permalink: /publications/
 ---
 
-### Accepted or to appear
-
-- Chlebus G, Schenk A, Moltz JH, van Ginneken B, Hahn HK, Meine H. "Automatic liver tumor segmentation in CT with fully convolutional neural networks and object-based postprocessing", *Scientific Reports*.
-
 ### 2018
+
+- Chlebus G, Schenk A, Moltz JH, van Ginneken B, Hahn HK, Meine H. "Automatic liver tumor
+  segmentation in CT with fully convolutional neural networks and object-based
+  postprocessing", *Scientific Reports*.
 
 - Meine H, Chlebus G, Ghafoorian M, Endo I, Schenk A. "Comparison of U-net-based
   Convolutional Neural Networks for Liver Segmentation in CT", *arXiv preprint arXiv:1810.04017*.
