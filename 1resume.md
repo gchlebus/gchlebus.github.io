@@ -112,6 +112,7 @@ Polish (native) • English (fluent) • German (fluent) • Russian (novice)
   <li>Academic Communication and Presentation</li>
   <li>Project Management at Fraunhofer</li>
   <li>Project Management</li>
+  <li>Scrum Basics</li>
 </ul>
 
 <h4 style="color:grey">Others</h4>
