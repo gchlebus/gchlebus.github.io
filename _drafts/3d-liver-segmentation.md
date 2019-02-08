@@ -18,7 +18,7 @@ In the following the 3D network is trained with `patch_size = (60, 52, 52)`, `pa
 - `patch_size = (60, 60)`
 - `padding = (44, 44)`
 - `minibatch_size = 1`
-- `learning_rage = 5e-4`
+- `learning_rate = 5e-4`
 - train only with patches containing liver
 
 The loss goes down to below 0.1, which seems fine.
@@ -28,7 +28,7 @@ The loss goes down to below 0.1, which seems fine.
 - `patch_size = (60, 60, 52)`
 - `padding = (44, 44, 44)`
 - `minibatch_size = 1`
-- `learning_rage = 5e-4`
+- `learning_rate = 5e-4`
 - train only with patches containing liver
 ![3DUnet_drop_bn_dice]({{ "/assets/3d-liver-segmentation/3DUnet_bn_drop_pb_dice.png" | absolute_url }})
 
@@ -36,7 +36,7 @@ The loss goes down to below 0.1, which seems fine.
 - `patch_size = (60, 60, 52)`
 - `padding = (44, 44, 44)`
 - `minibatch_size = 1`
-- `learning_rage = 5e-4` (1st session), `learning_rage = 5e-5` (2nd session), `learning_rage = 5e-6` (3rd session)
+- `learning_rate = 5e-4` (1st session), `learning_rage = 5e-5` (2nd session), `learning_rage = 5e-6` (3rd session)
 - train only with patches containing liver
 ![3DUnet_bn_dice]({{ "/assets/3d-liver-segmentation/3DUnet_bn_pb_dice.png" | absolute_url }})
 
@@ -44,7 +44,7 @@ The loss goes down to below 0.1, which seems fine.
 - `patch_size = (52, 52, 52)`
 - `padding = (44, 44, 44)`
 - `minibatch_size = 1`
-- `learning_rage = 5e-5`
+- `learning_rate = 5e-5`
 - train only with patches containing liver
 - dice takes **only fg** into account!
 
@@ -60,7 +60,7 @@ Second training
 - `patch_size = (52, 52, 52)`
 - `padding = (44, 44, 44)`
 - `minibatch_size = 1`
-- `learning_rage = 5e-5`
+- `learning_rate = 5e-5`
 - train only with patches containing liver
 - dice takes **bg and fg** into account!
 ![3DUnet_plainbn_dicewithbg]({{ "/assets/3d-liver-segmentation/3DUnet_plainbn_dicewithbg.png" | absolute_url }})
@@ -69,15 +69,29 @@ Second training
 ![3DUnet_plainbn_dicewithbg2]({{ "/assets/3d-liver-segmentation/3DUnet_plainbn_dicewithbg_run2.png" | absolute_url }})
 ![3DUnet_plainbn_dicewithbg2_norm]({{ "/assets/3d-liver-segmentation/3DUnet_plainbn_dicewithbg_run2_norm.png" | absolute_url }})
 
+#### 3D U-net + batch_norm + dice loss (all data)
+- `patch_size = (52, 52, 52)`
+- `padding = (44, 44, 44)`
+- `minibatch_size = 1`
+- `learning_rate = 5e-5`
+- batch renorm
+  - `rmax=1`, `dmax=0` (1st session)
+  - `rmax=1.25`, `dmax=1` (2nd session)
+  - `rmax=1.5`, `dmax=2` (3rd session)
+  - `rmax=2`, `dmax=3` (4th session)
+  - `rmax=2.5`, `dmax=4` (5th session)
+  - `rmax=3`, `dmax=5` (6th session)
+![3DUnet_plainbn_dicewithbg_alldata]({{ "/assets/3d-liver-segmentation/3DUnet_plainbn_dicewithbg_alldata_renorm_3_5.png" | absolute_url }})
+
 #### 3D U-net + batch_renorm + cce loss
 - `patch_size = (60, 60, 52)`
 - `padding = (44, 44, 44)`
 - `minibatch_size = 1`
-- `learning_rage = 5e-4` (1st session), `learning_rage = 5e-5` (2nd session)
+- `learning_rate = 5e-4` (1st session), `learning_rate = 5e-5` (2nd session)
 ![3DUnet_bn_cce]({{ "/assets/3d-liver-segmentation/3DUnet_bn_pb_cce.png" | absolute_url }})
 
 ### Remarks
-- I had a problem due to Nans in summary histograms of trainable variables. I solved it by using `dice(1e-7)`. 3D U-Net, no dropout, no batch norm and dice. It could be that using batch norm would alleviate the problem.
+- I had a problem due to `NANs` in summary histograms of trainable variables. Using *epsilon* in dice loss or *batch norm* seemed to solve the problem. `3D U-Net, no dropout, no batch norm and dice`. 
 
 - Now there is a problem with vanishing gradients with `3D U-Net, no dropout, no batch norm and dice` and `3D U-Net, no dropout, no batch norm and cce`. Probably, you have to use batch norm to fight the vanishing gradients.
 
