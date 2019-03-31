@@ -4,6 +4,11 @@ title: Publications
 permalink: /publications/
 ---
 
+### 2019
+
+- Bilic P, Christ PF, Vorontsov E, Chlebus G, Chen H, Dou Q, Fu CW, Han X, Heng PA, Hesser J,
+  Kadoury S. "The Liver Tumor Segmentation Benchmark (LiTS)", *arXiv preprint arXiv:1901.04056*.
+
 ### 2018
 
 - Chlebus G, Schenk A, Moltz JH, van Ginneken B, Hahn HK, Meine H. "Automatic liver tumor
@@ -19,7 +24,7 @@ permalink: /publications/
 
 - Schenk A, Chlebus G, Meine H, Thoduka S, Abolmaali N. "Deep Learning for Liver Segmentation and
   Volumetry in Late Phase MRI", *European Congress of Radiology*.
-  
+
 - Hermes L, Wenzel M, Schröder T, Zeile M, Chlebus G, Brüning R. "Zur automatisierten Detektion und
   Klassifikation von Leberläsionen im CT der Leber", *RöFo - Fortschritte auf dem Gebiet der
   Röntgenstrahlen und der bildgebenden Verfahren*.
