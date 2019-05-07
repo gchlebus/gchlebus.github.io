@@ -9,6 +9,9 @@ permalink: /publications/
 - Bilic P, Christ PF, Vorontsov E, Chlebus G, Chen H, Dou Q, Fu CW, Han X, Heng PA, Hesser J,
   Kadoury S. "The Liver Tumor Segmentation Benchmark (LiTS)", *arXiv preprint arXiv:1901.04056*.
 
+- Chlebus G,  Abolmaali N, Schenk A, Meine H. "Relevance analysis of MRI sequences for automatic
+  liver tumor segmentation", *Medical Imaging with Deep Learning*.
+
 ### 2018
 
 - Chlebus G, Schenk A, Moltz JH, van Ginneken B, Hahn HK, Meine H. "Automatic liver tumor
