@@ -4,13 +4,19 @@ title: Publications
 permalink: /publications/
 ---
 
+### Accepted or to appear
+
+- Chlebus G, Meine H, Thoduka S, Abolmaali N, van Ginneken B, Hahn HK, Schenk A. "Reducing
+  inter-observer variability and interaction time of MR liver volumetry by combining automatic
+  CNN-based liver segmentation and manual corrections", *PLoS ONE*.
+
+- Chlebus G,  Abolmaali N, Schenk A, Meine H. "Relevance analysis of MRI sequences for automatic
+  liver tumor segmentation", *Medical Imaging with Deep Learning*.
+
 ### 2019
 
 - Bilic P, Christ PF, Vorontsov E, Chlebus G, Chen H, Dou Q, Fu CW, Han X, Heng PA, Hesser J,
   Kadoury S. "The Liver Tumor Segmentation Benchmark (LiTS)", *arXiv preprint arXiv:1901.04056*.
-
-- Chlebus G,  Abolmaali N, Schenk A, Meine H. "Relevance analysis of MRI sequences for automatic
-  liver tumor segmentation", *Medical Imaging with Deep Learning*.
 
 ### 2018
 
