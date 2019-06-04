@@ -22,3 +22,19 @@ ImportError: No module named shutil_get_terminal_size
 Check whether jupyter is installed in the conda environment you are executing the `jupyter notebook`
 command. Most probably it is not, so you would need to execute `conda install juypter` in that
 environemtn to get rid of the `ImportError`.
+
+## Debug printing tf/keras
+
+### tensorflow
+```python
+import tensorflow as tf
+x = tf.Print(x, [tf.shape(x)], message="x.shape", summarize=100)
+```
+
+### keras
+
+```python
+import tensorflow as tf
+import keras
+x = keras.layers.Lambda(lambda x: tf.Print(x, [tf.shape(x)], message="x.shape", summarize=100))(x)
+```
