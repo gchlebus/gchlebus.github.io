@@ -52,6 +52,13 @@ Foreground relevance maps computed for a true positive.
 Foreground relevance maps computed for a false negative.
 ![FN_15_relevance]({{ "/assets/segmentation-lrp/FN_15_relevance.png" | absolute_url }})
 
+#### Discussion
+
+- CNN used information from all MRI sequences.
+- T1-15min sequence, which was used to create training labels was not the most important one.
+- Similar relevance attribution for plain T1, T1-20s, T1-60s, and T1-120s.
+- Pixel-level explanations are hard to interpret.
+
 #### References
 [^1]: S. Bach et al., [*On pixel-wise explanations for non-linear classifier decisions by layer-wise relevance propagation*](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0130140). PLOS ONE, 2015.
 [^2]: Ö. Çiçek et al. 3d u-net: learning dense volumetric segmentation from sparse annotation. MICCAI, 2016.
