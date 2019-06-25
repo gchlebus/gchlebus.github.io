@@ -2,7 +2,7 @@
 layout: post
 title: "LRP for semantic segmentation"
 excerpt: "Explainability of decisions made by deep neural networks is of high value as it allows for validation and improvement of models. This post introduces an approach to explain semantic segmentation networks by means of layer-wise relevance propagation."
-date: 2019-05-06
+date: 2019-06-24
 comments: true
 ---
 
