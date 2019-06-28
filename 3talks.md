@@ -4,6 +4,23 @@ title: Talks
 permalink: /talks/
 ---
 
+### 2019
+<div style="display: flex;align-items:stretch;flex-wrap:wrap">
+  <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
+    <img src="/assets/talks/midl2019/FN_15_relevance.png" style="max-width: 200px;">
+  </div>
+  <div style="margin-left:10px;flex:1 1 400px;">
+    <h4>Relevance Analysis of MRI Sequences for Automatic Liver Tumor Segmentation</h4>
+    <p>MIDL 2019 London, England</p>
+    <p>
+      [<a href="https://openreview.net/pdf?id=B1lRBjMAYN">abstract</a>]
+      [<a href="https://github.com/gchlebus/gchlebus.github.io/blob/master/assets/talks/midl2019/midl_poster.pdf">poster</a>]
+    </p>
+  </div>
+</div>
+
+##### Explainability of decisions made by deep neural networks is of high value as it allows for validation and improvement of models. This work proposes an approach to explain semantic segmentation networks by means of layer-wise relevance propagation. As an exemplary application, we investigate which MRI sequences are most relevant for liver tumor segmentation.
+
 ### 2018
 <div style="display: flex;align-items:stretch;flex-wrap:wrap">
   <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
