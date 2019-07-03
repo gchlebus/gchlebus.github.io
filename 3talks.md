@@ -21,6 +21,20 @@ permalink: /talks/
 
 ##### Explainability of decisions made by deep neural networks is of high value as it allows for validation and improvement of models. This work proposes an approach to explain semantic segmentation networks by means of layer-wise relevance propagation. As an exemplary application, we investigate which MRI sequences are most relevant for liver tumor segmentation.
 
+<div style="display: flex;align-items:stretch;flex-wrap:wrap">
+  <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
+    <img src="/assets/talks/dicomtreffen2019/image.png" style="max-width: 200px;">
+  </div>
+  <div style="margin-left:10px;flex:1 1 400px;">
+    <h4>KI in der Radiologie: Aktuelle Forschungsthemen</h4>
+    <p><i>Invited talk</i></p>
+    <p>KIS-RIS-PACS und DICOM-Treffen, Schloß Waldthausen Mainz / Budenheim, Germany</p>
+    <p>
+      [<a href="https://github.com/gchlebus/gchlebus.github.io/blob/master/assets/talks/dicomtreffen2019/slides.pdf">slides</a>]
+    </p>
+  </div>
+</div>
+
 ### 2018
 <div style="display: flex;align-items:stretch;flex-wrap:wrap">
   <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
