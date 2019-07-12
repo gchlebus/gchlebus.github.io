@@ -4,12 +4,10 @@ title: Publications
 permalink: /publications/
 ---
 
-### Accepted or to appear
-
-- Chlebus G,  Abolmaali N, Schenk A, Meine H. "Relevance analysis of MRI sequences for automatic
-  liver tumor segmentation", *Medical Imaging with Deep Learning*.
-
 ### 2019
+
+- Chlebus G, Abolmaali N, Schenk A, Meine H. "Relevance analysis of MRI sequences for automatic
+  liver tumor segmentation", *Medical Imaging with Deep Learning*.
 
 - Chlebus G, Meine H, Thoduka S, Abolmaali N, van Ginneken B, Hahn HK, Schenk A. "Reducing
   inter-observer variability and interaction time of MR liver volumetry by combining automatic
