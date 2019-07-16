@@ -10,6 +10,16 @@ permalink: /resume/
 <u>Research Scientist @ Fraunhofer MEVIS, Bremen, Germany</u>
 <ul style="margin-top:-18px">
   <li>Medical image analysis with deep learning and machine learning techniques</li>
+  <ul style="margin-bottom:0px">
+    <li>Automatic organ segmentation in CT and MR</li>
+    <li>Automatic liver lesion detection and segmentation in CT and MR</li>
+    <li>Automatic vessel segmentation in contrast-enhanced CT and MR</li>
+    <li>Real-time catheter segmentation in fluoroscopy images</li>
+    <li>Explainability and uncertainty estimation of CNN-models</li>
+    <li>Automatic anomaly detection</li>
+    <li>Statistical shape models</li>
+  </ul>
+  <li>Developer of an internal deep learning framework RedLeaf</li>
   <li>Standalone and web application development</li>
   <li>Mentoring</li>
   <li>Project acquisition</li>
