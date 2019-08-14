@@ -104,6 +104,12 @@ permalink: /resume/
 
 Polish (native) • English (fluent) • German (fluent) • Russian (novice)
 
+<h3 style="color:grey">Reviewer</h3>
+<ul style="margin-top:-18px">
+  <li>Journals: European Radiology, Computers in Biology and Medicine, PLOS ONE</li>
+  <li>Conferences: DLMIA, MIDL</li>
+</ul>
+
 <h3 style="color:grey">Skills</h3>
 
 <h4 style="color:grey">Computing & IT</h4>
@@ -125,7 +131,7 @@ Polish (native) • English (fluent) • German (fluent) • Russian (novice)
   <li>Scrum Basics</li>
 </ul>
 
-<h4 style="color:grey">Others</h4>
+<h4 style="color:grey">Other</h4>
 <ul style="margin-top:-18px">
   <li>Category B driving license (non-commercial passenger vehicles)</li>
 </ul> 
