@@ -106,7 +106,8 @@ Polish (native) • English (fluent) • German (fluent) • Russian (novice)
 
 <h3 style="color:grey">Reviewer</h3>
 <ul style="margin-top:-18px">
-  <li>Journals: IEEE TMI, European Radiology, Computers in Biology and Medicine, PLOS ONE</li>
+  <li>Journals: IEEE TMI, European Radiology, Computers in Biology and Medicine, PLOS ONE,
+  Biocybernetics and Biomedical Engineering</li>
   <li>Conferences: DLMIA, MIDL</li>
 </ul>
 
