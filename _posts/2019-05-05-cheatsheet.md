@@ -38,3 +38,14 @@ import tensorflow as tf
 import keras
 x = keras.layers.Lambda(lambda x: tf.Print(x, [tf.shape(x)], message="x.shape", summarize=100))(x)
 ```
+
+## Misc
+
+### CUDA version check
+```
+> nvcc --version
+```
+### cuDNN version check
+```
+> cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -A 2
+```
