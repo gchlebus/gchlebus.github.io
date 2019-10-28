@@ -130,6 +130,7 @@ Polish (native) • English (fluent) • German (fluent) • Russian (novice)
   <li>Project Management at Fraunhofer</li>
   <li>Project Management</li>
   <li>Scrum Basics</li>
+  <li>Scientific Integrity</li>
 </ul>
 
 <h4 style="color:grey">Other</h4>
