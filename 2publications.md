@@ -4,11 +4,9 @@ title: Publications
 permalink: /publications/
 ---
 
-### Accepted or to appear
+### 2019
 
 - Chlebus G, Humpire Mamani GE, Schenk A, van Ginneken B, Meine H. "Mimicking Radiologists to Improve the Robustness of Deep-learning Based Automatic Liver Segmentation", *RSNA Annual Meeting*.
-
-### 2019
 
 - Chlebus G, Abolmaali N, Schenk A, Meine H. "Relevance analysis of MRI sequences for automatic
   liver tumor segmentation", *Medical Imaging with Deep Learning*.
