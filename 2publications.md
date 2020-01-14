@@ -4,6 +4,10 @@ title: Publications
 permalink: /publications/
 ---
 
+### Accepted or to appear
+
+- Altun HC, Chlebus G, Jacobs C, Meine H, van Ginneken B, Hahn HK. "Feasibility of End-To-End Trainable Two-Stage U-Net for Detection of Axillary Lymph Nodes in Contrast-Enhanced CT Based Scans on Sparse Annotations", *SPIE Medical Imaging*.
+
 ### 2019
 
 - Chlebus G, Humpire Mamani GE, Schenk A, van Ginneken B, Meine H. "Mimicking Radiologists to Improve the Robustness of Deep-learning Based Automatic Liver Segmentation", *RSNA Annual Meeting*.
