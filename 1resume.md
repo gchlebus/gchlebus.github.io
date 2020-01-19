@@ -131,6 +131,7 @@ Polish (native) • English (fluent) • German (fluent) • Russian (novice)
   <li>Project Management</li>
   <li>Scrum Basics</li>
   <li>Scientific Integrity</li>
+  <li>Leadership Training</li>
 </ul>
 
 <h4 style="color:grey">Other</h4>
