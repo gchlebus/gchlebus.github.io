@@ -49,3 +49,8 @@ x = keras.layers.Lambda(lambda x: tf.Print(x, [tf.shape(x)], message="x.shape", 
 ```
 > cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -A 2
 ```
+
+## Diff outputs of two commands
+```
+diff -ubd =(command1) =(command2) | colordiff 
+```
