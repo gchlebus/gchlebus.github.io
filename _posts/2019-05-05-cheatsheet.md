@@ -52,5 +52,7 @@ x = keras.layers.Lambda(lambda x: tf.Print(x, [tf.shape(x)], message="x.shape", 
 
 ## Diff outputs of two commands
 ```
-diff -ubd =(command1) =(command2) | colordiff 
+diff -ubd =(command1) =(command2) | colordiff
+# display diffs within one line
+diff -ubd =(command1) =(command2) | wdiff -dst
 ```
