@@ -5,11 +5,12 @@ permalink: /publications/
 ---
 
 ### Accepted or to appear
-
-- Altun HC, Chlebus G, Jacobs C, Meine H, van Ginneken B, Hahn HK. "Feasibility of End-To-End Trainable Two-Stage U-Net for Detection of Axillary Lymph Nodes in Contrast-Enhanced CT Based Scans on Sparse Annotations", *SPIE Medical Imaging*.
-
 - Göhler A, Chlebus G, et al. "Assessing liver tumor burden change on consecutive liver MRIs –
 an end-to-end deep learning application", *BIDMC’s Artificial Intelligence/Machine Learning Symposium*
+
+### 2020
+
+- Altun HC, Chlebus G, Jacobs C, Meine H, van Ginneken B, Hahn HK. "Feasibility of End-To-End Trainable Two-Stage U-Net for Detection of Axillary Lymph Nodes in Contrast-Enhanced CT Based Scans on Sparse Annotations", *SPIE Medical Imaging*.
 
 ### 2019
 
