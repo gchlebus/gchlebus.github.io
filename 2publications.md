@@ -5,10 +5,17 @@ permalink: /publications/
 ---
 
 ### Accepted or to appear
-- Göhler A, Chlebus G, et al. "Assessing liver tumor burden change on consecutive liver MRIs –
-an end-to-end deep learning application", *BIDMC’s Artificial Intelligence/Machine Learning Symposium*
+
+- Schnurr A-K, Chlebus G, et al. "Relevance Analysis of MRI Sequences for MS Lesion Detection",
+*ESMRMB*
 
 ### 2020
+
+- Göhler A, Chlebus G, et al. "Three-Dimensional Neural Network to Automatically Assess Liver Tumor Burden
+Change on Consecutive Liver MRIs", *Journal of the American College of Radiology*
+
+- Göhler A, Chlebus G, et al. "Assessing liver tumor burden change on consecutive liver MRIs –
+an end-to-end deep learning application", *BIDMC’s Artificial Intelligence/Machine Learning Symposium*
 
 - Altun HC, Chlebus G, Jacobs C, Meine H, van Ginneken B, Hahn HK. "Feasibility of End-To-End Trainable Two-Stage U-Net for Detection of Axillary Lymph Nodes in Contrast-Enhanced CT Based Scans on Sparse Annotations", *SPIE Medical Imaging*.
 
