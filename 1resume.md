@@ -6,6 +6,9 @@ permalink: /resume/
 
 <h3 style="color:grey">Work experience</h3>
 
+**Mar 2020 - Present** <br>
+<u>Senior Research Engineer @ Qualtrics, Kraków, Poland</u>
+
 **Jan 2014 - Present** <br>
 <u>Research Scientist @ Fraunhofer MEVIS, Bremen, Germany</u>
 <ul style="margin-top:-18px">
