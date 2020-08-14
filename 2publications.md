@@ -6,12 +6,13 @@ permalink: /publications/
 
 ### Accepted or to appear
 
-- Schnurr AK, Chlebus G, et al. "Relevance Analysis of MRI Sequences for MS Lesion Detection",
+- Schnurr AK, Schöben M, Hermann I, Schmidt R, Chlebus G, Schad LR, Gass A, Zöllner FG. "Relevance Analysis of MRI Sequences for MS Lesion Detection",
 *European Society of Magnetic Resonance in Medicine and Biology*.
 
 ### 2020
 
-- Göhler A, Chlebus G, et al. "Three-Dimensional Neural Network to Automatically Assess Liver Tumor Burden
+- Göhler A, Hsu TMH, Lacson R, Gujrathi I, Hashemi R, Chlebus G, Szolovits P, Khorasani R.
+ "Three-Dimensional Neural Network to Automatically Assess Liver Tumor Burden
 Change on Consecutive Liver MRIs", *Journal of the American College of Radiology*.
 
 - Göhler A, Chlebus G, et al. "Assessing liver tumor burden change on consecutive liver MRIs –
