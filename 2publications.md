@@ -6,10 +6,12 @@ permalink: /publications/
 
 ### Accepted or to appear
 
-- Schnurr AK, Schöben M, Hermann I, Schmidt R, Chlebus G, Schad LR, Gass A, Zöllner FG. "Relevance Analysis of MRI Sequences for MS Lesion Detection",
-*European Society of Magnetic Resonance in Medicine and Biology*.
+- Meyer A, Chlebus G, Rak M, Schindele D, Schostak M, van Ginneken B, Schenk A, Meine H, Hahn HK, Schreiber A, Hansen Ch. "Anisotropic 3D Multi-Stream CNN for Accurate Prostate Segmentation from Multi-Planar MRI", *Computer Methods and Programs in Biomedicine*.
 
 ### 2020
+
+- Schnurr AK, Schöben M, Hermann I, Schmidt R, Chlebus G, Schad LR, Gass A, Zöllner FG. "Relevance Analysis of MRI Sequences for MS Lesion Detection",
+*European Society of Magnetic Resonance in Medicine and Biology*.
 
 - Göhler A, Hsu TMH, Lacson R, Gujrathi I, Hashemi R, Chlebus G, Szolovits P, Khorasani R.
  "Three-Dimensional Neural Network to Automatically Assess Liver Tumor Burden
@@ -25,7 +27,7 @@ an end-to-end deep learning application", *BIDMC’s Artificial Intelligence/Mac
 - Chlebus G, Humpire Mamani GE, Schenk A, van Ginneken B, Meine H. "Mimicking Radiologists to Improve the Robustness of Deep-learning Based Automatic Liver Segmentation", *RSNA Annual Meeting*.
 
 - Chlebus G, Abolmaali N, Schenk A, Meine H. "Relevance analysis of MRI sequences for automatic
-  liver tumor segmentation", *Medical Imaging with Deep Learning*.
+  liver tumor segmentation", *Medica~`l Imaging with Deep Learning*.
 
 - Chlebus G, Meine H, Thoduka S, Abolmaali N, van Ginneken B, Hahn HK, Schenk A. "Reducing
   inter-observer variability and interaction time of MR liver volumetry by combining automatic
