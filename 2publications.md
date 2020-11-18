@@ -4,11 +4,9 @@ title: Publications
 permalink: /publications/
 ---
 
-### Accepted or to appear
+### 2020
 
 - Meyer A, Chlebus G, Rak M, Schindele D, Schostak M, van Ginneken B, Schenk A, Meine H, Hahn HK, Schreiber A, Hansen Ch. "Anisotropic 3D Multi-Stream CNN for Accurate Prostate Segmentation from Multi-Planar MRI", *Computer Methods and Programs in Biomedicine*.
-
-### 2020
 
 - Schnurr AK, Schöben M, Hermann I, Schmidt R, Chlebus G, Schad LR, Gass A, Zöllner FG. "Relevance Analysis of MRI Sequences for MS Lesion Detection",
 *European Society of Magnetic Resonance in Medicine and Biology*.
