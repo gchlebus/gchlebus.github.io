@@ -4,6 +4,11 @@ title: Publications
 permalink: /publications/
 ---
 
+### Accepted or to appear
+
+- Tschigor C, Chlebus G, Schumann C. "Deep Learning-basierte Oberfl ̈achenrekonstruktion aus Binärmasken",
+*Bildverarbeitung für die Medizin 2021*.
+
 ### 2020
 
 - Meyer A, Chlebus G, Rak M, Schindele D, Schostak M, van Ginneken B, Schenk A, Meine H, Hahn HK, Schreiber A, Hansen Ch. "Anisotropic 3D Multi-Stream CNN for Accurate Prostate Segmentation from Multi-Planar MRI", *Computer Methods and Programs in Biomedicine*.
