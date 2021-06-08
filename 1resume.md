@@ -7,7 +7,12 @@ permalink: /resume/
 <h3 style="color:grey">Work experience</h3>
 
 **Mar 2020 - Present** <br>
-<u>Senior Research Engineer @ Qualtrics, Kraków, Poland</u>
+<u>Senior Applied Scientist @ Qualtrics, Kraków, Poland</u>
+<ul style="margin-top:-18px">
+  <li>Time series forecasting and anomaly detection</li>
+  <li>Automatic insight generation</li>
+  <li>Data mining</li>
+</ul>
 
 **Jan 2014 - Present** <br>
 <u>Research Scientist @ Fraunhofer MEVIS, Bremen, Germany</u>
