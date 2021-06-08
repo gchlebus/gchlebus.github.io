@@ -4,7 +4,7 @@ title: Publications
 permalink: /publications/
 ---
 
-### Accepted or to appear
+### 2021
 
 - Tschigor C, Chlebus G, Schumann C. "Deep Learning-basierte Oberflächenrekonstruktion aus Binärmasken",
 *Bildverarbeitung für die Medizin 2021*.
