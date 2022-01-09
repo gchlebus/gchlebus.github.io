@@ -15,7 +15,7 @@ permalink: /resume/
 </ul>
 
 **Jan 2014 - Present** <br>
-<u>Research Scientist @ Fraunhofer MEVIS, Bremen, Germany</u>
+<u>Scientist Medical Image Analysis @ Fraunhofer MEVIS, Bremen, Germany</u>
 <ul style="margin-top:-18px">
   <li>Medical image analysis with deep learning and machine learning techniques</li>
   <ul style="margin-bottom:0px">
