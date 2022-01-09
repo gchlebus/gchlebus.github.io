@@ -3,7 +3,7 @@ __author__ = 'gchlebus'
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
-import tensorflow_probability as tfp
+import tensorflow.keras.backend as K
 from tqdm import tqdm
 
 def f(x, sigma):
@@ -19,28 +19,24 @@ y_true = f(X, sigma=0.0)
 
 in_placeholder = tf.compat.v1.placeholder(tf.float32, shape=(None, 1))
 out_placeholder = tf.compat.v1.placeholder(tf.float32, shape=(None, 1))
-
+drop_rate = 0.25
+units = 20
 input = tf.keras.layers.Input(shape=(1,))
-x = tfp.layers.DenseFlipout(20, activation="relu")(input)
-x = tfp.layers.DenseFlipout(20, activation="relu")(x)
-x = tfp.layers.DenseFlipout(1)(x)
+x = tf.keras.layers.Dense(units, activation="relu")(input)
+x = tf.keras.layers.Dropout(drop_rate)(x)
+x = tf.keras.layers.Dense(units, activation="relu")(x)
+#x = tf.keras.layers.Dropout(drop_rate)(x)
+x = tf.keras.layers.Dense(1)(x)
 model = tf.keras.Model(input, x)
 
 
 batch_size = train_size
-num_batches = train_size / batch_size
-kl_weight = 1.0 / train_size
-print("kl_weight", kl_weight)
 
 y_pred = model(in_placeholder)
-y_dist = tfp.distributions.Normal(loc=y_pred,scale=noise)
-log_likelihood = y_dist.log_prob(out_placeholder)
-neg_log_likelihood = -tf.reduce_mean(log_likelihood)
-kl = sum(model.losses) * kl_weight
-elbo_loss = neg_log_likelihood + kl
+loss_op = tf.reduce_mean(tf.pow(y_pred - out_placeholder, 2))
 
 optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.03)
-train_op = optimizer.minimize(elbo_loss)
+train_op = optimizer.minimize(loss_op)
 init_op = tf.group(tf.compat.v1.global_variables_initializer(),
                      tf.compat.v1.local_variables_initializer())
 
@@ -49,18 +45,23 @@ sess = tf.compat.v1.Session()
 
 sess.run(init_op)
 for step in tqdm(range(10000), desc="training"):
-  _, loss = sess.run([train_op, elbo_loss], feed_dict={
+  _, loss = sess.run([train_op, loss_op], feed_dict={
     in_placeholder: X,
-    out_placeholder: y
+    out_placeholder: y,
+    K.learning_phase(): 1
   })
+  if step % 100 == 0:
+    print("loss:", loss)
 
 X_test = np.linspace(-1.5, 1.5, 1000).reshape(-1, 1)
 y_pred_list = []
 
 
 for i in tqdm(range(500), desc="inference"):
-  y_pre = sess.run(y_pred, feed_dict=
-    {in_placeholder: X_test})
+  y_pre = sess.run(y_pred, feed_dict={
+    in_placeholder: X_test,
+    K.learning_phase(): 1
+  })
   y_pred_list.append(y_pre)
 
 y_preds = np.concatenate(y_pred_list, axis=1)
@@ -79,4 +80,4 @@ plt.fill_between(X_test.ravel(),
 plt.title('Prediction')
 plt.legend()
 fig.tight_layout()
-fig.savefig("output_kl_%.2f.pdf" % kl_weight, dpi=300)
+fig.savefig("output_mcdrop_begin_%.1f.pdf" % drop_rate, dpi=300)

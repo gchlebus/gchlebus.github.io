@@ -4,6 +4,10 @@ title: Publications
 permalink: /publications/
 ---
 
+### 2022
+
+- Chlebus G, Schenk A, Hahn HK, van Ginneken B, Meine H. "Robust Segmentation Models using an Uncertainty Slice Sampling-Based Annotation Workflow", *IEEE Access*.
+
 ### 2021
 
 - Tschigor C, Chlebus G, Schumann C. "Deep Learning-basierte Oberflächenrekonstruktion aus Binärmasken",

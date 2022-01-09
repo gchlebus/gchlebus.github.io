@@ -1,0 +1,7 @@
+tensorflow==1.14
+tensorflow-probability==0.7
+matplotlib
+seaborn
+keras==2.2.2
+keras_preprocessing==1.0.5
+keras_applications==1.0.6
