@@ -14,7 +14,7 @@ permalink: /resume/
   <li>Data mining</li>
 </ul>
 
-**Jan 2014 - Present** <br>
+**Jan 2014 - Feb 2022** <br>
 <u>Scientist Medical Image Analysis @ Fraunhofer MEVIS, Bremen, Germany</u>
 <ul style="margin-top:-18px">
   <li>Medical image analysis with deep learning and machine learning techniques</li>

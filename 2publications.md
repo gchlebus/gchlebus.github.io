@@ -8,6 +8,8 @@ permalink: /publications/
 
 - Chlebus G, Schenk A, Hahn HK, van Ginneken B, Meine H. "Robust Segmentation Models using an Uncertainty Slice Sampling-Based Annotation Workflow", *IEEE Access*.
 
+- Kock F, Thielke F, Chlebus G, Meine H. "Temperature Calibration of Convolu- tional Neural Networks for Medical Image Segmentation”, *Medical Imaging with Deep Learning*.
+
 ### 2021
 
 - Tschigor C, Chlebus G, Schumann C. "Deep Learning-basierte Oberflächenrekonstruktion aus Binärmasken",
@@ -34,7 +36,7 @@ an end-to-end deep learning application", *BIDMC’s Artificial Intelligence/Mac
 - Chlebus G, Humpire Mamani GE, Schenk A, van Ginneken B, Meine H. "Mimicking Radiologists to Improve the Robustness of Deep-learning Based Automatic Liver Segmentation", *RSNA Annual Meeting*.
 
 - Chlebus G, Abolmaali N, Schenk A, Meine H. "Relevance analysis of MRI sequences for automatic
-  liver tumor segmentation", *Medica~`l Imaging with Deep Learning*.
+  liver tumor segmentation", *Medical Imaging with Deep Learning*.
 
 - Chlebus G, Meine H, Thoduka S, Abolmaali N, van Ginneken B, Hahn HK, Schenk A. "Reducing
   inter-observer variability and interaction time of MR liver volumetry by combining automatic
