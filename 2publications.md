@@ -8,7 +8,8 @@ permalink: /publications/
 
 - Chlebus G, Schenk A, Hahn HK, van Ginneken B, Meine H. "Robust Segmentation Models using an Uncertainty Slice Sampling-Based Annotation Workflow", *IEEE Access*.
 
-- Kock F, Thielke F, Chlebus G, Meine H. "Temperature Calibration of Convolu- tional Neural Networks for Medical Image Segmentation”, *Medical Imaging with Deep Learning*.
+- Kock F, Thielke F, Chlebus G, Meine H. "Confidence Histograms for Model Reliability Analysis
+and Temperature Calibration”, *Medical Imaging with Deep Learning*.
 
 ### 2021
 
