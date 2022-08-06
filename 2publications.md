@@ -11,6 +11,8 @@ permalink: /publications/
 - Kock F, Thielke F, Chlebus G, Meine H. "Confidence Histograms for Model Reliability Analysis
 and Temperature Calibration”, *Medical Imaging with Deep Learning*.
 
+- Hänsch A, Chlebus G, Meine H, Thielke F, Kock F, Paulus T, Abolmaali N, Schenk A. "Improving automatic liver tumor segmentation in late-phase MRI using multi-model training and 3D convolutional neural networks", *Scientific Reports*.
+
 ### 2021
 
 - Tschigor C, Chlebus G, Schumann C. "Deep Learning-basierte Oberflächenrekonstruktion aus Binärmasken",

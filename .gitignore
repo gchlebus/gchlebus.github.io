@@ -15,3 +15,5 @@ log_*
 *.auto
 *.npz
 *#
+vendor
+.bundle
