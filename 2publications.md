@@ -6,6 +6,8 @@ permalink: /publications/
 
 ### 2022
 
+- Chlebus G. "Deep learning-based segmentation in multimodal abdominal imaging", *PhD Dissertation*, ISBN: 9788396448002.
+
 - Chlebus G, Schenk A, Hahn HK, van Ginneken B, Meine H. "Robust Segmentation Models using an Uncertainty Slice Sampling-Based Annotation Workflow", *IEEE Access*.
 
 - Kock F, Thielke F, Chlebus G, Meine H. "Confidence Histograms for Model Reliability Analysis
