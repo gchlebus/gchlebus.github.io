@@ -6,7 +6,13 @@ permalink: /resume/
 
 <h3 style="color:grey">Work experience</h3>
 
-**Mar 2020 - Present** <br>
+**Apr 2022 - Present** <br>
+<u>Associate Manager, Machine Learning @ Qualtrics, Kraków, Poland</u>
+<ul style="margin-top:-18px">
+  <li>Managing the ML Accelerator team responsible for scaling ML efforts at Qualtrics.</li>
+</ul>
+
+**Mar 2020 - Apr 2022** <br>
 <u>Senior Applied Scientist @ Qualtrics, Kraków, Poland</u>
 <ul style="margin-top:-18px">
   <li>Time series forecasting and anomaly detection</li>
@@ -61,10 +67,10 @@ permalink: /resume/
 
 <h3 style="color:grey">Education</h3>
 
-**2017 - Present** <br>
-<u>External PhD Candidate @ Radboud University Medical Center, Nijmegen, The Netherlands</u>
+**2017 - Aug 2022** <br>
+<u>PhD in Medical Sciences @ Radboud University Medical Center, Nijmegen, The Netherlands</u>
 <ul style="margin-top:-18px">
-  <li>Research Topic: "Automatic Liver Analysis with Deep Learning"</li>
+  <li>Thesis title: "Deep Learning-Based Segmentation in Multimodal Abdominal Imaging"</li>
   <li>Supervisors: Prof. Bram van Ginneken, Prof. Horst Karl Hahn</li>
 </ul>
 
