@@ -7,6 +7,7 @@ permalink: /talks/
 ### 2026
 <div style="display: flex;align-items:stretch;flex-wrap:wrap">
   <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
+    <img src="/assets/talks/pytorch2026/core-loop.png" style="max-width: 200px;">
   </div>
   <div style="margin-left:10px;flex:1 1 400px;">
     <h4>The Science and Practice of Open and Scalable LLM Evaluations</h4>
