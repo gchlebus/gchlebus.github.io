@@ -4,6 +4,20 @@ title: Talks
 permalink: /talks/
 ---
 
+### 2026
+<div style="display: flex;align-items:stretch;flex-wrap:wrap">
+  <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
+  </div>
+  <div style="margin-left:10px;flex:1 1 400px;">
+    <h4>The Science and Practice of Open and Scalable LLM Evaluations</h4>
+    <p>PyTorch Conference Europe 2026</p>
+    <p>
+      [<a href="https://pytorchconferenceeu2026.sched.com/event/2HioA/the-science-and-practice-of-open-and-scalable-llm-evaluations-grzegorz-chlebus-nvidia">event</a>]
+      [<a href="https://hosted-files.sched.co/pytorchconferenceeu2026/65/GChlebus-The%20Science%20and%20Practice%20of%20Open%20and%20Scalable%20LLM%20Evaluations.pdf?_gl=1*k78jxf*_gcl_au*MjA0NTkzNzM2OS4xNzc2NjI5MDcy*FPAU*MjA0NTkzNzM2OS4xNzc2NjI5MDcy">slides</a>]
+    </p>
+  </div>
+</div>
+
 ### 2019
 <div style="display: flex;align-items:stretch;flex-wrap:wrap">
   <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
