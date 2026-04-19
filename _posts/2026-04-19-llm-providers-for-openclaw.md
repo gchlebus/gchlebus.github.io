@@ -61,66 +61,6 @@ The landscape breaks down roughly like this:
 
 If your priority is **developer ergonomics and integration stability**, OpenAI remains the safest bet. If your priority is **best-in-class agent behavior**, you should probably be looking at Claude or Gemini first.
 
-#### Can you use GPT models via a ChatGPT subscription instead of the API?
-
-This is where a lot of confusion creeps in, especially in social-media posts about agent stacks.
-
-The short answer is: **sometimes, sort of, but usually not in the clean way people imply.**
-
-There is a big practical difference between:
-
-- **ChatGPT subscription access** (consumer or prosumer product, optimized for interactive use)
-- **OpenAI API access** (programmatic, metered, designed for software systems)
-
-For OpenClaw and other agent frameworks, the API is the natural fit. It is built for repeated tool calls, automation, routing, background work, and predictable failure handling. A ChatGPT subscription can still be economically attractive, but only under narrower conditions.
-
-##### When a subscription can pay off
-
-A ChatGPT subscription can make sense if all of the following are true:
-
-- you are mostly running **one human-in-the-loop agent session**, not a fleet
-- you use it interactively rather than as unattended infrastructure
-- you are comfortable with product-surface limits, opaque throttling, and changing quotas
-- you care more about flat monthly spend than about clean API semantics
-
-That makes subscription-backed usage most appealing for:
-
-- solo experimentation
-- personal coding sessions
-- exploratory research
-- occasional heavy interactive use where API token accounting would otherwise sting
-- situations where you want predictable monthly spend more than clean backend integration
-
-##### When the API clearly wins
-
-The API is the better choice when you want reliable automation, stable routing across providers, auditable usage, and production-like behavior. You get fewer surprises around quotas, rate limits, or UI-driven policy changes.
-
-In other words: **subscription access can be a hack; the API is infrastructure.**
-
-##### Practical takeaway
-
-For OpenClaw-style workloads, subscription access is compelling when usage is **bursty, interactive, and mostly human-driven**. It becomes much less compelling when the workload is **automated, parallel, or operationally important**.
-
-##### What about specific ChatGPT / Codex subscription plans?
-
-This is the version people actually ask about in practice: *can I get away with ChatGPT Plus or Pro instead of paying for API usage?*
-
-My answer is:
-
-- **ChatGPT Plus** can be a very good deal for one person doing interactive work, but it is not a backend plan.
-- **ChatGPT Pro** can make even more economic sense for heavy personal usage, especially if you spend hours a day in coding or research sessions.
-- **Codex-style subscription access** can be great for interactive coding workflows, but it should not be confused with programmatic capacity for a fleet of agents.
-- **OpenAI API usage** is still the right abstraction if OpenClaw is doing real automation.
-
-| Access path | Good for | Not good for | OpenClaw fit |
-|---|---|---|---|
-| **ChatGPT Plus** | Solo interactive use, occasional heavy prompting, personal experimentation | Multi-agent backends, unattended automation, predictable throughput | **Low** except as a personal side channel |
-| **ChatGPT Pro** | Heavy daily individual use, interactive coding, long research sessions | Production-like routing, background jobs, reliable parallel execution | **Medium** for one power user, **low** for backend architecture |
-| **Codex-style subscription product access** | Human-in-the-loop coding, terminal work, exploratory repo sessions | Treating it as stable infrastructure for many concurrent agents | **Medium** for personal dev workflows |
-| **OpenAI API** | Tool use, routing, sub-agents, concurrency, accounting, automation | People trying to minimize monthly invoices at all costs | **High** |
-
-A simple rule of thumb: if **you** are the main bottleneck, subscriptions can pay off. If **the system** is the main bottleneck, you probably want the API.
-
 ## The open and local story
 
 This is where the economics really changed.
