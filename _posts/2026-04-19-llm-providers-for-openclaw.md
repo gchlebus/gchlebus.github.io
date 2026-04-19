@@ -6,8 +6,6 @@ date: 2026-04-19
 comments: true
 ---
 
-> **Disclaimer:** The views expressed in this post are my own and do not represent the views of my employer or any affiliated organization.
-
 If you're building or operating an agent framework in 2026, the old question — *"which model should I use?"* — is the wrong one.
 
 The useful question now is: *which model should handle which kind of turn?*
@@ -200,6 +198,7 @@ That makes subscription-backed usage most appealing for:
 - personal coding sessions
 - exploratory research
 - occasional heavy interactive use where API token accounting would otherwise sting
+- situations where you want predictable monthly spend more than clean backend integration
 
 ##### When the API clearly wins
 
@@ -401,7 +400,7 @@ Two practical caveats:
 
 The interesting shift in 2026 is not just that models got better.
 
-It's that **the market structure changed**.
+It is that **the market structure changed**.
 
 We now have:
 
