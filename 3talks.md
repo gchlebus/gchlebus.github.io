@@ -18,6 +18,8 @@ permalink: /talks/
   </div>
 </div>
 
+##### Rapid advances in AI have expanded the range of capabilities required for successful real-world deployment. Understanding where we are in this multi-dimensional frontier is essential for accelerating innovation through effective quality assurance. Rigorous evaluation is increasingly difficult to scale as development requires testing many checkpoints across numerous benchmarks. Model comparison is further complicated by limited transparency of reported results. This talk explores challenges, best practices, and open-source tools that elevate evaluation to a core component of LLM development, delivering continuous signals across the model lifecycle.<br><br>We discuss principles for standardizing evaluation methods and improving consistency through practical patterns and anti-patterns, and examples of integrating the science of evaluation directly into model development. Using Nemo-Evaluator, an open-source scalable evaluation tool, we demonstrate modular architectures that enable transparent, reproducible measurement. Finally, we show how Nemo-Evaluator supports reproducible evaluation for the Nemotron model family, helping enable one of the most open development processes in modern AI.
+
 ### 2019
 <div style="display: flex;align-items:stretch;flex-wrap:wrap">
   <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
