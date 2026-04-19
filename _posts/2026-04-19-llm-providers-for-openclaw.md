@@ -24,141 +24,40 @@ The bigger point: **serious agent systems should route, not worship a single def
 
 ## What matters for OpenClaw specifically
 
-OpenClaw puts pressure on models in ways normal chat apps don't.
+OpenClaw puts pressure on models in ways normal chat apps do not. The useful questions are boring and practical:
 
-A useful OpenClaw model needs to be good at:
-
-- **Tool use under schema pressure** — not just one function call, but repeated calls with changing state.
-- **Long-horizon session behavior** — the model has to keep track of what it's doing over many turns.
-- **Recovery from bad tool results** — when a command fails, the model should adapt instead of spiraling.
-- **Cost discipline** — agent loops can burn a shocking number of tokens.
-- **Personality retention** — if you use system prompts, personas, and memory files, the model has to keep a coherent voice.
-- **Compatibility** — OpenAI-compatible endpoints still matter because agent frameworks tend to standardize there even when the best APIs are vendor-native.
+- does the model call tools correctly under pressure?
+- does it recover when a tool fails?
+- does it stay coherent over long sessions?
+- does it bankrupt you if you let it run all day?
+- does it fit the APIs and provider patterns that agent frameworks actually use?
 
 That is why I care more about **Aider Polyglot, SWE-Bench Verified, Terminal-Bench, τ²-bench, MCP Atlas, MRCR v2, Artificial Analysis, and LMArena** than about legacy benchmarks like MMLU or GSM8K.
 
-## The top closed-model options
+## The short version on providers
 
-### Claude Opus 4.7: the best planner
+### Claude: best overall agent quality
 
-Opus 4.7 looks like the current top pick for the hardest agent turns.
+**Claude Opus 4.7** is the best top-end planner in the market right now. It looks strongest when the task is messy: tool errors, long-horizon work, sensitive judgment calls, multi-step coding, and agent recovery loops.
 
-Why? Because the interesting problem in agent frameworks is no longer "can the model solve a benchmark puzzle?" It's "can the model make good decisions while operating in a messy loop?" Anthropic seems unusually focused on that exact problem. The reports around Opus 4.7 are not just "smarter model" reports; they're reports of **fewer tool-call mistakes, better recovery, and better long-session behavior**.
+**Claude Sonnet 4.6** is the more practical recommendation for day-to-day use. It is cheaper, still strong at tool use and coding, and makes more sense as the default premium workhorse.
 
-For OpenClaw, that makes Opus 4.7 ideal for:
+### Gemini: best long-context frontier option
 
-- planning multi-step work
-- deciding whether to escalate or delegate
-- hard code-editing or repo-navigation tasks
-- sensitive judgment calls where the cost of a wrong answer is high
-- recovering from tool failures without getting lost
+**Gemini 3.1 Pro** is the most credible long-context choice. A lot of vendors advertise huge context windows; Google is one of the few that seems to have a real story when you actually push them. If you need repo-wide reasoning, transcript-heavy work, or giant document context, Gemini is the one I would take most seriously.
 
-The downside is obvious: price. If you use Opus as the universal default, you are choosing the expensive answer to a routing problem.
+### OpenAI: best ecosystem fit, not best-in-class agent model
 
-### Claude Sonnet 4.6: the sensible default
+OpenAI still has enormous gravity because the APIs, SDKs, and compatibility story are so strong. That matters. But I no longer think GPT-5.x is the obvious best answer for OpenClaw.
 
-If I had to pick a single closed model for most agent users today, it would probably still be Sonnet 4.6.
+My practical breakdown is simple:
 
-That's not because it wins every benchmark. It doesn't. It's because it sits in the useful middle:
+- **GPT-5.4**: polished, safe, strong tool calling, but a bit overrated relative to Claude and Gemini.
+- **GPT-5.4 mini**: probably the most rational OpenAI tier for many default turns.
+- **GPT-5.3/Codex-style variants**: strong coding specialists, but not proof of overall agent superiority.
+- **GPT-OSS**: not frontier, but strategically useful as a cheap or open fallback.
 
-- strong tool use
-- good coding
-- good instruction following
-- much cheaper than Opus
-- stable enough for day-to-day agent work
-
-OpenClaw workloads like inbox triage, calendar checks, drafting, file inspection, lightweight coding, structured research, or memory-aware conversations usually do **not** need Opus-level reasoning every turn. Sonnet is the model you can let touch most turns without feeling reckless.
-
-### Gemini 3.1 Pro: the long-context specialist
-
-Gemini 3.1 Pro is the strongest argument that context length can still matter — if it actually works.
-
-A lot of models advertise huge context windows. Far fewer remain reliable when you truly stuff them. Google's published MRCR numbers are important because they suggest Gemini is one of the few frontier options where the long-context story is not pure brochureware.
-
-That makes Gemini especially interesting for OpenClaw scenarios like:
-
-- loading large codebases or document sets
-- repo-wide reasoning
-- large transcript analysis
-- document-heavy workflows
-- multimodal tasks where images or video matter
-
-Gemini is not my first choice for personality or everyday feel. But if the job is "here is a mountain of context, now reason over it," it's one of the few models with a credible claim.
-
-### OpenAI GPT-5.x: still the ecosystem default
-
-OpenAI is in a funny place.
-
-On pure agent benchmarks, it no longer looks dominant. But the ecosystem gravity remains huge:
-
-- everyone supports the API
-- the OpenAI-compatible pattern still shapes framework design
-- structured outputs are excellent
-- function calling is polished
-- many developers start there by reflex
-
-For OpenClaw, GPT-5.x is still viable, especially when compatibility and SDK smoothness matter more than being absolute best-in-class. But compared with Claude and Gemini, it currently looks more like the "most available" option than the "most agentically capable" one.
-
-The important nuance is that "GPT-5" is not one thing anymore. In practice, there are at least four relevant buckets for agent builders:
-
-- **GPT-5.4 / GPT-5.4 Thinking** for higher-stakes reasoning and more demanding tool workflows.
-- **GPT-5.4 mini** for cheap default routing where OpenAI compatibility matters more than frontier quality.
-- **GPT-5.3-Codex / Codex-oriented variants** for terminal-heavy and coding-heavy workflows.
-- **GPT-OSS** for people who want the OpenAI interaction style but need open weights or ultra-cheap hosted inference.
-
-That makes OpenAI more of a platform family than a single recommendation.
-
-#### GPT-5.4: polished, expensive-enough, and slightly overrated
-
-My current view is that GPT-5.4 is a very good model, just not the obvious best one for OpenClaw.
-
-What it does well:
-
-- very strong schema adherence
-- reliable parallel tool calls
-- strong SDK and framework support
-- the cleanest path if you want to build around the newer `responses` API
-
-What it does less well than its reputation suggests:
-
-- it no longer clearly leads on agentic reasoning benchmarks
-- it is weaker than Gemini on credible long-context use
-- it is less impressive than Opus on difficult, messy recovery loops
-- its default personality is flatter and more generic than both Claude and Grok
-
-If your priority is **developer ergonomics and integration stability**, GPT-5.4 remains a serious choice. If your priority is **best-in-class agent performance**, it feels more like a safe default than a winning one.
-
-#### GPT-5.4 mini: the practical OpenAI choice
-
-For many OpenClaw deployments, GPT-5.4 mini may be more rational than full GPT-5.4.
-
-Why? Because a lot of turns do not need premium reasoning. They need a model that can:
-
-- follow instructions
-- call tools correctly
-- summarize or classify reliably
-- avoid doing anything too weird
-
-That is exactly where OpenAI's smaller models tend to be useful. If you are already in the OpenAI ecosystem and want a cheap default tier, mini is often the interesting SKU, not the flagship.
-
-#### GPT-5.3-Codex and code-oriented variants
-
-OpenAI's code-specific variants still matter, especially for people doing terminal-heavy automation and repo work. They can look very strong on coding harnesses and are often the easiest choice if your stack already assumes OpenAI semantics.
-
-The catch is the usual one: benchmark wins on a home-field harness do not automatically mean broader agent superiority. I would treat them as **excellent coding specialists**, not proof that OpenAI is winning the full agent stack.
-
-#### GPT-OSS: more important than people admit
-
-GPT-OSS is easy to dismiss because it is not frontier-class. That would be a mistake.
-
-For OpenClaw, GPT-OSS matters because it gives builders one more path to:
-
-- open-weight deployment
-- low-cost hosted inference on providers like Groq or Cerebras
-- partial compatibility with OpenAI-style prompting and tooling
-- a fallback that does not depend on a closed frontier vendor
-
-I would not make GPT-OSS my primary reasoning layer. I would absolutely test it as a cheap execution tier, coding helper, or local-ish backup path.
+If your priority is **developer ergonomics and integration stability**, OpenAI remains extremely attractive. If your priority is **best-in-class agent behavior**, I would currently look elsewhere first.
 
 #### Can you use GPT models via a ChatGPT subscription instead of the API?
 
@@ -246,103 +145,26 @@ My answer is:
 
 A simple rule of thumb: if **you** are the main bottleneck, subscriptions can pay off. If **the system** is the main bottleneck, you probably want the API.
 
-## The open and cost-sensitive frontier
+## The open and local story
 
-This is where the story gets much more interesting.
+This is where the economics really changed.
 
-In 2024, the safe assumption was that open models were clearly worse and mostly useful for toy workloads or strict privacy constraints.
+**DeepSeek V3.2** is the model that makes people rethink budgets. **GLM-4.6** and **Qwen3-family** models make open or semi-open routing much more credible than it was two years ago. **Kimi K2.5** is interesting because it is explicitly framed around agent-style workflows rather than just generic chat.
 
-In 2026, that assumption is stale.
+The strategic point is simple: there is now a real cheap tier. That changes architecture. You can let cheaper models do bulk work and reserve expensive premium models for the small number of turns where they truly matter.
 
-### DeepSeek V3.2: the economics breaker
+### Why Ollama matters
 
-DeepSeek V3.2 is the model that makes people recalculate their budgets.
+Ollama matters less as a model provider and more as a deployment layer. It is the shortest path from *"I want local models"* to *"I have a working local model API."*
 
-If you can get something in the rough neighborhood of frontier performance at a tiny fraction of the price, then the architecture changes. Suddenly it becomes rational to:
+That makes it useful for four things:
 
-- run cheap bulk turns on DeepSeek
-- escalate only failures or hard planning to Claude or Gemini
-- use open or self-hosted models as privacy fallbacks
-- route sub-agents aggressively without worrying about token burn
+1. **local fallback** when cloud APIs are down,
+2. **privacy-sensitive work** you do not want to ship to a hosted provider,
+3. **cheap grunt work** like summarization, extraction, and first-pass triage,
+4. **experimentation** with open models without paying frontier API prices.
 
-That's a very OpenClaw-native pattern.
-
-### GLM-4.6 and Qwen3-family: serious open-weight contenders
-
-GLM-4.6 and Qwen3-based coding models matter because they are no longer just "pretty good for open models." They're now good enough that serious agent builders have to test them.
-
-The big advantages:
-
-- OpenAI-compatible serving options exist
-- costs are dramatically lower
-- self-hosting is possible
-- privacy and compliance stories are much cleaner
-- coding performance is credible enough for real use
-
-If agent frameworks want to appeal to enterprise and homelab deployments, these models are strategically important.
-
-### Kimi K2.5: interesting because it thinks in agents
-
-Kimi K2.5 stands out not just on price/performance, but because its product framing explicitly includes agent swarms and large numbers of tool calls.
-
-That matters conceptually. OpenClaw already has sub-agents as a first-class idea. A model trained and positioned around orchestration, delegation, and multi-agent behavior is naturally relevant, even if it's not the universal best model.
-
-## Why Ollama deserves a place in this conversation
-
-Ollama is not a frontier model vendor. It is something arguably more important for many real deployments: **the shortest path from "I want local models" to "I have a working local model API."**
-
-That makes it strategically important.
-
-### What Ollama is good at
-
-Ollama gives users an easy local serving layer for open models:
-
-- one-command local model pulls
-- a simple local API
-- broad community support
-- fast experimentation with model swaps
-- reasonable ergonomics on laptops, desktops, and homelabs
-
-If your goal is:
-
-- privacy-preserving local inference
-- offline fallback
-- a cheap always-available local workhorse
-- experimenting with Qwen, DeepSeek distills, Llama, Mistral, or Nemotron variants
-
-...then Ollama is one of the most practical answers.
-
-### What Ollama is not good at
-
-It is important not to confuse **Ollama-the-runtime** with **frontier hosted APIs**.
-
-Ollama does not magically make a local 8B or 14B model compete with Opus 4.7. It also does not automatically solve:
-
-- tool-use fine-tuning
-- structured output reliability
-- long-horizon planning
-- large-context robustness
-- multi-user rate and memory management
-
-In other words: Ollama is a deployment layer, not a quality guarantee.
-
-### Where Ollama fits in an agent stack
-
-For OpenClaw, Ollama is best viewed as one of four things:
-
-1. **Local fallback provider**  
-   Internet or API outage? Route basic turns locally.
-
-2. **Privacy tier**  
-   Sensitive internal notes, local document triage, or workflows where sending content to an external API is undesirable.
-
-3. **Cheap grunt-worker tier**  
-   Summaries, classification, tagging, extraction, first-pass search, lightweight code explanation.
-
-4. **Dev sandbox**  
-   The easiest way to test prompt templates, routing, and model-specific behavior without paying frontier API prices.
-
-This is the most useful mental model: **Ollama is not the main brain; it's the local muscle.**
+The important caveat: Ollama does not magically turn a small local model into Claude Opus 4.7. It is a deployment layer, not a quality guarantee.
 
 ## So what should people actually do?
 
@@ -394,6 +216,8 @@ Two practical caveats:
 
 1. **Caching changes everything.** Anthropic-style prompt caching can slash the real bill for long-running agents with stable prefixes.
 2. **Local models are not free.** They hide cost inside GPUs, power, storage, and operational pain instead of putting it neatly on an API invoice.
+
+## Practical routing recommendations
 
 ### If you care most about cost
 
