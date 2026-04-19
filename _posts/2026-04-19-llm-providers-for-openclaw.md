@@ -32,32 +32,34 @@ OpenClaw puts pressure on models in ways normal chat apps do not. The useful que
 - does it bankrupt you if you let it run all day?
 - does it fit the APIs and provider patterns that agent frameworks actually use?
 
-That is why I care more about **Aider Polyglot, SWE-Bench Verified, Terminal-Bench, τ²-bench, MCP Atlas, MRCR v2, Artificial Analysis, and LMArena** than about legacy benchmarks like MMLU or GSM8K.
+That is why I pay attention to benchmarks that measure agentic behavior over time — like **Aider Polyglot, SWE-Bench Verified, Terminal-Bench, τ²-bench, and MCP Atlas** — rather than older static tests like MMLU.
 
-## The short version on providers
+## The state of the top tier
 
-### Claude: best overall agent quality
+### Claude: the overall agent quality leader
 
-**Claude Opus 4.7** is the best top-end planner in the market right now. It looks strongest when the task is messy: tool errors, long-horizon work, sensitive judgment calls, multi-step coding, and agent recovery loops.
+Right now, Anthropic has the strongest hand for agent workflows.
 
-**Claude Sonnet 4.6** is the more practical recommendation for day-to-day use. It is cheaper, still strong at tool use and coding, and makes more sense as the default premium workhorse.
+**Claude Opus 4.7** is the best top-end planner in the market. It excels when the task gets messy: handling tool errors, managing long-horizon work, making sensitive judgment calls, and surviving recovery loops without losing the plot.
 
-### Gemini: best long-context frontier option
+**Claude Sonnet 4.6** is the practical default for day-to-day use. It is cheaper, still very strong at tool use and coding, and makes sense as the primary workhorse for the majority of turns.
 
-**Gemini 3.1 Pro** is the most credible long-context choice. A lot of vendors advertise huge context windows; Google is one of the few that seems to have a real story when you actually push them. If you need repo-wide reasoning, transcript-heavy work, or giant document context, Gemini is the one I would take most seriously.
+### Gemini: the long-context specialist
 
-### OpenAI: best ecosystem fit, not best-in-class agent model
+**Gemini 3.1 Pro** is the most credible long-context frontier option. Many vendors advertise huge context windows, but Google is one of the few that actually delivers reliable performance when you fill them. If your workflow requires repo-wide reasoning, massive transcripts, or giant document analysis, Gemini is the model to take most seriously.
 
-OpenAI still has enormous gravity because the APIs, SDKs, and compatibility story are so strong. That matters. But I no longer think GPT-5.x is the obvious best answer for OpenClaw.
+### OpenAI: the ecosystem default
 
-My practical breakdown is simple:
+OpenAI still exerts enormous gravity. Their APIs, SDKs, and compatibility ecosystem are the industry standard. But while GPT-5.x remains highly capable, it is no longer the undisputed king of agent models.
 
-- **GPT-5.4**: polished, safe, strong tool calling, but a bit overrated relative to Claude and Gemini.
-- **GPT-5.4 mini**: probably the most rational OpenAI tier for many default turns.
-- **GPT-5.3/Codex-style variants**: strong coding specialists, but not proof of overall agent superiority.
-- **GPT-OSS**: not frontier, but strategically useful as a cheap or open fallback.
+The landscape breaks down roughly like this:
 
-If your priority is **developer ergonomics and integration stability**, OpenAI remains extremely attractive. If your priority is **best-in-class agent behavior**, I would currently look elsewhere first.
+- **GPT-5.4**: highly polished, safe, and strong at tool calling, but arguably slightly overrated compared to the current Claude and Gemini flagships.
+- **GPT-5.4 mini**: the most rational OpenAI tier for routine, high-volume turns.
+- **GPT-5.3/Codex variants**: excellent coding specialists, though that doesn't automatically translate to general agent superiority.
+- **GPT-OSS**: strategically useful as a cheap or open fallback, even if it isn't frontier-class.
+
+If your priority is **developer ergonomics and integration stability**, OpenAI remains the safest bet. If your priority is **best-in-class agent behavior**, you should probably be looking at Claude or Gemini first.
 
 #### Can you use GPT models via a ChatGPT subscription instead of the API?
 
@@ -70,17 +72,7 @@ There is a big practical difference between:
 - **ChatGPT subscription access** (consumer or prosumer product, optimized for interactive use)
 - **OpenAI API access** (programmatic, metered, designed for software systems)
 
-For OpenClaw and other agent frameworks, the API is the natural fit. It is built for:
-
-- repeated tool calls
-- automation
-- routing
-- concurrency
-- background work
-- predictable failure handling
-- usage accounting
-
-A ChatGPT subscription can still be economically attractive in some cases, but only under narrower conditions.
+For OpenClaw and other agent frameworks, the API is the natural fit. It is built for repeated tool calls, automation, routing, background work, and predictable failure handling. A ChatGPT subscription can still be economically attractive, but only under narrower conditions.
 
 ##### When a subscription can pay off
 
@@ -101,22 +93,13 @@ That makes subscription-backed usage most appealing for:
 
 ##### When the API clearly wins
 
-The API is the better choice when you want:
-
-- multiple agents or sub-agents running in parallel
-- reliable automation
-- stable routing across providers
-- auditable usage and cost accounting
-- production-like behavior
-- fewer surprises around quotas, rate limits, or UI-driven policy changes
+The API is the better choice when you want reliable automation, stable routing across providers, auditable usage, and production-like behavior. You get fewer surprises around quotas, rate limits, or UI-driven policy changes.
 
 In other words: **subscription access can be a hack; the API is infrastructure.**
 
 ##### Practical takeaway
 
-For OpenClaw-style workloads, subscription access is most compelling when the usage is **bursty, interactive, and mostly human-driven**. It becomes much less compelling when the workload is **automated, parallel, or operationally important**.
-
-That is why ChatGPT or Codex subscription access is best understood as a product-surface option for people, while the API remains the cleaner abstraction for systems.
+For OpenClaw-style workloads, subscription access is compelling when usage is **bursty, interactive, and mostly human-driven**. It becomes much less compelling when the workload is **automated, parallel, or operationally important**.
 
 ##### What about specific ChatGPT / Codex subscription plans?
 
@@ -163,33 +146,32 @@ The important caveat: Ollama does not magically turn a small local model into Cl
 
 To make the trade-offs more concrete, here is a rough cost model for a few common architecture patterns.
 
-**Assumption:** one agent-day equals **100 turns/day**, with an average of **20k input tokens** and **2k output tokens** per turn. That works out to **2.0M input tokens** and **0.2M output tokens** per day. These are not universal numbers, but they are a decent order-of-magnitude estimate for active agent workflows with tools and memory.
+**Assumption:** one agent-day equals **100 turns/day**, with an average of **20k input tokens** and **2k output tokens** per turn (2.0M input and 0.2M output per day). These are order-of-magnitude estimates for active workflows with tools and memory.
 
 | Pattern | Example stack | Estimated $/day | Estimated $/30-day month | Notes |
 |---|---|---:|---:|---|
 | **Premium-heavy** | Mostly Claude Sonnet 4.6, with ~10% of turns escalated to Claude Opus 4.7 | **~$10-11** | **~$300-330** | Useful as a reference point for high-quality premium routing. |
 | **OpenAI-first** | GPT-5.4 mini as default, GPT-5.4 for hard turns | **~$2-3** | **~$60-90** | Useful when framework compatibility and familiar APIs matter most. |
-| **Long-context-heavy** | Gemini 3.1 Pro for document-heavy / repo-heavy work, cheap tier elsewhere | **~$4-5** | **~$120-150** | Illustrates the premium paid for very large-context workflows. |
 | **Cost-optimized** | DeepSeek V3.2 or GLM-4.6 for most turns, occasional Sonnet escalation | **~$1-3** | **~$30-90** | Shows how far a cheap-tier-heavy architecture can go. |
 | **Privacy / local-first** | Ollama-hosted open model for bulk work, hosted model only for explicit escalation | **~$0.50-2 API spend** + hardware | **~$15-60 API spend** + hardware | Token cost drops, but hardware and ops complexity increase. |
 | **Coding-heavy hybrid** | Sonnet 4.6 or GPT-5.3/5.4 code tier for code, DeepSeek/GLM for cheap helpers | **~$3-8** | **~$90-240** | Useful for repo work with many narrow sub-agents. |
 
-Those numbers are deliberately approximate. The point is not fake precision. The point is to show how quickly costs diverge once you stop using one premium model for everything.
+Those numbers are deliberately approximate. The point is not fake precision; the point is to show how quickly costs diverge once you stop using one premium model for everything.
 
 ### Price reference used for the estimates
 
-The estimates above use rough April 2026 pricing assumptions from the broader research scan:
+The estimates above use rough April 2026 pricing assumptions:
 
-| Model | Input $ / 1M | Output $ / 1M | Comment |
-|---|---:|---:|---|
-| Claude Opus 4.7 | 5.00 | 25.00 | Best top-end planner, priced like it knows it |
-| Claude Sonnet 4.6 | 3.00 | 15.00 | Best default premium workhorse |
-| GPT-5.4 | 2.00 | 10.00 | Estimated market rate |
-| GPT-5.4 mini | 0.30 | 1.20 | Best-value OpenAI tier in practice |
-| Gemini 3.1 Pro | 1.25 | 10.00 | Strong long-context specialist |
-| DeepSeek V3.2 | 0.28 | 0.42 | Cost monster |
-| GLM-4.6 | 0.60 | 2.20 | Strong open-ish fallback |
-| Kimi K2.5 | 1.00 | 3.00 | Interesting agent-oriented mid-tier |
+| Model | Input $ / 1M | Output $ / 1M |
+|---|---:|---:|
+| Claude Opus 4.7 | 5.00 | 25.00 |
+| Claude Sonnet 4.6 | 3.00 | 15.00 |
+| GPT-5.4 | 2.00 | 10.00 |
+| GPT-5.4 mini | 0.30 | 1.20 |
+| Gemini 3.1 Pro | 1.25 | 10.00 |
+| DeepSeek V3.2 | 0.28 | 0.42 |
+| GLM-4.6 | 0.60 | 2.20 |
+| Kimi K2.5 | 1.00 | 3.00 |
 
 Two practical caveats:
 
