@@ -12,15 +12,15 @@ The useful question now is: *which model should handle which kind of turn?*
 
 That's especially true for OpenClaw. It isn't just a chatbot shell. It has tools, long-lived sessions, sub-agents, heartbeats, memory files, and real background work. In that world, the best model isn't the one with the highest benchmark score. It's the one that behaves well in an agent loop: uses tools reliably, recovers from partial failure, doesn't hallucinate arguments for tools that don't exist, keeps its tone over long sessions, and doesn't bankrupt you in the process.
 
-My take after a broad market scan in April 2026 is simple:
+A few broad patterns stand out from the current landscape:
 
-- **Claude Opus 4.7** is the best top-end planner and recovery model.
-- **Claude Sonnet 4.6** is the best default workhorse in the closed-model tier.
-- **Gemini 3.1 Pro** is the strongest choice when truly long context or hard reasoning matters.
-- **DeepSeek V3.2, GLM-4.6, Kimi K2.5, and Qwen3-family models** make the economics of open or semi-open routing impossible to ignore.
-- **Ollama matters less as a model provider and more as the local execution layer that makes privacy-preserving OpenClaw deployments practical.**
+- **Claude Opus 4.7** currently looks strongest at hard agentic work and recovery.
+- **Claude Sonnet 4.6** sits in a strong premium middle ground.
+- **Gemini 3.1 Pro** is one of the most credible long-context frontier options.
+- **DeepSeek V3.2, GLM-4.6, Kimi K2.5, and Qwen3-family models** make the cheap and open-ish tier impossible to ignore.
+- **Ollama matters less as a model provider and more as a local deployment layer.**
 
-The bigger point: **serious agent systems should route, not worship a single default model.**
+The bigger point is not that one model has won forever. It is that **agent systems increasingly benefit from routing instead of relying on a single default.**
 
 ## What matters for OpenClaw specifically
 
@@ -112,18 +112,11 @@ The API is the better choice when you want:
 
 In other words: **subscription access can be a hack; the API is infrastructure.**
 
-##### My practical recommendation
+##### Practical takeaway
 
-If you are running OpenClaw seriously, I would treat ChatGPT subscription access as:
+For OpenClaw-style workloads, subscription access is most compelling when the usage is **bursty, interactive, and mostly human-driven**. It becomes much less compelling when the workload is **automated, parallel, or operationally important**.
 
-- a useful personal productivity layer
-- maybe a cheap way to get a lot of high-end interactive usage
-- not the foundation of a resilient multi-agent backend
-
-It pays off most when your workload is **bursty, interactive, and mostly human-driven**.
-It pays off least when your workload is **automated, parallel, or operationally important**.
-
-That is why I would not build the main OpenClaw architecture around the assumption that a consumer subscription cleanly substitutes for API capacity. Sometimes it is a great deal. It is rarely a clean systems design choice.
+That is why ChatGPT or Codex subscription access is best understood as a product-surface option for people, while the API remains the cleaner abstraction for systems.
 
 ##### What about specific ChatGPT / Codex subscription plans?
 
@@ -166,34 +159,20 @@ That makes it useful for four things:
 
 The important caveat: Ollama does not magically turn a small local model into Claude Opus 4.7. It is a deployment layer, not a quality guarantee.
 
-## So what should people actually do?
+## Example architecture patterns and their cost
 
-### A strong default stack
-
-If you want something that just works:
-
-- **Primary planner / escalation model:** Claude Opus 4.7
-- **Default workhorse:** Claude Sonnet 4.6
-- **Long-context specialist:** Gemini 3.1 Pro
-- **Cheap execution tier:** DeepSeek V3.2 or GLM-4.6
-- **Local/private fallback:** Ollama running a strong open model
-
-That is a much healthier architecture than trying to force one provider into every role.
-
-## Estimated cost of the recommended setups
-
-To make the routing argument more concrete, here is a rough cost model.
+To make the trade-offs more concrete, here is a rough cost model for a few common architecture patterns.
 
 **Assumption:** one agent-day equals **100 turns/day**, with an average of **20k input tokens** and **2k output tokens** per turn. That works out to **2.0M input tokens** and **0.2M output tokens** per day. These are not universal numbers, but they are a decent order-of-magnitude estimate for active agent workflows with tools and memory.
 
-| Setup | Recommended stack | Estimated $/day | Estimated $/30-day month | Notes |
+| Pattern | Example stack | Estimated $/day | Estimated $/30-day month | Notes |
 |---|---|---:|---:|---|
-| **Premium / best quality** | Mostly Claude Sonnet 4.6, with ~10% of turns escalated to Claude Opus 4.7 | **~$10-11** | **~$300-330** | Best general recommendation when quality matters more than spend. |
-| **OpenAI-first practical** | GPT-5.4 mini as default, GPT-5.4 for hard turns | **~$2-3** | **~$60-90** | Sensible if you want maximum framework compatibility and clean API ergonomics. |
-| **Long-context heavy** | Gemini 3.1 Pro for document-heavy / repo-heavy work, cheap tier elsewhere | **~$4-5** | **~$120-150** | Worth it when very large contexts are genuinely part of the job. |
-| **Cost-optimized** | DeepSeek V3.2 or GLM-4.6 for most turns, occasional Sonnet escalation | **~$1-3** | **~$30-90** | The most economically aggressive hosted setup that still feels serious. |
-| **Privacy / local-first** | Ollama-hosted open model for bulk work, hosted model only for explicit escalation | **~$0.50-2 API spend** + hardware | **~$15-60 API spend** + hardware | Cheap in token terms, but hardware and ops complexity move off the invoice and onto you. |
-| **Coding-heavy hybrid** | Sonnet 4.6 or GPT-5.3/5.4 code tier for code, DeepSeek/GLM for cheap helpers | **~$3-8** | **~$90-240** | Good compromise for repo work with many narrow sub-agents. |
+| **Premium-heavy** | Mostly Claude Sonnet 4.6, with ~10% of turns escalated to Claude Opus 4.7 | **~$10-11** | **~$300-330** | Useful as a reference point for high-quality premium routing. |
+| **OpenAI-first** | GPT-5.4 mini as default, GPT-5.4 for hard turns | **~$2-3** | **~$60-90** | Useful when framework compatibility and familiar APIs matter most. |
+| **Long-context-heavy** | Gemini 3.1 Pro for document-heavy / repo-heavy work, cheap tier elsewhere | **~$4-5** | **~$120-150** | Illustrates the premium paid for very large-context workflows. |
+| **Cost-optimized** | DeepSeek V3.2 or GLM-4.6 for most turns, occasional Sonnet escalation | **~$1-3** | **~$30-90** | Shows how far a cheap-tier-heavy architecture can go. |
+| **Privacy / local-first** | Ollama-hosted open model for bulk work, hosted model only for explicit escalation | **~$0.50-2 API spend** + hardware | **~$15-60 API spend** + hardware | Token cost drops, but hardware and ops complexity increase. |
+| **Coding-heavy hybrid** | Sonnet 4.6 or GPT-5.3/5.4 code tier for code, DeepSeek/GLM for cheap helpers | **~$3-8** | **~$90-240** | Useful for repo work with many narrow sub-agents. |
 
 Those numbers are deliberately approximate. The point is not fake precision. The point is to show how quickly costs diverge once you stop using one premium model for everything.
 
@@ -217,53 +196,28 @@ Two practical caveats:
 1. **Caching changes everything.** Anthropic-style prompt caching can slash the real bill for long-running agents with stable prefixes.
 2. **Local models are not free.** They hide cost inside GPUs, power, storage, and operational pain instead of putting it neatly on an API invoice.
 
-## Practical routing recommendations
+## Common design directions
 
-### If you care most about cost
+Different teams will optimize for different things:
 
-- Default to DeepSeek V3.2, GLM-4.6, or a Qwen3-family model
-- Escalate only hard turns to Sonnet or Opus
-- Use Ollama for local utility tasks and experimentation
+### Cost-sensitive setups
 
-### If you care most about privacy
+These tend to lean toward DeepSeek V3.2, GLM-4.6, or Qwen-family models for bulk turns, with a premium model reserved for occasional escalation.
 
-- Prefer GLM, Qwen, or Nemotron-class open models
-- Serve locally or in a controlled environment
-- Use Ollama for easy local starts, then migrate to a more specialized serving stack if scale grows
-- Keep frontier hosted models only as explicit opt-in escalation paths
+### Privacy-sensitive setups
 
-### If you care most about coding
+These tend to prefer open models, local serving, or controlled environments, with Ollama often acting as the easiest starting point.
 
-- Claude Opus 4.7 for hardest turns
-- Sonnet 4.6 for most day-to-day coding
-- Gemini 3.1 Pro when huge context matters
-- Qwen3-Coder, GLM-4.6, or DeepSeek as the cost-efficient second line
-- Ollama for local experimentation, code indexing helpers, and lightweight coding sub-agents
+### Coding-heavy setups
 
-## The real conclusion
+These often mix a stronger premium coding model with cheaper helper models for narrow sub-tasks, indexing, summarization, or first-pass edits.
 
-The interesting shift in 2026 is not just that models got better.
+## Conclusion
 
-It is that **the market structure changed**.
+The interesting shift in 2026 is not just that models got better. It is that **the market structure changed**.
 
-We now have:
+There is now a visible top-end tier, a strong workhorse tier, a surprisingly capable cheap tier, and a credible open/self-hosted tier. Add local runtimes like Ollama, and the design space becomes much broader than it was even a year or two ago.
 
-- a clear top-end planner tier
-- a strong workhorse tier
-- a shockingly capable cheap tier
-- a credible open and self-hosted tier
-- practical local runtimes like Ollama that make private deployments easy
-
-That means the correct design for agent frameworks is no longer "pick the smartest model."
-
-It's:
-
-- route by task
-- route by cost
-- route by privacy
-- route by failure mode
-- route by latency
+That does not mean every team should use the same stack. It does mean that the old habit of searching for one universally best default model makes less and less sense.
 
 The era of the single default model is over.
-
-Good riddance.
