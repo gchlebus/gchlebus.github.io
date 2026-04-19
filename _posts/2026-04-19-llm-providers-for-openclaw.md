@@ -162,6 +162,71 @@ For OpenClaw, GPT-OSS matters because it gives builders one more path to:
 
 I would not make GPT-OSS my primary reasoning layer. I would absolutely test it as a cheap execution tier, coding helper, or local-ish backup path.
 
+#### Can you use GPT models via a ChatGPT subscription instead of the API?
+
+This is where a lot of confusion creeps in, especially in social-media posts about agent stacks.
+
+The short answer is: **sometimes, sort of, but usually not in the clean way people imply.**
+
+There is a big practical difference between:
+
+- **ChatGPT subscription access** (consumer or prosumer product, optimized for interactive use)
+- **OpenAI API access** (programmatic, metered, designed for software systems)
+
+For OpenClaw and other agent frameworks, the API is the natural fit. It is built for:
+
+- repeated tool calls
+- automation
+- routing
+- concurrency
+- background work
+- predictable failure handling
+- usage accounting
+
+A ChatGPT subscription can still be economically attractive in some cases, but only under narrower conditions.
+
+##### When a subscription can pay off
+
+A ChatGPT subscription can make sense if all of the following are true:
+
+- you are mostly running **one human-in-the-loop agent session**, not a fleet
+- you use it interactively rather than as unattended infrastructure
+- you are comfortable with product-surface limits, opaque throttling, and changing quotas
+- you care more about flat monthly spend than about clean API semantics
+
+That makes subscription-backed usage most appealing for:
+
+- solo experimentation
+- personal coding sessions
+- exploratory research
+- occasional heavy interactive use where API token accounting would otherwise sting
+
+##### When the API clearly wins
+
+The API is the better choice when you want:
+
+- multiple agents or sub-agents running in parallel
+- reliable automation
+- stable routing across providers
+- auditable usage and cost accounting
+- production-like behavior
+- fewer surprises around quotas, rate limits, or UI-driven policy changes
+
+In other words: **subscription access can be a hack; the API is infrastructure.**
+
+##### My practical recommendation
+
+If you are running OpenClaw seriously, I would treat ChatGPT subscription access as:
+
+- a useful personal productivity layer
+- maybe a cheap way to get a lot of high-end interactive usage
+- not the foundation of a resilient multi-agent backend
+
+It pays off most when your workload is **bursty, interactive, and mostly human-driven**.
+It pays off least when your workload is **automated, parallel, or operationally important**.
+
+That is why I would not build the main OpenClaw architecture around the assumption that a consumer subscription cleanly substitutes for API capacity. Sometimes it is a great deal. It is rarely a clean systems design choice.
+
 ## The open and cost-sensitive frontier
 
 This is where the story gets much more interesting.
