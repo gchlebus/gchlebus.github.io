@@ -10,7 +10,7 @@ If you're building or operating an agent framework in 2026, the old question —
 
 The useful question now is: *which model should handle which kind of turn?*
 
-That's especially true for OpenClaw. It isn't just a chatbot shell. It has tools, long-lived sessions, sub-agents, heartbeats, memory files, and real background work. In that world, the best model isn't the one with the highest benchmark score. It's the one that behaves well in an agent loop: uses tools reliably, recovers from partial failure, doesn't hallucinate arguments for tools that don't exist, keeps its tone over long sessions, and doesn't bankrupt you in the process.
+That's especially true for OpenClaw 🦞. It isn't just a chatbot shell. It has tools, long-lived sessions, sub-agents, heartbeats, memory files, and real background work. In that world, the best model isn't the one with the highest benchmark score. It's the one that behaves well in an agent loop: uses tools reliably, recovers from partial failure, doesn't hallucinate arguments for tools that don't exist, keeps its tone over long sessions, and doesn't bankrupt you in the process.
 
 A few broad patterns stand out from the current landscape:
 
@@ -22,7 +22,7 @@ A few broad patterns stand out from the current landscape:
 
 The bigger point is not that one model has won forever. It is that **agent systems increasingly benefit from routing instead of relying on a single default.**
 
-## What matters for OpenClaw specifically
+## What matters for OpenClaw 🦞 specifically
 
 OpenClaw puts pressure on models in ways normal chat apps do not. The useful questions are boring and practical:
 
@@ -73,7 +73,7 @@ The strategic point is simple: there is now a real cheap tier. That changes arch
 
 If you aren't using Ollama's flat-rate cloud or hosting your own hardware, you have to choose a hosted inference provider. Not all are created equal when it comes to agentic workloads.
 
-For OpenClaw, you need a provider that handles parallel tool calls gracefully, respects JSON schemas, and doesn't drop requests under concurrent load. 
+For OpenClaw 🦞, you need a provider that handles parallel tool calls gracefully, respects JSON schemas, and doesn't drop requests under concurrent load. 
 
 Here is the current landscape of who to use for open weights:
 
@@ -85,53 +85,43 @@ Here is the current landscape of who to use for open weights:
 
 My rule of thumb: use **OpenRouter** to figure out which open model your sub-agents actually need, then switch to a direct provider like **Together AI** or **Fireworks** if you hit rate limits or want to squeeze out better tool-call reliability.
 
-## Example architecture patterns and their cost
+## Recommended setups under $100/mo
 
-To make the trade-offs more concrete, here is a rough cost model for a few common architecture patterns.
+Running a personal AI assistant like OpenClaw 🦞 all day requires a balance of intelligence and cost. If you rely on it for coding, research, email triage, and constant background tasks, API costs can add up quickly.
 
-**Assumption:** one agent-day equals **100 turns/day**, with an average of **20k input tokens** and **2k output tokens** per turn (2.0M input and 0.2M output per day). These are order-of-magnitude estimates for active workflows with tools and memory.
+Based on the latest data from the [Artificial Analysis Leaderboard](https://artificialanalysis.ai/leaderboards/models) and current API pricing, here are my top 3 recommended setups to keep your monthly bill comfortably under $100 without sacrificing capability.
 
-| Pattern | Example stack | Estimated $/day | Estimated $/30-day month | Notes |
-|---|---|---:|---:|---|
-| **Premium-heavy** | Mostly Claude Sonnet 4.6, with ~10% of turns escalated to Claude Opus 4.7 | **~$10-11** | **~$300-330** | Useful as a reference point for high-quality premium routing. |
-| **OpenAI-first** | GPT-5.4 mini as default, GPT-5.4 for hard turns | **~$3-4** | **~$90-120** | Useful when framework compatibility and familiar APIs matter most. |
-| **Cost-optimized** | DeepSeek V3.2 or GLM 5 for most turns, occasional Sonnet escalation | **~$1-3** | **~$30-90** | Shows how far a cheap-tier-heavy architecture can go. |
-| **Flat-rate Open** | Ollama Max tier for bulk concurrency, hosted API only for explicit escalation | **~$3.33** | **$100 flat** + escalation | Shifts variable token costs to a predictable monthly subscription. |
-| **Coding-heavy hybrid** | Sonnet 4.6 or GPT-5.4 code tier for code, DeepSeek/GLM for cheap helpers | **~$3-8** | **~$90-240** | Useful for repo work with many narrow sub-agents. |
+### 1. The Sweet Spot (Value + Intelligence): Gemini 2.0 Flash / Gemini 2.5 Flash
+For the vast majority of daily assistant tasks, you want a fast, cheap model with a massive context window. Google's Flash line remains the undisputed king of value.
 
-Those numbers are deliberately approximate. The point is not fake precision; the point is to show how quickly costs diverge once you stop using one premium model for everything.
+*   **Intelligence:** Very high. Gemini models consistently rank near the top of the leaderboards.
+*   **Cost:** Gemini 2.0 Flash is practically free at **$0.10 / 1M input and $0.40 / 1M output tokens**. Even the newer Gemini 2.5 Flash is incredibly cheap at **$0.15 / 1M input and $0.60 / 1M output**.
+*   **Why it works:** OpenClaw 🦞 relies heavily on context (reading memory files, workspace scanning). The 1M+ token context window means you can dump massive amounts of data into the prompt without breaking the bank. You could process 100 million tokens a month and still spend less than $50.
 
-### Price reference used for the estimates
+### 2. The Heavy Lifter (Complex Coding & Reasoning): Claude 3.7 Sonnet / o3-mini
+When you need your assistant to write complex code, refactor a project, or perform deep reasoning, you need to step up from the "Flash" tier.
 
-The estimates above use rough April 2026 pricing assumptions:
+*   **Intelligence:** Top tier. Claude 3.7 Sonnet and OpenAI's o3-mini are some of the best reasoning and coding models available right now.
+*   **Cost:** 
+    *   **Claude 3.7 Sonnet:** $3.00 / 1M input, $15.00 / 1M output.
+    *   **o3-mini:** ~$1.10 / 1M input, $4.40 / 1M output.
+*   **Why it works:** While significantly more expensive than Flash, using these strategically keeps costs down. You can configure OpenClaw 🦞 to use Gemini Flash as the default background engine, and explicitly request Claude 3.7 Sonnet or o3-mini (via `/reasoning` or model overrides) only when you need deep technical work done. 
 
-| Model | Input $ / 1M | Output $ / 1M |
-|---|---:|---:|
-| Claude Opus 4.7 | 5.00 | 25.00 |
-| Claude Sonnet 4.6 | 3.00 | 15.00 |
-| GPT-5.4 | 2.00 | 10.00 |
-| GPT-5.4 mini | 0.40 | 1.60 |
-| Gemini 3.1 Pro | 2.00 | 12.00 |
-| DeepSeek V3.2 | 0.28 | 0.42 |
-| GLM 5 | 0.60 | 2.20 |
-| Kimi K2.5 | 1.00 | 3.00 |
+### 3. The Open Source Disruptor: DeepSeek V3 / R1
+If you want frontier-level performance at a fraction of the cost of Western models, DeepSeek is impossible to ignore.
 
-Two practical caveats:
+*   **Intelligence:** Extremely high, often matching or beating GPT-4 class models on coding and reasoning benchmarks.
+*   **Cost:** 
+    *   **DeepSeek V3:** ~$0.27 / 1M input, $1.10 / 1M output.
+    *   **DeepSeek R1:** ~$0.55 / 1M input, $2.19 / 1M output.
+*   **Why it works:** DeepSeek V3 is roughly 5-15x cheaper than Claude Sonnet or GPT-4o, while offering comparable intelligence. 
 
-1. **Caching changes everything.** Anthropic-style prompt caching can slash the real bill for long-running agents with stable prefixes.
-2. **Flat-rate implies hardware limits.** Ollama's Max plan gives you 10 concurrent models, but latency will depend on their backend load.
+### The $100/mo Strategy
+To stay under $100/mo, don't use a single expensive model for everything. Use a **hybrid approach**:
+1.  **Default Engine:** Set `Gemini 2.5 Flash` or `DeepSeek V3` as your default for constant heartbeat polling, memory retrieval, and simple text tasks. This will handle 80% of your requests for pennies.
+2.  **Coding / Deep Work:** Map an override for `Claude 3.7 Sonnet` or `o3-mini` for complex coding tasks or when you need guaranteed top-tier reasoning. 
 
-## Common design directions
-
-Different teams will optimize for different things:
-
-### Open-model / Flat-rate setups
-
-These tend to rely heavily on Ollama's cloud tiers (or direct provider APIs like DeepSeek) for bulk turns and concurrent sub-agents, with a premium model reserved for occasional escalation.
-
-### Coding-heavy setups
-
-These often mix a stronger premium coding model with cheaper helper models for narrow sub-tasks, indexing, summarization, or first-pass edits.
+By offloading the high-volume, low-complexity work to a cheap, large-context model, you save your budget for the tasks that actually require expensive compute.
 
 ## Conclusion
 
