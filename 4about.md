@@ -4,6 +4,8 @@ title: About
 permalink: /about/
 ---
 
+<img src="/assets/avatar.jpg" alt="Grzegorz Chlebus" style="width: 150px; height: 150px; border-radius: 50%; float: right; margin: 0 0 15px 15px; object-fit: cover;">
+
 I'm Grzegorz Chlebus, a manager at [NVIDIA](https://www.nvidia.com/) working on **Frontier AI Evaluation**.
 
 My work sits at the intersection of **LLM evaluation, agent systems, developer tooling, and practical AI engineering**. I'm especially interested in the gap between benchmark performance and real-world usefulness: what actually makes models reliable, debuggable, cost-effective, and worth deploying.
