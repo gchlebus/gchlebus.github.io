@@ -226,6 +226,26 @@ It pays off least when your workload is **automated, parallel, or operationally 
 
 That is why I would not build the main OpenClaw architecture around the assumption that a consumer subscription cleanly substitutes for API capacity. Sometimes it is a great deal. It is rarely a clean systems design choice.
 
+##### What about specific ChatGPT / Codex subscription plans?
+
+This is the version people actually ask about in practice: *can I get away with ChatGPT Plus or Pro instead of paying for API usage?*
+
+My answer is:
+
+- **ChatGPT Plus** can be a very good deal for one person doing interactive work, but it is not a backend plan.
+- **ChatGPT Pro** can make even more economic sense for heavy personal usage, especially if you spend hours a day in coding or research sessions.
+- **Codex-style subscription access** can be great for interactive coding workflows, but it should not be confused with programmatic capacity for a fleet of agents.
+- **OpenAI API usage** is still the right abstraction if OpenClaw is doing real automation.
+
+| Access path | Good for | Not good for | OpenClaw fit |
+|---|---|---|---|
+| **ChatGPT Plus** | Solo interactive use, occasional heavy prompting, personal experimentation | Multi-agent backends, unattended automation, predictable throughput | **Low** except as a personal side channel |
+| **ChatGPT Pro** | Heavy daily individual use, interactive coding, long research sessions | Production-like routing, background jobs, reliable parallel execution | **Medium** for one power user, **low** for backend architecture |
+| **Codex-style subscription product access** | Human-in-the-loop coding, terminal work, exploratory repo sessions | Treating it as stable infrastructure for many concurrent agents | **Medium** for personal dev workflows |
+| **OpenAI API** | Tool use, routing, sub-agents, concurrency, accounting, automation | People trying to minimize monthly invoices at all costs | **High** |
+
+A simple rule of thumb: if **you** are the main bottleneck, subscriptions can pay off. If **the system** is the main bottleneck, you probably want the API.
+
 ## The open and cost-sensitive frontier
 
 This is where the story gets much more interesting.
