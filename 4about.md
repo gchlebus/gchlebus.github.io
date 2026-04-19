@@ -5,7 +5,7 @@ permalink: /about/
 ---
 
 <div style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px;">
-  <img src="/assets/avatar.jpg" alt="Grzegorz Chlebus" style="width: 150px; height: 150px; border-radius: 50%; flex-shrink: 0; object-fit: cover;">
+  <img src="/assets/avatar.jpg" alt="Grzegorz Chlebus" style="width: 150px; height: 150px; border-radius: 50%; flex-shrink: 0; object-fit: cover; object-position: center 20%;">
   <div>
     <p style="margin-top: 0;">I'm Grzegorz Chlebus, a manager at <a href="https://www.nvidia.com/">NVIDIA</a> working on <strong>Frontier AI Evaluation</strong>.</p>
     <p style="margin-bottom: 0;">My work sits at the intersection of <strong>LLM evaluation, agent systems, developer tooling, and practical AI engineering</strong>. I'm especially interested in the gap between benchmark performance and real-world usefulness: what actually makes models reliable, debuggable, cost-effective, and worth deploying.</p>
