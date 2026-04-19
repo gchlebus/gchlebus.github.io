@@ -18,7 +18,7 @@ A few broad patterns stand out from the current landscape:
 - **Claude Sonnet 4.6** sits in a strong premium middle ground.
 - **Gemini 3.1 Pro** is one of the most credible long-context frontier options.
 - **DeepSeek V3.2, GLM-4.6, Kimi K2.5, and Qwen3-family models** make the cheap and open-ish tier impossible to ignore.
-- **Ollama matters less as a model provider and more as a local deployment layer.**
+- **Ollama's new cloud tiers** make running open models at scale practically accessible without owning a rack of GPUs.
 
 The bigger point is not that one model has won forever. It is that **agent systems increasingly benefit from routing instead of relying on a single default.**
 
