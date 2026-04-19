@@ -94,10 +94,10 @@ To make the trade-offs more concrete, here is a rough cost model for a few commo
 | Pattern | Example stack | Estimated $/day | Estimated $/30-day month | Notes |
 |---|---|---:|---:|---|
 | **Premium-heavy** | Mostly Claude Sonnet 4.6, with ~10% of turns escalated to Claude Opus 4.7 | **~$10-11** | **~$300-330** | Useful as a reference point for high-quality premium routing. |
-| **OpenAI-first** | GPT-5.4 mini as default, GPT-5.4 for hard turns | **~$2-3** | **~$60-90** | Useful when framework compatibility and familiar APIs matter most. |
-| **Cost-optimized** | DeepSeek V3.2 or GLM-4.6 for most turns, occasional Sonnet escalation | **~$1-3** | **~$30-90** | Shows how far a cheap-tier-heavy architecture can go. |
-| **Privacy / local-first** | Ollama-hosted open model for bulk work, hosted model only for explicit escalation | **~$0.50-2 API spend** + hardware | **~$15-60 API spend** + hardware | Token cost drops, but hardware and ops complexity increase. |
-| **Coding-heavy hybrid** | Sonnet 4.6 or GPT-5.3/5.4 code tier for code, DeepSeek/GLM for cheap helpers | **~$3-8** | **~$90-240** | Useful for repo work with many narrow sub-agents. |
+| **OpenAI-first** | GPT-5.4 mini as default, GPT-5.4 for hard turns | **~$3-4** | **~$90-120** | Useful when framework compatibility and familiar APIs matter most. |
+| **Cost-optimized** | DeepSeek V3.2 or GLM 5 for most turns, occasional Sonnet escalation | **~$1-3** | **~$30-90** | Shows how far a cheap-tier-heavy architecture can go. |
+| **Flat-rate Open** | Ollama Max tier for bulk concurrency, hosted API only for explicit escalation | **~$3.33** | **$100 flat** + escalation | Shifts variable token costs to a predictable monthly subscription. |
+| **Coding-heavy hybrid** | Sonnet 4.6 or GPT-5.4 code tier for code, DeepSeek/GLM for cheap helpers | **~$3-8** | **~$90-240** | Useful for repo work with many narrow sub-agents. |
 
 Those numbers are deliberately approximate. The point is not fake precision; the point is to show how quickly costs diverge once you stop using one premium model for everything.
 
@@ -110,28 +110,24 @@ The estimates above use rough April 2026 pricing assumptions:
 | Claude Opus 4.7 | 5.00 | 25.00 |
 | Claude Sonnet 4.6 | 3.00 | 15.00 |
 | GPT-5.4 | 2.00 | 10.00 |
-| GPT-5.4 mini | 0.30 | 1.20 |
-| Gemini 3.1 Pro | 1.25 | 10.00 |
+| GPT-5.4 mini | 0.40 | 1.60 |
+| Gemini 3.1 Pro | 2.00 | 12.00 |
 | DeepSeek V3.2 | 0.28 | 0.42 |
-| GLM-4.6 | 0.60 | 2.20 |
+| GLM 5 | 0.60 | 2.20 |
 | Kimi K2.5 | 1.00 | 3.00 |
 
 Two practical caveats:
 
 1. **Caching changes everything.** Anthropic-style prompt caching can slash the real bill for long-running agents with stable prefixes.
-2. **Local models are not free.** They hide cost inside GPUs, power, storage, and operational pain instead of putting it neatly on an API invoice.
+2. **Flat-rate implies hardware limits.** Ollama's Max plan gives you 10 concurrent models, but latency will depend on their backend load.
 
 ## Common design directions
 
 Different teams will optimize for different things:
 
-### Cost-sensitive setups
+### Open-model / Flat-rate setups
 
-These tend to lean toward DeepSeek V3.2, GLM-4.6, or Qwen-family models for bulk turns, with a premium model reserved for occasional escalation.
-
-### Privacy-sensitive setups
-
-These tend to prefer open models, local serving, or controlled environments, with Ollama often acting as the easiest starting point.
+These tend to rely heavily on Ollama's cloud tiers (or direct provider APIs like DeepSeek) for bulk turns and concurrent sub-agents, with a premium model reserved for occasional escalation.
 
 ### Coding-heavy setups
 
