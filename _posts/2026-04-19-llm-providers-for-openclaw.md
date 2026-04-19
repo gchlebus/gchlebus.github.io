@@ -69,18 +69,21 @@ This is where the economics really changed.
 
 The strategic point is simple: there is now a real cheap tier. That changes architecture. You can let cheaper models do bulk work and reserve expensive premium models for the small number of turns where they truly matter.
 
-### Why Ollama matters
+### Where to actually run open models
 
-Ollama matters less as a model provider and more as a deployment layer. It is the shortest path from *"I want local models"* to *"I have a working local model API."*
+If you aren't using Ollama's flat-rate cloud or hosting your own hardware, you have to choose a hosted inference provider. Not all are created equal when it comes to agentic workloads.
 
-That makes it useful for four things:
+For OpenClaw, you need a provider that handles parallel tool calls gracefully, respects JSON schemas, and doesn't drop requests under concurrent load. 
 
-1. **local fallback** when cloud APIs are down,
-2. **privacy-sensitive work** you do not want to ship to a hosted provider,
-3. **cheap grunt work** like summarization, extraction, and first-pass triage,
-4. **experimentation** with open models without paying frontier API prices.
+Here is the current landscape of who to use for open weights:
 
-The important caveat: Ollama does not magically turn a small local model into Claude Opus 4.7. It is a deployment layer, not a quality guarantee.
+- **OpenRouter:** The easiest starting point. It aggregates everyone else, lets you test DeepSeek, Qwen, and Llama behind a single API key, and handles the OpenAI-compatibility layer well. It's the best default for testing.
+- **Together AI:** The most reliable enterprise-grade host for large open models. Their tool-calling support is mature, and they are usually the safest bet for production agent fleets running Llama 3.x or Qwen3 at scale.
+- **Groq:** Unbeatable for time-to-first-token and raw throughput on supported models. Excellent for fast, simple sub-agents where latency matters more than massive context windows.
+- **Fireworks AI:** Very strong for structured output and tool use. Their `firefunction` tuning makes open models behave much more reliably when emitting complex JSON schemas.
+- **NVIDIA NIM:** The obvious choice if your enterprise is already an NVIDIA shop. It's the cleanest way to get optimized, supported inference for Nemotron, Llama, and Mistral variants.
+
+My rule of thumb: use **OpenRouter** to figure out which open model your sub-agents actually need, then switch to a direct provider like **Together AI** or **Fireworks** if you hit rate limits or want to squeeze out better tool-call reliability.
 
 ## Example architecture patterns and their cost
 
