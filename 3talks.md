@@ -6,8 +6,8 @@ permalink: /talks/
 
 ### 2026
 <div style="display: flex;align-items:stretch;flex-wrap:wrap">
-  <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
-    <img src="/assets/talks/pytorch2026/PyTorch-Conference-Europe-7-8-April-2026.avif" style="max-width: 200px;">
+  <div style="display: flex;flex-direction:column;justify-content:flex-start;font-size:60%;margin-bottom:10px;width:200px">
+    <img src="/assets/talks/pytorch2026/PyTorch-Conference-Europe-7-8-April-2026.avif" style="max-width: 200px; width: 100%; object-fit: contain; margin-top: 10px;">
   </div>
   <div style="margin-left:10px;flex:1 1 400px;">
     <h4>The Science and Practice of Open and Scalable LLM Evaluations</h4>
@@ -23,8 +23,8 @@ permalink: /talks/
 
 ### 2019
 <div style="display: flex;align-items:stretch;flex-wrap:wrap">
-  <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
-    <img src="/assets/talks/rsna2019/image.png" style="max-width: 200px;">
+  <div style="display: flex;flex-direction:column;justify-content:flex-start;font-size:60%;margin-bottom:10px;width:200px">
+    <img src="/assets/talks/rsna2019/image.png" style="max-width: 200px; width: 100%; object-fit: contain; margin-top: 10px;">
   </div>
   <div style="margin-left:10px;flex:1 1 400px;">
     <h4>Mimicking radiologists to improve the robustness of deep-learning based automatic liver segmentation</h4>
@@ -38,8 +38,8 @@ permalink: /talks/
 ##### Radiologists delineating organ contours on a CT slice typically consider a couple of neighboring slices while taking into account the whole in-plane context in order to distinguish the organ boundary from surrounding structures. We present a new 3D deep-learning model that mimics the way radiologists interpret images on the example of liver segmentation. To evaluate its performance, the model is compared with a standard 3D neural network.
 
 <div style="display: flex;align-items:stretch;flex-wrap:wrap">
-  <div style="display: flex;flex-direction:column;justify-content:center;font-size:60%;margin-bottom:10px">
-    <img src="/assets/talks/midl2019/FN_15_relevance.png" style="max-width: 200px;">
+  <div style="display: flex;flex-direction:column;justify-content:flex-start;font-size:60%;margin-bottom:10px;width:200px">
+    <img src="/assets/talks/midl2019/FN_15_relevance.png" style="max-width: 200px; width: 100%; object-fit: contain; margin-top: 10px;">
   </div>
   <div style="margin-left:10px;flex:1 1 400px;">
     <h4>Relevance Analysis of MRI Sequences for Automatic Liver Tumor Segmentation</h4>
