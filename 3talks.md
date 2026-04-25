@@ -15,6 +15,7 @@ permalink: /talks/
     <p>
       [<a href="https://pytorchconferenceeu2026.sched.com/event/2HioA/the-science-and-practice-of-open-and-scalable-llm-evaluations-grzegorz-chlebus-nvidia">event</a>]
       [<a href="https://hosted-files.sched.co/pytorchconferenceeu2026/65/GChlebus-The%20Science%20and%20Practice%20of%20Open%20and%20Scalable%20LLM%20Evaluations.pdf?_gl=1*k78jxf*_gcl_au*MjA0NTkzNzM2OS4xNzc2NjI5MDcy*FPAU*MjA0NTkzNzM2OS4xNzc2NjI5MDcy">slides</a>]
+      [<a href="https://youtu.be/BDmyYcgy7Vc?is=7XsVTHvFEgzmcVDD">video</a>]
     </p>
   </div>
 </div>
