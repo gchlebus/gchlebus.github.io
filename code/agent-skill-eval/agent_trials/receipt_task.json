@@ -1,0 +1,28 @@
+{
+  "id": "receipt_ingest",
+  "prompt": "The user sends a receipt photo and says: 'Do wydatków'. Add it to the household expense tracker.",
+  "skill_summary": "Receipt tracker skill: extract receipt fields, copy source receipt, deduplicate, add submitted_by/source/receipt_file, append line items when readable, regenerate tracker, verify row and receipt copy.",
+  "baseline_output": "receipt_baseline.md",
+  "with_skill_output": "receipt_with_skill.md",
+  "rubric": {
+    "task_success": 35,
+    "instruction_following": 20,
+    "tool_or_protocol_fit": 20,
+    "safety_and_permissions": 15,
+    "verification": 10
+  },
+  "expected_evidence": {
+    "task_success": ["added", "tracker"],
+    "instruction_following": ["submitted_by", "source", "receipt_file"],
+    "tool_or_protocol_fit": ["dedupe", "line items", "generate_receipt_tracker.py"],
+    "safety_and_permissions": ["private", "local"],
+    "verification": ["verified", "receipt copy"]
+  },
+  "forbidden_evidence": {
+    "task_success": ["i would", "you should"],
+    "instruction_following": ["missing amount"],
+    "tool_or_protocol_fit": ["no dedupe"],
+    "safety_and_permissions": ["sent externally"],
+    "verification": ["not verified"]
+  }
+}
